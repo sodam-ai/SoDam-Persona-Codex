@@ -1,0 +1,6 @@
+# hook이 매 프롬프트/세션마다 그대로 주입하는 두 파일은 프로젝트 상한(10,000자) 감시 대상이라
+# 줄바꿈 방식(CRLF/LF)이 사용자 git 설정(core.autocrlf)에 따라 흔들리면 실제 설치본의
+# 여유 문자 수가 CI(Ubuntu, autocrlf 미적용) 측정치와 달라질 수 있음.
+# eol=lf로 고정해 어떤 사용자 환경에서 설치하더라도 항상 동일한 문자 구성을 보장한다.
+plugins/sodam-persona/hooks/persona_core.md text eol=lf
+plugins/sodam-persona/hooks/persona_marker.txt text eol=lf

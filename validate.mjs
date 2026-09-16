@@ -47,12 +47,12 @@ const KEY_FILES = [
   pluginPath('skills/persona-triggers/SKILL.md'),
   pluginPath('skills/persona-investor/SKILL.md'),
   pluginPath('skills/persona-lawyer/SKILL.md'),
+  pluginPath('skills/persona-accountant/SKILL.md'),
+  pluginPath('skills/persona-marketer/SKILL.md'),
   pluginPath('reference/persona_full_core.md'),
   pluginPath('reference/test_scenarios.md'),
   'README.md',
   'README.en.md',
-  pluginPath('.codex-plugin/plugin.json'),
-  '.agents/plugins/marketplace.json',
 ];
 // 관점 수를 뜻하는 표현만 (년 제외). 캡처된 모든 숫자는 N과 같아야 한다.
 const COUNT_PATTERNS = [
@@ -137,19 +137,46 @@ for (const d of DOMAINS) {
   if (!marker.includes(d)) err(`persona_marker.txt 파일맵에 ${d} 누락`);
 }
 
-// ── 6) JSON 유효성 + 이름/소스 경로 ────────────────────────────────────
+// ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
+const EXPECTED_PLUGIN_VERSION = '1.3.0';
+const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
+const manifestPaths = [
+  pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
+  pluginPath('.codex-plugin/plugin.json'),           // 구형 Codex 호환 fallback
+  pluginPath('.claude-plugin/plugin.json'),          // 이전 호스트 호환
+];
+for (const manifestPath of manifestPaths) {
+  try {
+    const manifest = JSON.parse(read(manifestPath));
+    if (manifest.name !== 'sodam-persona') err(`${manifestPath} name(${manifest.name}) ≠ sodam-persona`);
+    if (manifest.version !== EXPECTED_PLUGIN_VERSION)
+      err(`${manifestPath} version(${manifest.version}) ≠ ${EXPECTED_PLUGIN_VERSION}`);
+    if (manifest.repository !== EXPECTED_REPOSITORY)
+      err(`${manifestPath} repository(${manifest.repository}) ≠ ${EXPECTED_REPOSITORY}`);
+    if (manifest.license !== 'Apache-2.0') err(`${manifestPath} license(${manifest.license}) ≠ Apache-2.0`);
+  } catch (e) { err(`${manifestPath} 파싱 실패: ${e.message}`); }
+}
 try {
-  const plugin = JSON.parse(read(pluginPath('.codex-plugin/plugin.json')));
-  if (plugin.name !== 'sodam-persona') err(`plugin.json name(${plugin.name}) ≠ sodam-persona`);
-  if (plugin.skills !== './skills/') err(`plugin.json skills(${plugin.skills}) ≠ ./skills/`);
-} catch (e) { err(`plugin.json 파싱 실패: ${e.message}`); }
+  const portable = JSON.parse(read(pluginPath('plugin.json')));
+  if (portable.$schema !== 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json')
+    err(`plugin.json Agent Plugins 1.0 schema 누락/불일치: ${portable.$schema}`);
+  if (portable.extensions?.['com.openai']?.hooks !== './hooks/hooks.json')
+    err(`plugin.json OpenAI hooks 경로 불일치: ${portable.extensions?.['com.openai']?.hooks}`);
+} catch (e) { err(`Agent Plugins 1.0 plugin.json 검사 실패: ${e.message}`); }
 try {
   const mkt = JSON.parse(read('.agents/plugins/marketplace.json'));
   const p0 = mkt.plugins?.[0];
-  if (p0?.name !== 'sodam-persona') err(`marketplace plugins[0].name(${p0?.name}) ≠ sodam-persona`);
-  if (p0?.source?.path && !existsSync(P(p0.source.path)))
-    err(`marketplace source 경로 없음: ${p0.source.path}`);
-} catch (e) { err(`marketplace.json 파싱 실패: ${e.message}`); }
+  const sourcePath = typeof p0?.source === 'string' ? p0.source : p0?.source?.path;
+  if (p0?.name !== 'sodam-persona') err(`Codex marketplace plugins[0].name(${p0?.name}) ≠ sodam-persona`);
+  if (!sourcePath || !existsSync(P(sourcePath))) err(`Codex marketplace source 경로 없음: ${sourcePath}`);
+} catch (e) { err(`Codex marketplace.json 파싱 실패: ${e.message}`); }
+try {
+  const legacyMkt = JSON.parse(read('.claude-plugin/marketplace.json'));
+  const p0 = legacyMkt.plugins?.[0];
+  if (p0?.name !== 'sodam-persona') err(`legacy marketplace plugins[0].name(${p0?.name}) ≠ sodam-persona`);
+  if (typeof p0?.source === 'string' && !existsSync(P(p0.source)))
+    err(`legacy marketplace source 경로 없음: ${p0.source}`);
+} catch (e) { err(`legacy marketplace.json 파싱 실패: ${e.message}`); }
 
 // ── 7) 면책(disclaimer) 강제 존재 — #14 회계세무·#11 법률·#13 투자자 안전 필수 ──
 // 라이브 검증에서 #14 세무 답변이 면책을 누락(2026-07-11) → 항상-주입 레이어에
@@ -207,7 +234,7 @@ const isCheckableRepoRef = (ref) => {
   if (/^persona-[a-z0-9-]+\/SKILL\.md$/.test(ref)) return true;
   if (ref.startsWith('plugins/sodam-persona/')) return true;
   if (ref.startsWith('reference/')) return true;
-  if (ref.startsWith('.codex-plugin/') || ref.startsWith('.agents/plugins/')) return true;
+  if (ref.startsWith('.claude-plugin/') || ref.startsWith('.codex-plugin/') || ref.startsWith('.agents/')) return true;
   if (ref.startsWith('.github/')) return true;
   return false;
 };
@@ -266,6 +293,137 @@ const validatorComments = readFileSync(P('validate.mjs'), 'utf8')
   .filter(line => line.trimStart().startsWith('//'))
   .join('\n');
 checkPersonalPaths(validatorComments, 'validate.mjs (comments)');
+
+// ── 11) Codex hooks.json 변수·스크립트·컨텍스트 한도 검사 (2026-09-16 조정) ──
+// Codex 플러그인 hook은 ${PLUGIN_ROOT}를 사용한다. additionalContextLimit=0은
+// 내장 잘라내기를 끄므로, 아래 #13의 저장소 자체 10,000자 상한 검사와 반드시 함께 유지한다.
+try {
+  const hooksConfig = JSON.parse(read(pluginPath('hooks/hooks.json')));
+  const commandHandlers = [];
+  (function walk(node) {
+    if (Array.isArray(node)) { node.forEach(walk); return; }
+    if (!node || typeof node !== 'object') return;
+    if (node.type === 'command') commandHandlers.push(node);
+    Object.values(node).forEach(walk);
+  })(hooksConfig);
+  if (commandHandlers.length !== 2) err(`hooks.json command handler 수(${commandHandlers.length}) ≠ 2`);
+  for (const handler of commandHandlers) {
+    const command = handler.command;
+    if (typeof command !== 'string') { err('hooks.json command handler에 command 문자열 없음'); continue; }
+    if (command.includes('${CLAUDE_PLUGIN_ROOT}'))
+      err(`hooks.json 이전 호스트 변수 사용 (Codex는 \${PLUGIN_ROOT} 사용): "${command}"`);
+    if (!command.includes('${PLUGIN_ROOT}/'))
+      err(`hooks.json Codex 플러그인 루트 변수 누락: "${command}"`);
+    for (const m of command.matchAll(/\$\{PLUGIN_ROOT\}\/([^"']+)/g)) {
+      if (!existsSync(P(PLUGIN_ROOT, m[1]))) err(`hooks.json 참조 스크립트 없음: ${m[1]}`);
+    }
+    if (handler.additionalContextLimit !== 0)
+      err(`hooks.json additionalContextLimit(${handler.additionalContextLimit}) ≠ 0 — #13의 프로젝트 상한과 함께 써야 함`);
+  }
+} catch (e) { err(`hooks.json 파싱 실패: ${e.message}`); }
+
+// ── 12) 도메인 스킬 "트리거 단어군" 문자열이 persona-triggers와 그대로 동기화되어 있는가 ──
+// 근거: commands/create.md 3-1단계 자신이 "실제 라이브 테스트에서 17건 누락 발견됨"이라고
+// 기록할 만큼, 같은 트리거 단어 목록이 여러 파일에 손으로 복사돼 있다가 한쪽만 고쳐 어긋나는
+// 사고가 이미 실제로 있었다. persona-accountant/persona-marketer SKILL.md는 persona-triggers의
+// 해당 도메인 "트리거 단어군:" 줄을 그대로 복사해 두는 것이 기존 관례(실측 확인)이므로, 그
+// 줄이 서로 다르면 어느 한쪽이 갱신 없이 어긋난 것 — 이 관례를 지키는 도메인만 검사한다.
+// (investor·lawyer는 skill 파일에 별도 단어 목록을 두지 않는 설계라 검사 대상에서 자연히 제외됨 —
+// 형식이 다른 파일끼리 억지로 비교해 오탐을 만들지 않기 위함)
+for (const d of DOMAINS) {
+  const skillPath = pluginPath('skills', d, 'SKILL.md');
+  if (!existsSync(P(skillPath))) continue;
+  const m = read(skillPath).match(/트리거 단어군:\s*([^\n]+)/);
+  if (!m) continue;
+  const line = m[1].trim();
+  if (!triggers.includes(line))
+    err(`도메인 트리거 단어 동기화 어긋남 (${d}/SKILL.md): persona-triggers/SKILL.md에 동일한 "트리거 단어군" 줄이 없음`);
+}
+
+// ── 13) Codex hook 출력 프로젝트 상한 검사 (2026-09-16 조정) ──────────
+// hooks.json의 additionalContextLimit=0은 Codex 내장 잘라내기를 끈다. 페르소나 코어가
+// 중간에서 잘리지 않게 하면서도 출력이 무제한으로 커지지 않도록, 실제 JSON 직렬화 결과에
+// 저장소 자체 10,000자 상한을 적용한다. 정적 파일을 그대로 내보내는 hook이라 빌드 시 검증으로 충분하다.
+const HOOK_OUTPUT_PROJECT_CAP = 10000;
+const HOOK_OUTPUT_WARN_AT = 9000;
+const serializedHookLength = (eventName, text) => JSON.stringify({
+  continue: true,
+  hookSpecificOutput: { hookEventName: eventName, additionalContext: text },
+}).length;
+const HOOK_OUTPUTS = [
+  ['persona_core.md (SessionStart)', serializedHookLength('SessionStart', core)],
+  ['persona_marker.txt (UserPromptSubmit)', serializedHookLength('UserPromptSubmit', marker)],
+];
+const hookSizeWarnings = [];
+for (const [label, length] of HOOK_OUTPUTS) {
+  if (length >= HOOK_OUTPUT_PROJECT_CAP)
+    err(`hook 직렬화 출력 프로젝트 상한 초과 (${label}): ${length}자 ≥ ${HOOK_OUTPUT_PROJECT_CAP}자`);
+  else if (length >= HOOK_OUTPUT_WARN_AT)
+    hookSizeWarnings.push(`${label}: ${length}자 — 프로젝트 상한(${HOOK_OUTPUT_PROJECT_CAP}자)의 90% 이상, 여유 ${HOOK_OUTPUT_PROJECT_CAP - length}자`);
+}
+if (hookSizeWarnings.length) {
+  console.log(`⚠️  hook 출력 프로젝트 상한 근접 경고 ${hookSizeWarnings.length}건 (실패 아님, 여유 있을 때 내용 정리 권장):`);
+  for (const w of hookSizeWarnings) console.log(`  · ${w}`);
+}
+
+// ── 14) persona_core.md 도메인 트리거 목록이 persona-triggers 정본을 온전히 포함하는가 ──
+// 근거: persona-investor/lawyer/accountant/marketer SKILL.md는 스스로 "트리거 단어·관점
+// 활성 판단의 정본은 persona_core.md"라 선언하지만, 실제로는 persona_core.md가
+// persona-triggers/SKILL.md의 J/K/S/T 절보다 단어 수가 적은 드리프트가 있었음(2026-08-31
+// 발견: #13 "페이퍼 모드/라이브 모드" 등 누락). 12번 검사는 persona-triggers ↔ 도메인
+// skill(accountant/marketer)끼리만 비교해 이 방향(core → triggers)은 사각지대였다 —
+// 그 빈틈만 메운다. investor·lawyer도 여기서 함께 검사(12번은 형식이 달라 제외했지만,
+// 이 검사는 core의 "트리거 단어" 줄만 보므로 형식 문제 없음).
+const DOMAIN_CORE_HEADINGS = [
+  ['J', '전문 투자자 페르소나'],
+  ['K', '전문 변호사 페르소나'],
+  ['S', '회계·세무 전문가 페르소나'],
+  ['T', '마케팅·세일즈 전문가 페르소나'],
+];
+function extractSection(text, marker, endRe) {
+  const start = text.indexOf(marker);
+  if (start === -1) return null;
+  const rest = text.slice(start + marker.length);
+  const nextMatch = rest.match(endRe);
+  const end = nextMatch ? start + marker.length + nextMatch.index : text.length;
+  return text.slice(start, end);
+}
+function wordsFromList(line) {
+  return line
+    .replace(/\([^)]*\)/g, '') // 괄호 각주 제거 (※ ... 같은 예외 설명)
+    .split(',')
+    .map((w) => w.trim().replace(/[.]+$/, '')) // 문장 끝 마침표 제거(단어 자체엔 마침표 없음)
+    .filter(Boolean);
+}
+for (const [letter, coreHeading] of DOMAIN_CORE_HEADINGS) {
+  const triggerSection = extractSection(triggers, `## ${letter}. `, /\n## [A-Z]\. /);
+  const triggerWordLine = triggerSection && triggerSection.match(/트리거 단어군:\s*([^\n]+)/);
+  if (!triggerWordLine) { err(`persona-triggers ${letter}절에서 "트리거 단어군:" 줄을 못 찾음`); continue; }
+  const canonicalWords = wordsFromList(triggerWordLine[1]);
+
+  const coreSection = extractSection(core, coreHeading, /\n### /);
+  const coreWordLine = coreSection && coreSection.match(/\*\*트리거 단어\*\*:\s*([^\n]+)/);
+  if (!coreWordLine) { err(`persona_core.md에서 "${coreHeading}" 절의 트리거 단어 줄을 못 찾음`); continue; }
+  // persona_core.md는 (※ ...) 각주가 같은 줄에 붙고 그 안에 중첩 괄호(예: "(회계감사)")가
+  // 있어 단순 /\([^)]*\)/g 로는 못 지운다 — 첫 " (" 앞까지만 단어 목록으로 취급해 우회.
+  const coreWordsRaw = coreWordLine[1].split(/\s\(/)[0];
+  const coreWords = new Set(wordsFromList(coreWordsRaw));
+
+  for (const w of canonicalWords) {
+    if (!coreWords.has(w)) err(`persona_core.md "${coreHeading}" 트리거 누락: "${w}" (persona-triggers ${letter}절엔 있음, 정본이라던 core엔 없음)`);
+  }
+}
+
+// ── 15) 페르소나 스킬 폴더명 안전성 검사 (2026-09-01 추가) ──────────────────
+// 근거: commands/create.md 2단계의 slug 검증("^[a-z][a-z0-9-]*$"만 허용, 경로 조작 방지)은
+// 코드가 아니라 AI에게 "이렇게 확인하라"고 지시하는 문장뿐이라, AI가 그 지시를 놓치면
+// 아무 것도 못 막는 구조였다. 폴더명이 이미 만들어진 뒤에라도 이 검사(및 create.md 4단계가
+// 이미 강제하는 "PASS할 때까지 반복")가 있으면, 경로 조작 문자가 섞인 폴더명은 절대
+// "완료" 상태에 도달할 수 없고 혹시 놓쳐도 다음 push 때 CI가 기계적으로 잡는다.
+const SAFE_SKILL_FOLDER_RE = /^persona-[a-z][a-z0-9-]*$/;
+for (const folder of skillFolders) {
+  if (!SAFE_SKILL_FOLDER_RE.test(folder)) err(`페르소나 스킬 폴더명이 안전한 형식(persona-[a-z][a-z0-9-]*)이 아님: "${folder}" — 경로 조작 문자 포함 가능성`);
+}
 
 // ── 결과 ────────────────────────────────────────────────────────────────
 console.log(`SoDam-Persona 정합성 검사 — 관점 ${N}명 · 패턴 ${uniqLetters.length}개 · 스킬 ${nSkills}개`);

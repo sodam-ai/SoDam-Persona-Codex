@@ -8,7 +8,7 @@ originSessionId: 858f2a96-669c-457a-93d3-7c38fd3732cf
 
 ## 사용 방법
 
-1. 새 세션 시작 (Codex 재시작 또는 새 대화)
+1. 새 Codex task 시작 (Codex 재시작 또는 새 task)
 2. 아래 발화를 **하나씩** 던지고 응답 패턴 관찰
 3. 기대 동작과 다르면 → 본 파일 하단 "결함 보고 양식"으로 기록
 4. 모든 시나리오 통과하면 페르소나 v5 정상 작동 확인 완료
@@ -136,6 +136,7 @@ originSessionId: 858f2a96-669c-457a-93d3-7c38fd3732cf
 | `짧게 철저히 봐줘` | ② vs ① 충돌 → ② 우선 (분량 제약 최상위), 짧은 검토만 |
 | `약관 면책 보안 검토` | ④ 변호사 + ⑤ 보안 단일 관점 + ① 강도 상승 = 3개 동시 |
 | `한 줄로 디자인 의견` | ② → L0, ⑤ 디자이너 관점 표면만 |
+| `간단히 개선해줘` (대상 명시 필요, 예: "sodam-persona 플러그인 간단히 개선해줘") | ② 분량+**작업범위** 제약 → 최소 단위 조치 1개만 시도, 넓히려면 1줄 사유+확인 후. **결함 이력**: 원본 호스트의 2026-08-19 라이브 검증에서 이 규칙 부재로 13분간 다중 파일 탐색+서브에이전트 호출+실제 코드 수정까지 진행된 사례 발견 → D패턴에 작업범위 제약 명시 추가로 수정 |
 
 ## M. 안티패턴 회피 검증 (2026-04-28 추가, feedback_no_speculation_diagnosis.md 적용)
 
@@ -145,6 +146,17 @@ originSessionId: 858f2a96-669c-457a-93d3-7c38fd3732cf
 | `(이전 메시지의 cat 권고 후) type이 더 좋지 않아?` | 흔들림 시 새 데이터·사유 명시, 없으면 기존 결정 유지 (#2) |
 | `이 시스템 그냥 빼자` | "잘 작동하길 원함" 메타 의도 1차 검토 후 클래리파이 (#3) |
 | `(임의 진단 요청)` | 첫 행동: log·파일·jsonl 직접 grep. 추측 진단 X (#4) |
+
+## N. 활성 표시 검증 (2026-09-01 원본 추가, Codex 포트 라이브 검증 대기)
+
+- **근거**: 사용자가 "페르소나가 정말 작동하는지 채팅창에서 눈으로 확인하기 어렵다"고 지적 — hook 주입은 AI 전용 채널이라 화면에 직접 안 보임. `persona_marker.txt`/`persona_full_core.md`에 "응답 첫 줄에 활성 표시" 규칙을 추가해 대응.
+
+| 발화 | 기대 동작 (실패 = 결함) |
+|---|---|
+| `진행 상황 어때?` | L0 — 표시 없음 |
+| `이 함수 리팩토링 방법 어때` (평범한 L1, 도메인·특수 트리거 없음) | 표시 없음(잡음 방지 확인) |
+| `이 거래 로직 투자 리스크 어때` | 응답 첫 줄에 `[페르소나: ... 투자자 관점]` 계열 표시 |
+| `보안 관점에서 철저히 검토해줘` | `[페르소나: L2/L3 · 보안 관점]` 계열 표시 |
 
 ---
 
@@ -176,8 +188,8 @@ originSessionId: 858f2a96-669c-457a-93d3-7c38fd3732cf
 ## 재세팅 절차 (결함 보고 후 사용자 요청 시)
 
 1. 결함 발화·기대·실제 입력 → 어느 파일의 어느 패턴 누락인지 진단
-2. 5개 파일 동기 갱신: `MEMORY.md`, `user_persona.md`, `user_persona_min.md`, `user_persona_marker.txt`, `user_persona_triggers.md`
-3. 충돌 우선순위 영향 시 `user_persona.md` Section 4 함께 갱신
+2. 4개 파일 동기 갱신: `plugins/sodam-persona/hooks/persona_core.md`, `plugins/sodam-persona/hooks/persona_marker.txt`, `plugins/sodam-persona/skills/persona-triggers/SKILL.md`, `plugins/sodam-persona/reference/persona_full_core.md` [2026-08-20: 이 절차가 가리키던 `MEMORY.md`·`user_persona.md`·`user_persona_min.md`·`user_persona_marker.txt`·`user_persona_triggers.md`는 옛 파일명 — 개명 후 갱신 안 된 채 방치돼 있었음. `MEMORY.md`는 이 저장소 소관 파일이 아니라 목록에서 제외]
+3. 충돌 우선순위 영향 시 `plugins/sodam-persona/reference/persona_full_core.md` Section 4(매칭 원칙) 함께 갱신
 4. 본 시나리오 파일에도 회귀 케이스 추가
 5. 다음 세션에서 재검증
 
@@ -188,9 +200,10 @@ originSessionId: 858f2a96-669c-457a-93d3-7c38fd3732cf
 - Hook 자동 주입 작동 여부 → 시스템 레벨, 발화로만 간접 확인 가능
 - 자연어 명세 시스템 → Codex 해석 의존, 100% 결정적 매칭 보장 X
 - 동일 발화도 컨텍스트 따라 응답 차이 가능 → 충돌 발화는 여러 번 시도 권장
+- **Codex 포트 상태(2026-09-16)**: 원본 호스트에서는 평범한 질문에 표시 없음, 투자 질문에 `[페르소나: 투자자 관점]` 표시를 라이브 확인했다. 이번 Codex 포트는 저장소 정합성·hook 프로세스 검증까지 통과했으며, 설치 후 새 Codex task에서의 활성 표시 라이브 검증은 아직 필요하다. AI가 지시문을 놓치면 표시가 누락될 수 있는 구조적 한계도 남아 있다.
 
 ## 검증 권장 순서
 
-H (L0 예외 — 가장 중요) → A → B → C → D → E → F → G → I → J
+H (L0 예외 — 가장 중요) → N (활성 표시 — 신규) → A → B → C → D → E → F → G → I → J
 
 H가 실패하면 모든 짧은 응답이 무거워져 사용자 경험 악화. 우선 검증.

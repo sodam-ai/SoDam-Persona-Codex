@@ -5,17 +5,29 @@ This product is licensed under the Apache License, Version 2.0.
 See the LICENSE file for the full license text.
 
 --------------------------------------------------------------------------------
-Third-party acknowledgments
+Third-party quotations and provenance
 --------------------------------------------------------------------------------
 
-This project references the following third-party concepts as short, attributed
-quotations. The project reimplements the underlying ideas in its own words and
-does NOT bundle or redistribute third-party source code:
+The current distribution contains short quotations or paraphrases in
+plugins/sodam-persona/skills/persona-triggers/SKILL.md. It does NOT bundle or
+redistribute third-party source code, images, fonts, audio, or video:
 
-  - "Chesterton's Fence"      — attributed to G. K. Chesterton (concept).
-  - "Hyrum's Law"             — attributed to Hyrum Wright (aphorism).
-  - Goal-Driven Execution     — short phrasing attributed to Andrej Karpathy.
+  - "Chesterton's Fence" — the project uses a simplified paraphrase of the
+    principle associated with G. K. Chesterton's The Thing, "The Drift from
+    Domesticity."
+  - "Hyrum's Law" — the project uses a shortened formulation of the observation
+    published at https://www.hyrumslaw.com/ and attributed to Hyrum Wright.
+  - Goal-Driven Execution — the project includes a short excerpt attributed to
+    Andrej Karpathy; a public archive of the referenced post is available at
+    https://adhx.com/karpathy/status/2015883857489522876.
 
+These acknowledgments identify provenance only. They do not claim that any
+quotation is in the public domain, licensed to this project, or legally usable
+in every jurisdiction or context. Confirm quotation rights, applicable
+exceptions, and attribution requirements before public or commercial
+redistribution. Legal/professional review is required where the answer matters.
+
+--------------------------------------------------------------------------------
 Trademarks
 --------------------------------------------------------------------------------
 
@@ -24,12 +36,16 @@ but not limited to "Claude", "Claude Code", "Anthropic", "Codex", "OpenAI",
 "GitHub", and "Node.js" — are trademarks or registered trademarks of their
 respective owners.
 This project is an independent work and is NOT affiliated with, sponsored by, or
-endorsed by any of them. Such names are used only nominatively to refer to the
-respective products.
+endorsed by any of them. Such names are used only to identify the respective
+products and describe the origin or compatibility of the Work.
 
+--------------------------------------------------------------------------------
 Note
 --------------------------------------------------------------------------------
 
 This NOTICE file is for informational and attribution purposes only and does not
-modify the terms of the Apache License, Version 2.0. It is not legal advice; for
-commercial redistribution, independent legal review is recommended.
+modify the terms of the Apache License, Version 2.0. The copyright line above is
+the project's stated notice; this audit did not independently verify legal-entity
+identity, contributor title, or the ownership chain for AI-assisted material.
+This is not legal advice. Independent legal review is required when those facts
+or commercial redistribution rights are material.

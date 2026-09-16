@@ -2,7 +2,7 @@
 /**
  * SoDam-Persona 정합성 검사기 (자기완결 — Node 내장만 사용, 의존성 0)
  *
- * 목적: 관점 수(11→12→13→14→15 같은) 드리프트·스킬 수 불일치·도메인 배선 누락·
+ * 목적: 관점 수(22→24 같은) 드리프트·스킬 수 불일치·도메인 배선 누락·
  *       JSON 오류를 push 전에 기계적으로 잡는다. (AGENTS.md 하네스 원칙: 골든 룰을 규칙으로 인코딩)
  *
  * 사용: node validate.mjs   (저장소 루트에서. 종료코드 0=통과, 1=실패)
@@ -22,17 +22,34 @@ const read = (rel) => readFileSync(P(rel), 'utf8');
 
 const errors = [];
 const err = (m) => errors.push(m);
-
-// ── 1) 관점 수 N = B 테이블 행 수 (source of truth) ───────────────────────
 const PLUGIN_ROOT = 'plugins/sodam-persona';
 const pluginPath = (...parts) => [PLUGIN_ROOT, ...parts].join('/');
+let REGISTRY;
+try { REGISTRY = JSON.parse(read(pluginPath('persona-registry.json'))); }
+catch (error) { console.error(`❌ persona-registry.json 파싱 실패: ${error.message}`); process.exit(1); }
+if (REGISTRY.schemaVersion !== 1) err(`등록부 schemaVersion(${REGISTRY.schemaVersion}) ≠ 1`);
+if (!/^\d+\.\d+\.\d+$/.test(REGISTRY.pluginVersion ?? '')) err(`등록부 pluginVersion 형식 오류: ${REGISTRY.pluginVersion}`);
+if (REGISTRY.hookSerializedCap !== 12000) err(`등록부 hookSerializedCap(${REGISTRY.hookSerializedCap}) ≠ 12000`);
+for (const key of ['perspectives', 'triggerPatterns', 'domainSkills']) {
+  if (!Array.isArray(REGISTRY[key])) err(`등록부 ${key}는 배열이어야 함`);
+}
+
+// ── 1) 관점 수 N = B 테이블 행 수 (source of truth) ───────────────────────
 const triggers = read(pluginPath('skills/persona-triggers/SKILL.md'));
 const bSection = triggers.slice(
   triggers.indexOf('## B.'),
   triggers.indexOf('복수 관점 명시')
 );
-const rows = [...bSection.matchAll(/^\|\s*(\d+)\s*\|/gm)].map((m) => +m[1]);
+const perspectiveRows = [...bSection.matchAll(/^\|\s*(\d+)\s*\|\s*([^|]+?)\s*\|/gm)].map((m) => ({ id: +m[1], name: m[2].trim() }));
+const rows = perspectiveRows.map(({ id }) => id);
 const N = rows.length;
+if (REGISTRY.perspectives?.length !== N) err(`등록부 관점 수(${REGISTRY.perspectives?.length}) ≠ 실제(${N})`);
+for (let i = 0; i < Math.min(N, REGISTRY.perspectives?.length ?? 0); i++) {
+  const actual = perspectiveRows[i];
+  const registered = REGISTRY.perspectives[i];
+  if (actual.id !== registered.id || actual.name !== registered.name)
+    err(`등록부 관점 불일치 #${i + 1}: ${JSON.stringify(registered)} ≠ ${JSON.stringify(actual)}`);
+}
 // 연속성: 1..N 이어야 함
 for (let i = 0; i < N; i++) {
   if (rows[i] !== i + 1) err(`B테이블 관점 번호 불연속: ${i + 1}번 위치에 ${rows[i]}`);
@@ -73,10 +90,15 @@ for (const f of KEY_FILES) {
   }
 }
 
-// ── 3) 패턴 수 (A~T) 일관성 ──────────────────────────────────────────────
-const letters = [...triggers.matchAll(/^## ([A-Z])\. /gm)].map((m) => m[1]);
-const uniqLetters = [...new Set(letters)].sort();
-const descMatch = triggers.match(/A~([A-Z])\s*(\d+)패턴/);
+// ── 3) 패턴 수 (A~AA 이상) 일관성 ──────────────────────────────────────────────
+const patternIds = [...triggers.matchAll(/^## ([A-Z]+)\. /gm)].map((m) => m[1]);
+const patternOrdinal = (id) => [...id].reduce((n, ch) => n * 26 + ch.charCodeAt(0) - 64, 0);
+const uniqLetters = [...new Set(patternIds)].sort((a, b) => patternOrdinal(a) - patternOrdinal(b));
+if (JSON.stringify(REGISTRY.triggerPatterns) !== JSON.stringify(uniqLetters))
+  err(`등록부 패턴 ID 불일치: ${REGISTRY.triggerPatterns?.join(', ')} ≠ ${uniqLetters.join(', ')}`);
+if (uniqLetters.some((id, index) => patternOrdinal(id) !== index + 1))
+  err(`pattern IDs are not contiguous from A: ${uniqLetters.join(', ')}`);
+const descMatch = triggers.match(/A~([A-Z]+)\s*(\d+)패턴/);
 if (!descMatch) err('트리거 description에서 "A~X N패턴" 표기를 못 찾음');
 else {
   const [, lastLetter, patCount] = descMatch;
@@ -128,7 +150,7 @@ for (const f of ['README.md']) {
 }
 
 // ── 5) 도메인 페르소나 배선 (core 파일맵 · marker 파일맵에 모두 존재) ────
-const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer'];
+const DOMAINS = REGISTRY.domainSkills ?? [];
 const core = read(pluginPath('hooks/persona_core.md'));
 const marker = read(pluginPath('hooks/persona_marker.txt'));
 for (const d of DOMAINS) {
@@ -137,8 +159,52 @@ for (const d of DOMAINS) {
   if (!marker.includes(d)) err(`persona_marker.txt 파일맵에 ${d} 누락`);
 }
 
+// ── 5-1) README 현행 수치·한영 구조·도메인 명령 회귀 검사 ─────────────
+const domainCount = DOMAINS.length;
+const README_CURRENT_COUNT_CHECKS = [
+  ['README.md', /전문 지식 모음[(]skill, 스킬[)][ ]*([0-9]+)개/g, nSkills, '첫 설명 스킬 수'],
+  ['README.md', /([0-9]+)개 skill 전체/g, nSkills, '파일표 스킬 수'],
+  ['README.md', /도메인 전문가[ ]*([0-9]+)종/g, domainCount, '도메인 전문가 수'],
+  ['README.md', /도메인[ ]*([0-9]+)종 중/g, domainCount, '워크플로우 도메인 수'],
+  ['README.en.md', /([0-9]+) conditional expert knowledge modules/g, nSkills, 'intro skill count'],
+  ['README.en.md', /All[ ]*([0-9]+) skills/g, nSkills, 'file-map skill count'],
+  ['README.en.md', /([0-9]+) domain experts/g, domainCount, 'domain expert count'],
+  ['README.en.md', /([0-9]+) domain skills/g, domainCount, 'workflow domain count'],
+];
+for (const [file, pattern, expected, label] of README_CURRENT_COUNT_CHECKS) {
+  const text = read(file);
+  const matches = [...text.matchAll(pattern)];
+  if (matches.length === 0) err(file + '에서 현행 ' + label + ' 표기를 찾지 못함');
+  for (const match of matches) {
+    if (+match[1] !== expected)
+      err(file + ' ' + label + '(' + match[1] + ') ≠ 실제(' + expected + ')');
+  }
+}
+
+const koReadme = read('README.md');
+const enReadme = read('README.en.md');
+for (const domain of DOMAINS) {
+  for (const [label, text] of [['README.md', koReadme], ['README.en.md', enReadme]]) {
+    if (!text.includes('$' + domain))
+      err(label + ' 명시 호출 명령 누락: $' + domain);
+  }
+}
+const REQUIRED_BEGINNER_DOCS = [
+  [koReadme, '건축·인테리어 작업을 처음 요청하는 방법', 'README.md 초보자 요청 섹션'],
+  [koReadme, '건축·인테리어 작업의 권장 흐름', 'README.md 실무 워크플로우'],
+  [enReadme, 'How to request architectural or interior work for the first time', 'README.en.md beginner request section'],
+  [enReadme, 'Recommended workflow for architectural and interior work', 'README.en.md production workflow'],
+];
+for (const [text, phrase, label] of REQUIRED_BEGINNER_DOCS) {
+  if (!text.includes(phrase)) err(label + ' 누락');
+}
+const koH2Count = [...koReadme.matchAll(/^## /gm)].length;
+const enH2Count = [...enReadme.matchAll(/^## /gm)].length;
+if (koH2Count !== enH2Count)
+  err('한영 README 주요 목차 수 불일치: KO ' + koH2Count + ' ≠ EN ' + enH2Count);
+
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
-const EXPECTED_PLUGIN_VERSION = '1.3.0';
+const EXPECTED_PLUGIN_VERSION = REGISTRY.pluginVersion;
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
 const manifestPaths = [
   pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
@@ -188,10 +254,85 @@ const DISCLAIMER_CHECKS = [
   [pluginPath('skills/persona-accountant/SKILL.md'), '면책'],
   [pluginPath('skills/persona-lawyer/SKILL.md'), '면책'],
   [pluginPath('skills/persona-investor/SKILL.md'), '면책'],
+  [pluginPath('skills/persona-architectural-designer/SKILL.md'), '최종 확인'],
+  [pluginPath('skills/persona-interior-designer/SKILL.md'), '최종 확인'],
+  [pluginPath('skills/persona-construction-expert/SKILL.md'), '최종 확인'],
+  [pluginPath('skills/persona-cost-estimator/SKILL.md'), '확정 금액'],
+  [pluginPath('skills/persona-design-director/SKILL.md'), '자격자 확인'],
+  [pluginPath('skills/persona-architectural-design-expert/SKILL.md'), '자격자 확인'],
+  [pluginPath('skills/persona-interior-design-expert/SKILL.md'), '자격자 확인'],
+  [pluginPath('skills/persona-spatial-3d-modeling-expert/SKILL.md'), '확정하지 않는다'],
+  [pluginPath('skills/persona-rendering-visualization-expert/SKILL.md'), '법정 설계도서'],
 ];
 for (const [f, kw] of DISCLAIMER_CHECKS) {
   if (!existsSync(P(f))) { err(`면책 검사 대상 파일 없음: ${f}`); continue; }
   if (!read(f).includes(kw)) err(`면책 강제 누락 (${f}): "${kw}" 문자열 없음`);
+}
+
+// ── 7-1) 검색·리서치·아이디어 신뢰성·오발동 경계 검사 ──────────────
+const KNOWLEDGE_WORK_CHECKS = [
+  [pluginPath('skills/persona-source-verification-expert/SKILL.md'), ['없는 출처', '확인 날짜', '파일 검색', '미확인']],
+  [pluginPath('skills/persona-research-analyst/SKILL.md'), ['사실', '해석', '가설', '정보 공백']],
+  [pluginPath('skills/persona-ideation-strategist/SKILL.md'), ['평가 기준', '검증 방법', 'IDE', '중단 기준']],
+  [pluginPath('skills/persona-triggers/SKILL.md'), ['## AE.', '## AF.', '## AG.', '코드에서 문자열 검색해줘', '좋은 아이디어네요']],
+  [pluginPath('hooks/persona_core.md'), ['없는 출처 생성 금지', '사실·해석·가설', '감탄·IDE 언급은 제외']],
+];
+for (const [f, phrases] of KNOWLEDGE_WORK_CHECKS) {
+  if (!existsSync(P(f))) { err(`지식작업 검사 대상 파일 없음: ${f}`); continue; }
+  const text = read(f);
+  for (const phrase of phrases) if (!text.includes(phrase)) err(`지식작업 안전장치 누락 (${f}): "${phrase}"`);
+}
+
+// ── 7-2) 프로젝트 관리 역할 경계·데이터 무결성·약어 오발동 검사 ──────
+const PROJECT_MANAGEMENT_CHECKS = [
+  [pluginPath('skills/persona-project-manager/SKILL.md'), ['계획, 기준선, 실제 실적, 예측, 미확인', '완료율', '`PM` 단독']],
+  [pluginPath('skills/persona-product-owner/SKILL.md'), ['사용자 가치', '수용 기준', '`PM`·`PO` 단독']],
+  [pluginPath('skills/persona-pmo-governance-expert/SKILL.md'), ['단계 승인', '보고 왜곡', '`PMO` 약어 단독']],
+  [pluginPath('skills/persona-project-analyst-coordinator/SKILL.md'), ['원문 기록', '추적 가능한 연결', '`PA` 단독', 'Project Architect']],
+  [pluginPath('skills/persona-triggers/SKILL.md'), ['## AH.', '## AI.', '## AJ.', '## AK.', '오후 3 PM', '건축 PA', '약어 단독']],
+  [pluginPath('hooks/persona_core.md'), ['PM·PO·PMO·PA 약어 단독은 제외', '계획·실적·예측·미확인']],
+];
+for (const [f, phrases] of PROJECT_MANAGEMENT_CHECKS) {
+  if (!existsSync(P(f))) { err(`프로젝트관리 검사 대상 파일 없음: ${f}`); continue; }
+  const text = read(f);
+  for (const phrase of phrases) if (!text.includes(phrase)) err(`프로젝트관리 안전장치 누락 (${f}): "${phrase}"`);
+}
+if (!triggers.includes('| 9 | 시니어 기획·요구사항 라우터 |')) err('#9가 기획·요구사항 라우터로 축소되지 않음');
+
+
+// ── 7-3) 이미지·영상 역할 경계·실제 결과 검수·권리 안전성 검사 ────────
+const MEDIA_PRODUCTION_CHECKS = [
+  [pluginPath('skills/persona-image-production-expert/SKILL.md'), ['원본 보존', '실제 결과 이미지', '언급되거나 첨부됐다는 이유로 자동 활성하지 않는다']],
+  [pluginPath('skills/persona-video-production-director/SKILL.md'), ['스토리보드', '작은 테스트 샷', '프로그램 숙련도', '어느 목적이 필요한지 확인한다']],
+  [pluginPath('skills/persona-video-post-production-expert/SKILL.md'), ['실제 재생', '내보내기 성공 메시지', '마스터와 플랫폼별 배포본']],
+  [pluginPath('skills/persona-media-quality-rights-reviewer/SKILL.md'), ['미검수', '법률 판단', '공개·광고·판매·고객 납품']],
+  [pluginPath('skills/persona-triggers/SKILL.md'), ['## AL.', '## AM.', '## AN.', '## AO.', '미디어 중의어 안전선', 'React 이미지 컴포넌트 오류']],
+  [pluginPath('hooks/persona_core.md'), ['이미지·사진·영상·비디오 단독 언급', '정지 결과 보정=#32', '실제 전체 재생']],
+  [pluginPath('reference/media_production_collaboration.md'), ['사용자 역량 보정', '실제 파일을 열어 화면·소리를 검수', '파일 보유 사실', '딥페이크']],
+];
+for (const [f, phrases] of MEDIA_PRODUCTION_CHECKS) {
+  if (!existsSync(P(f))) { err(`미디어 검사 대상 파일 없음: ${f}`); continue; }
+  const text = read(f);
+  for (const phrase of phrases) if (!text.includes(phrase)) err(`미디어 안전장치 누락 (${f}): "${phrase}"`);
+}
+
+// ── 7-4) 생성형 AI 로컬 도구·외부 플랫폼 경계·보존·최신성 검사 ──
+const GENERATIVE_AI_TOOL_CHECKS = [
+  [pluginPath('skills/persona-generative-ai-workflow-engineer/SKILL.md'), ['ComfyUI 설치', '기존 워크플로우', '모델 파일 존재와 로더 인식', '서버가 켜졌거나 큐가 성공했다는 이유만으로']],
+  [pluginPath('skills/persona-generative-ai-platform-operator/SKILL.md'), ['Midjourney 사용', 'Higgsfield 사용', '공식 자료 또는 실제 계정 화면', '유료 플랜 보유만으로']],
+  [pluginPath('skills/persona-triggers/SKILL.md'), ['## AP.', '## AQ.', '생성형 AI 도구·플랫폼 안전선', 'ComfyUI 좋아']],
+  [pluginPath('hooks/persona_core.md'), ['생성형 AI 로컬 워크플로우 엔지니어 (#36)', '생성형 AI 플랫폼 운영 전문가 (#37)', '설치됨·도달 가능·로드 성공·큐 성공·파일 존재·실제 결과 검수·권리 확인']],
+  [pluginPath('hooks/persona_marker.txt'), ['ComfyUI형 로컬 워크플로우', 'Midjourney·미드저니·Higgsfield·힉스필드·Runway형 외부 플랫폼', '[생성형 AI 사용자 역량]', '설치·도달·로드·생성·파일·실제 검수·권리 상태를 분리']],
+  [pluginPath('reference/generative_ai_tools_collaboration.md'), ['제품 자체를 15년간 사용했다는 의미가 아니다', '로컬 환경 보존과 복구', 'API 키·세션·쿠키·결제 정보', '유료 계정 또는 크레딧 구매']],
+  [pluginPath('reference/media_production_collaboration.md'), ['생성형 AI 로컬 워크플로우', '생성형 AI 플랫폼 운영']],
+  ['README.md', ['생성형 AI 도구·플랫폼 작업을 처음 요청하는 방법', '생성형 AI 도구·플랫폼 작업의 권장 흐름', '유료 요금제를 쓰면']],
+  ['README.en.md', ['How to request generative-AI tool or platform work for the first time', 'Recommended workflow for generative-AI tools and platforms', 'Does a paid plan automatically']],
+  [pluginPath('reference/test_scenarios.md'), ['v1.10 생성형 AI 도구·플랫폼 회귀 시나리오', '서버 HTTP 응답만 성공']],
+];
+for (const [f, phrases] of GENERATIVE_AI_TOOL_CHECKS) {
+  if (!existsSync(P(f))) { err(`생성형 AI 도구 검사 대상 파일 없음: ${f}`); continue; }
+  const text = read(f);
+  for (const phrase of phrases) if (!text.includes(phrase)) err(`생성형 AI 도구 안전장치 누락 (${f}): "${phrase}"`);
 }
 
 // ── 8) HTML 4개 동기화 경고 (소프트 — exit code에 영향 없음, 2026-07-26 추가) ──
@@ -226,7 +367,8 @@ if (warnings.length) {
 const REPO_KNOWN_BASENAMES = new Set([
   'persona_core.md', 'persona_marker.txt', 'hooks.json', 'plugin.json',
   'marketplace.json', 'README.md', 'README.en.md', 'LICENSE', 'NOTICE',
-  'validate.mjs', 'build-docs.mjs', 'doc-theme.html', 'GUIDE.md', 'GUIDE.en.md',
+  'validate.mjs', 'diagnose.mjs', 'test-hooks.mjs', 'test-validator.mjs', 'persona-registry.json',
+  'build-docs.mjs', 'doc-theme.html', 'GUIDE.md', 'GUIDE.en.md',
 ]);
 const isCheckableRepoRef = (ref) => {
   if (!/^[A-Za-z0-9_./-]+\.(md|mjs|js|json|html|txt)$/.test(ref)) return false;
@@ -296,7 +438,7 @@ checkPersonalPaths(validatorComments, 'validate.mjs (comments)');
 
 // ── 11) Codex hooks.json 변수·스크립트·컨텍스트 한도 검사 (2026-09-16 조정) ──
 // Codex 플러그인 hook은 ${PLUGIN_ROOT}를 사용한다. additionalContextLimit=0은
-// 내장 잘라내기를 끄므로, 아래 #13의 저장소 자체 10,000자 상한 검사와 반드시 함께 유지한다.
+// 내장 잘라내기를 끄므로, 아래 #13의 저장소 자체 12,000자 상한 검사와 반드시 함께 유지한다.
 try {
   const hooksConfig = JSON.parse(read(pluginPath('hooks/hooks.json')));
   const commandHandlers = [];
@@ -343,9 +485,9 @@ for (const d of DOMAINS) {
 // ── 13) Codex hook 출력 프로젝트 상한 검사 (2026-09-16 조정) ──────────
 // hooks.json의 additionalContextLimit=0은 Codex 내장 잘라내기를 끈다. 페르소나 코어가
 // 중간에서 잘리지 않게 하면서도 출력이 무제한으로 커지지 않도록, 실제 JSON 직렬화 결과에
-// 저장소 자체 10,000자 상한을 적용한다. 정적 파일을 그대로 내보내는 hook이라 빌드 시 검증으로 충분하다.
-const HOOK_OUTPUT_PROJECT_CAP = 10000;
-const HOOK_OUTPUT_WARN_AT = 9000;
+// 저장소 자체 12,000자 상한을 적용한다. 정적 파일을 그대로 내보내는 hook이라 빌드 시 검증으로 충분하다.
+const HOOK_OUTPUT_PROJECT_CAP = REGISTRY.hookSerializedCap ?? 0;
+const HOOK_OUTPUT_WARN_AT = 11400;
 const serializedHookLength = (eventName, text) => JSON.stringify({
   continue: true,
   hookSpecificOutput: { hookEventName: eventName, additionalContext: text },
@@ -359,7 +501,7 @@ for (const [label, length] of HOOK_OUTPUTS) {
   if (length >= HOOK_OUTPUT_PROJECT_CAP)
     err(`hook 직렬화 출력 프로젝트 상한 초과 (${label}): ${length}자 ≥ ${HOOK_OUTPUT_PROJECT_CAP}자`);
   else if (length >= HOOK_OUTPUT_WARN_AT)
-    hookSizeWarnings.push(`${label}: ${length}자 — 프로젝트 상한(${HOOK_OUTPUT_PROJECT_CAP}자)의 90% 이상, 여유 ${HOOK_OUTPUT_PROJECT_CAP - length}자`);
+    hookSizeWarnings.push(`${label}: ${length}자 — 프로젝트 상한(${HOOK_OUTPUT_PROJECT_CAP}자)의 95% 이상, 여유 ${HOOK_OUTPUT_PROJECT_CAP - length}자`);
 }
 if (hookSizeWarnings.length) {
   console.log(`⚠️  hook 출력 프로젝트 상한 근접 경고 ${hookSizeWarnings.length}건 (실패 아님, 여유 있을 때 내용 정리 권장):`);
@@ -379,6 +521,28 @@ const DOMAIN_CORE_HEADINGS = [
   ['K', '전문 변호사 페르소나'],
   ['S', '회계·세무 전문가 페르소나'],
   ['T', '마케팅·세일즈 전문가 페르소나'],
+  ['U', '건축 설계 전문가 페르소나'],
+  ['V', '인테리어 설계 전문가 페르소나'],
+  ['W', '건축·인테리어 시공 전문가 페르소나'],
+  ['X', '건축·인테리어 견적 전문가 페르소나'],
+  ['Y', '건축·인테리어 디자인 디렉터 페르소나'],
+  ['Z', '건축·인테리어 3D 모델링 전문가 페르소나'],
+  ['AA', '건축·인테리어 렌더링·시각화 전문가 페르소나'],
+  ['AC', '건축 디자인 전문가 페르소나'],
+  ['AD', '인테리어 디자인 전문가 페르소나'],
+  ['AE', '자료 검색·출처 검증 전문가'],
+  ['AF', '리서치·분석 전문가'],
+  ['AG', '아이디어·콘셉트 전략 전문가'],
+  ['AH', '프로젝트 매니저'],
+  ['AI', '프로덕트 매니저·프로덕트 오너'],
+  ['AJ', 'PMO·프로젝트 거버넌스 전문가'],
+  ['AK', '프로젝트 분석·운영 코디네이터'],
+  ['AL', '이미지 제작·편집 전문가'],
+  ['AM', '영상 제작·연출 전문가'],
+  ['AN', '영상 편집·후반작업 전문가'],
+  ['AO', '미디어 품질·권리 검수 전문가'],
+  ['AP', '생성형 AI 로컬 워크플로우 엔지니어'],
+  ['AQ', '생성형 AI 플랫폼 운영 전문가'],
 ];
 function extractSection(text, marker, endRe) {
   const start = text.indexOf(marker);
@@ -391,12 +555,12 @@ function extractSection(text, marker, endRe) {
 function wordsFromList(line) {
   return line
     .replace(/\([^)]*\)/g, '') // 괄호 각주 제거 (※ ... 같은 예외 설명)
-    .split(',')
+    .split(/[,;]/)
     .map((w) => w.trim().replace(/[.]+$/, '')) // 문장 끝 마침표 제거(단어 자체엔 마침표 없음)
     .filter(Boolean);
 }
 for (const [letter, coreHeading] of DOMAIN_CORE_HEADINGS) {
-  const triggerSection = extractSection(triggers, `## ${letter}. `, /\n## [A-Z]\. /);
+  const triggerSection = extractSection(triggers, `## ${letter}. `, /\n## [A-Z]+\. /);
   const triggerWordLine = triggerSection && triggerSection.match(/트리거 단어군:\s*([^\n]+)/);
   if (!triggerWordLine) { err(`persona-triggers ${letter}절에서 "트리거 단어군:" 줄을 못 찾음`); continue; }
   const canonicalWords = wordsFromList(triggerWordLine[1]);
@@ -412,6 +576,100 @@ for (const [letter, coreHeading] of DOMAIN_CORE_HEADINGS) {
   for (const w of canonicalWords) {
     if (!coreWords.has(w)) err(`persona_core.md "${coreHeading}" 트리거 누락: "${w}" (persona-triggers ${letter}절엔 있음, 정본이라던 core엔 없음)`);
   }
+}
+
+// ── 14-1) 건축·인테리어 계열의 경계·협업·오발동 안전성 ────────────────
+const BUILT_ENVIRONMENT_DOMAINS = [
+  ['U', 'persona-architectural-designer'],
+  ['V', 'persona-interior-designer'],
+  ['W', 'persona-construction-expert'],
+  ['X', 'persona-cost-estimator'],
+  ['Y', 'persona-design-director'],
+  ['Z', 'persona-spatial-3d-modeling-expert'],
+  ['AA', 'persona-rendering-visualization-expert'],
+  ['AC', 'persona-architectural-design-expert'],
+  ['AD', 'persona-interior-design-expert'],
+];
+const BUILT_COLLAB_REF = 'reference/built_environment_collaboration.md';
+const OVERBROAD_BUILT_TRIGGERS = new Set(['건축', '인테리어', '설계', '시공', '견적', '디자인', '공간', '공사']);
+for (const [letter, skillName] of BUILT_ENVIRONMENT_DOMAINS) {
+  const skillPath = pluginPath(`skills/${skillName}/SKILL.md`);
+  if (!existsSync(P(skillPath))) { err(`건축·인테리어 도메인 skill 누락: ${skillName}`); continue; }
+  const skillText = read(skillPath);
+  if (!skillText.includes(BUILT_COLLAB_REF)) err(`${skillName}에 공통 협업 프로토콜 참조 누락`);
+  if (!skillText.includes('15년+')) err(`${skillName}에 15년+ 경력 기준 누락`);
+
+  const triggerSection = extractSection(triggers, `## ${letter}. `, /\n## [A-Z]+\. /);
+  const triggerWordLine = triggerSection && triggerSection.match(/트리거 단어군:\s*([^\n]+)/);
+  if (!triggerWordLine) continue; // 14번 검사가 상세 오류를 이미 보고한다.
+  const overbroad = wordsFromList(triggerWordLine[1]).filter((w) => OVERBROAD_BUILT_TRIGGERS.has(w));
+  if (overbroad.length) err(`${skillName}의 단독 일반어 트리거가 오발동 위험: ${overbroad.join(', ')}`);
+}
+for (const target of [core, marker]) {
+  if (!target.includes(BUILT_COLLAB_REF)) err(`건축·인테리어 공통 협업 프로토콜이 core/marker에 연결되지 않음`);
+}
+
+const builtCollab = read(pluginPath(BUILT_COLLAB_REF));
+for (const phrase of ['사용자 역량 보정', '업종 경력', '개별 프로그램 숙련도', '설계·시공·견적은 입문', 'Revit·Rhino', '자격자·현장 책임자 확인 필요']) {
+  if (!builtCollab.includes(phrase)) err(`사용자 역량 보정 공통 규칙 누락: ${phrase}`);
+}
+for (const skillName of BUILT_ENVIRONMENT_DOMAINS.map(([, name]) => name)) {
+  const skillText = read(pluginPath(`skills/${skillName}/SKILL.md`));
+  if (!skillText.includes('사용자 역량 보정')) err(`${skillName}에 사용자 역량 보정 연결 누락`);
+}
+for (const [label, target] of [['core', core], ['marker', marker]]) {
+  for (const phrase of ['15년+', '사용자', '숙련']) {
+    if (!target.includes(phrase)) err(`사용자 역량 보정이 ${label}에 불완전함: ${phrase}`);
+  }
+}
+const designDirectorSkill = read(pluginPath('skills/persona-design-director/SKILL.md'));
+const architecturalDesignSkill = read(pluginPath('skills/persona-architectural-design-expert/SKILL.md'));
+const interiorDesignSkill = read(pluginPath('skills/persona-interior-design-expert/SKILL.md'));
+for (const phrase of ['건축디자인', '인테리어디자인', '무드보드']) {
+  if (designDirectorSkill.includes(phrase)) err(`디자인 디렉터에 분야별 트리거 잔존: ${phrase}`);
+}
+for (const phrase of ['건축 디자인', '건축디자인', '매스 디자인', '파사드 디자인']) {
+  if (!architecturalDesignSkill.includes(phrase)) err(`건축 디자인 필수 트리거 누락: ${phrase}`);
+}
+for (const phrase of ['인테리어 디자인', '인테리어디자인', '공간 분위기', '무드보드']) {
+  if (!interiorDesignSkill.includes(phrase)) err(`인테리어 디자인 필수 트리거 누락: ${phrase}`);
+}
+const ySection = extractSection(triggers, '## Y. ', /\n## [A-Z]+\. /);
+for (const phrase of ['건축디자인', '인테리어디자인', '무드보드']) {
+  if (ySection?.includes(phrase)) err(`Y 디자인 디렉터 패턴에 분야별 트리거 잔존: ${phrase}`);
+}
+
+for (const [label, target] of [['core', core], ['marker', marker]]) {
+  for (const phrase of ['디자인 의도', '#23', '#24']) {
+    if (!target.includes(phrase)) err('도면 디자인 라우팅이 ' + label + '에 불완전함: ' + phrase);
+  }
+}
+const builtCollaboration = read(pluginPath('reference/built_environment_collaboration.md'));
+if (builtCollaboration.includes('결과물: 렌더링·시각화 + 디자인 디렉터')) {
+  err('렌더 결과물이 #20 디자인 디렉터에 무조건 라우팅됨');
+}
+
+const modelingSkill = read(pluginPath('skills/persona-spatial-3d-modeling-expert/SKILL.md'));
+const renderingSkill = read(pluginPath('skills/persona-rendering-visualization-expert/SKILL.md'));
+for (const phrase of ['데이터 모델링', 'DB 모델링', 'AI 모델']) {
+  if (!modelingSkill.includes(phrase)) err(`3D 모델링 충돌 제외 규칙 누락: ${phrase}`);
+}
+for (const phrase of ['React 렌더링', '웹 렌더링', '브라우저 렌더']) {
+  if (!renderingSkill.includes(phrase)) err(`렌더링 충돌 제외 규칙 누락: ${phrase}`);
+}
+for (const phrase of ['Revit', '레빗', 'Rhino', '라이노']) {
+  if (!modelingSkill.includes(phrase)) err(`확정 3D 도구 트리거 누락: ${phrase}`);
+}
+
+const drawingSection = extractSection(triggers, '## AB. ', /\n## [A-Z]+\. /);
+for (const phrase of ['도면', '도면 관련 작업', 'CAD', 'DWG', '평면도', '입면도', '단면도', '상세도', '시공도', '샵드로잉', '준공도면']) {
+  if (!drawingSection?.includes(phrase)) err(`도면 라우팅 AB 필수 트리거 누락: ${phrase}`);
+}
+for (const [label, target] of [['core', core], ['marker', marker]]) {
+  if (!target.includes('도면') || !target.includes('AB')) err(`도면 라우팅이 ${label}에 연결되지 않음`);
+}
+for (const phrase of ['제품', '기계', '전자회로']) {
+  if (!drawingSection?.includes(phrase)) err(`도면 라우팅 비건축 제외 규칙 누락: ${phrase}`);
 }
 
 // ── 15) 페르소나 스킬 폴더명 안전성 검사 (2026-09-01 추가) ──────────────────

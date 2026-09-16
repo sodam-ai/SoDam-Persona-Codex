@@ -1,7 +1,6 @@
 name: validate
 
-# SoDam-Persona 정합성 검사 — push/PR마다 validate.mjs 자동 실행.
-# 관점 수 드리프트·스킬 수 불일치·도메인 배선 누락·JSON 오류가 main에 못 올라오게 차단.
+# SoDam-Persona 정합성·실행 회귀 검사 — push/PR마다 자동 실행.
 on:
   push:
     branches: [main]
@@ -23,5 +22,9 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '20'
-      - name: 정합성 검사 (node validate.mjs)
+      - name: 정합성 검사
         run: node validate.mjs
+      - name: hook 실행 회귀 테스트
+        run: node --test test-hooks.mjs
+      - name: validator 실패 감지 테스트
+        run: node --test test-validator.mjs

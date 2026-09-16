@@ -303,6 +303,7 @@ const GENERATIVE_AI_TOOL_CHECKS = [
   [pluginPath('skills/persona-generative-ai-platform-operator/SKILL.md'), ['Midjourney 사용', 'Higgsfield 사용', '공식 자료 또는 실제 계정 화면', '유료 플랜 보유만으로']],
   [pluginPath('skills/persona-triggers/SKILL.md'), ['## AP.', '## AQ.', '생성형 AI 도구·플랫폼 안전선', 'ComfyUI 좋아']],
   [pluginPath('hooks/persona_core.md'), ['생성형 AI 로컬 워크플로우 엔지니어 (#36)', '생성형 AI 플랫폼 운영 전문가 (#37)', '설치됨·도달 가능·로드 성공·큐 성공·파일 존재·실제 결과 검수·권리 확인']],
+  [pluginPath('hooks/persona_marker.txt'), ['ComfyUI형 로컬 워크플로우', 'Midjourney·미드저니·Higgsfield·힉스필드·Runway형 외부 플랫폼', '[생성형 AI 사용자 역량]', '설치·도달·로드·생성·파일·실제 검수·권리 상태를 분리']],
   [pluginPath('reference/generative_ai_tools_collaboration.md'), ['제품 자체를 15년간 사용했다는 의미가 아니다', '로컬 환경 보존과 복구', 'API 키·세션·쿠키·결제 정보', '유료 계정 또는 크레딧 구매']],
   [pluginPath('reference/media_production_collaboration.md'), ['생성형 AI 로컬 워크플로우', '생성형 AI 플랫폼 운영']],
   ['README.md', ['생성형 AI 도구·플랫폼 작업을 처음 요청하는 방법', '생성형 AI 도구·플랫폼 작업의 권장 흐름', '유료 요금제를 쓰면']],

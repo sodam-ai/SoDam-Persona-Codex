@@ -284,12 +284,12 @@ documents together).</p>
 this way, answer this way" rule documents on top of the conversational
 ability Codex already has. It consists of 2 always-on core rules
 (<strong>hooks</strong> — small programs that run automatically at a
-specific moment) and 25 conditional expert knowledge modules
+specific moment) and 29 conditional expert knowledge modules
 (<strong>skills</strong>) that load only when relevant.</p>
 <blockquote>
-<p><strong>Current version</strong>: <code>1.8.0</code> ·
-<strong>Perspectives</strong>: 31 · <strong>Trigger patterns</strong>:
-37 patterns (A-AK) · <strong>Skills</strong>: 25 ·
+<p><strong>Current version</strong>: <code>1.9.0</code> ·
+<strong>Perspectives</strong>: 35 · <strong>Trigger patterns</strong>:
+41 patterns (A-AO) · <strong>Skills</strong>: 29 ·
 <strong>Hooks</strong>: 2 · <strong>License</strong>: Apache License
 2.0</p>
 </blockquote>
@@ -750,6 +750,52 @@ facts from assumptions and ask for the missing inputs first. Images, 3D
 models, and renders support decisions; they do not replace permit
 documents, structural calculations, fire-safety design, fabrication/shop
 drawings, construction drawings, or a final estimate.</p>
+<h3 id="how-to-request-image-or-video-work-for-the-first-time">How to
+request image or video work for the first time</h3>
+<p>Image and video work has separate ideation, production, editing, and
+review stages. A bare “image” or “video” prompt triggers one
+clarification; state the intended result to route directly.</p>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Example request</th>
+<th>Lead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Generate, composite, or retouch an image</td>
+<td>“Preserve the source render, composite this image, and upscale it to
+4K”</td>
+<td>#32; #22 joins for 3D scene settings</td>
+</tr>
+<tr>
+<td>Plan a video concept, storyboard, and shots</td>
+<td>“Create a 30-second storyboard and camera path for this cafe
+walkthrough”</td>
+<td>#33; #21+#22 join for 3D model/render work</td>
+</tr>
+<tr>
+<td>Edit cuts, captions, audio, color, and output</td>
+<td>“Edit this as a vertical short, then check captions, loudness, and
+export settings”</td>
+<td>#34</td>
+</tr>
+<tr>
+<td>Review actual quality, provenance, and rights</td>
+<td>“Inspect the actual image/video and document commercial-use evidence
+for music, fonts, and models”</td>
+<td>#35; #11 joins for legal interpretation</td>
+</tr>
+</tbody>
+</table>
+<p>Provide the purpose, platform, aspect ratio, image size or video
+duration/FPS, source files, protected elements, software and version,
+proficiency in that specific software, deadline, and rights status when
+known. Architectural/interior 3D experience does not imply expert
+proficiency in every image or video tool. Successful generation/export
+and actual visual/audio review remain separate states.</p>
 <h3 id="checking-which-skills-are-available">Checking which skills are
 available</h3>
 <p>In Codex CLI and the IDE extension, type <code>/skills</code>, or
@@ -941,9 +987,29 @@ delivery (#28)</td>
 traceability (#31)</td>
 </tr>
 <tr>
+<td><code>$persona-image-production-expert &lt;text&gt;</code></td>
+<td>Image generation, retouching, compositing, background removal, and
+upscaling perspective (#32)</td>
+</tr>
+<tr>
+<td><code>$persona-video-production-director &lt;text&gt;</code></td>
+<td>Video concept, storyboard, shots, camera movement, and generation
+perspective (#33)</td>
+</tr>
+<tr>
+<td><code>$persona-video-post-production-expert &lt;text&gt;</code></td>
+<td>Editing, captions, audio, grading, and encoding perspective
+(#34)</td>
+</tr>
+<tr>
+<td><code>$persona-media-quality-rights-reviewer &lt;text&gt;</code></td>
+<td>Image/video quality, provenance, consent, and license-review
+perspective (#35)</td>
+</tr>
+<tr>
 <td><code>$persona-create</code></td>
 <td>Add a domain persona through an interview. Under the current
-numbering, the next perspective starts at #32</td>
+numbering, the next perspective starts at #36</td>
 </tr>
 <tr>
 <td><code>$persona-edit</code></td>
@@ -1018,7 +1084,7 @@ procedure</td>
 <td>Major work involving security, money, deployment, or irreversible
 actions</td>
 <td><code>persona-format</code> + <code>persona-triggers</code> +
-<code>persona-safety</code> all activate, plus a full review by all 31
+<code>persona-safety</code> all activate, plus a full review by all 35
 perspectives</td>
 </tr>
 </tbody>
@@ -1043,7 +1109,9 @@ architecture/interiors/construction/cost/design/3D/rendering → #16-#24,
 source search/verification → #25, research/analysis → #26,
 ideation/concept strategy → #27, project delivery → #28, product
 value/backlog → #29, PMO/governance → #30, and project
-analysis/operations → #31</li>
+analysis/operations → #31, image production/editing → #32, video
+production/direction → #33, video editing/post-production → #34, and
+media quality/rights review → #35</li>
 <li><strong>Fully activate a single perspective</strong> — "security"
 alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone →
 #4, "AI"/"agent"/"MCP" alone → #6</li>
@@ -1051,16 +1119,16 @@ alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone →
 "evidence", "source", "example", "fact" etc. → present real evidence and
 clearly separate speculation from confirmed fact</li>
 </ol>
-<p>These trigger words are organized into 37 patterns (A-AK), and the
+<p>These trigger words are organized into 41 patterns (A-AO), and the
 full word lists plus the priority order for conflicts all live in the
 <code>persona-triggers</code> skill. Priority summary: <strong>length
 constraints (e.g. "briefly") &gt; intensity (e.g. "in depth") &gt;
 domain expert &gt; single perspective &gt; additional
 skill.</strong></p>
 <h3
-id="31-perspectives--the-expert-checklist-reviewed-before-every-answer">31
+id="35-perspectives--the-expert-checklist-reviewed-before-every-answer">35
 perspectives — the expert checklist reviewed before every answer</h3>
-<p>For every response at L1 or above, 3-5 of the 31 perspectives below
+<p>For every response at L1 or above, 3-5 of the 35 perspectives below
 that are relevant to the task are briefly reviewed internally before
 answering — automatically, even without a trigger word. This does not
 apply to L0 small talk or "briefly"-style requests.</p>
@@ -1242,11 +1310,35 @@ change control</td>
 <td>Tracking meetings, decisions, actions, requirements, status data,
 and handoffs</td>
 </tr>
+<tr>
+<td>32</td>
+<td>Image production and editing specialist (15+ years)</td>
+<td>Image generation, retouching, compositing, background removal,
+upscaling, and output</td>
+</tr>
+<tr>
+<td>33</td>
+<td>Video production and direction specialist (15+ years)</td>
+<td>Video concept, storyboard, shots, cameras, capture, AI generation,
+and continuity</td>
+</tr>
+<tr>
+<td>34</td>
+<td>Video editing and post-production specialist (15+ years)</td>
+<td>Cuts, captions, audio, grading, compositing, encoding, and
+deliverables</td>
+</tr>
+<tr>
+<td>35</td>
+<td>Media quality and rights reviewer (15+ years)</td>
+<td>Technical quality, AI errors, continuity, provenance, consent, and
+licensing</td>
+</tr>
 </tbody>
 </table>
-<h3 id="20-domain-experts--conditionally-going-deep">20 domain experts —
+<h3 id="24-domain-experts--conditionally-going-deep">24 domain experts —
 conditionally going deep</h3>
-<p>Among the 31 perspectives above, #11 and #13 through #31 each have
+<p>Among the 35 perspectives above, #11 and #13 through #35 each have
 their own dedicated skill, which loads much deeper knowledge when a
 related trigger is detected.</p>
 <ul>
@@ -1333,6 +1425,22 @@ control, change control, and auditability.</li>
 <code>persona-project-analyst-coordinator</code>)</strong>: Tracks
 meetings, decisions, actions, requirements, status data, documents, and
 handoffs by source and approval state.</li>
+<li><strong>Image production and editing specialist (#32,
+<code>persona-image-production-expert</code>)</strong>: Handles AI image
+generation, photo/render retouching, compositing, background removal,
+upscaling, and visual inspection of the actual result.</li>
+<li><strong>Video production and direction specialist (#33,
+<code>persona-video-production-director</code>)</strong>: Designs
+purpose, concept, storyboard, shots, camera movement, capture or AI
+generation, and scene continuity.</li>
+<li><strong>Video editing and post-production specialist (#34,
+<code>persona-video-post-production-expert</code>)</strong>: Handles
+cuts, captions, audio, grading, compositing, encoding, master files, and
+platform deliverables.</li>
+<li><strong>Media quality and rights reviewer (#35,
+<code>persona-media-quality-rights-reviewer</code>)</strong>: Reviews
+actual file quality, AI errors, playback, sync, continuity, provenance,
+consent, and licenses, and hands legal interpretation to #11.</li>
 </ul>
 <p><code>Drawing</code>, <code>drawing work</code>, <code>CAD</code>,
 <code>DWG</code>, floor plans, detail drawings, and shop drawings
@@ -1404,7 +1512,7 @@ an ordinary conversation (every session)</h3>
        ▼
 6. Matching skills load conditionally
    (whichever of persona-triggers / persona-format / persona-safety /
-    whichever of the 20 domain skills apply)
+    whichever of the 24 domain skills apply)
        │
        ▼
 7. L2/L3 responses follow the 7-step response format (recap → root cause →
@@ -1462,6 +1570,20 @@ approved deliverable for the next. Each handoff must re-check the
 required dimensions, performance, attributes, approvals, and price
 basis: mood board to finish schedule, render to construction drawing, 3D
 model to BIM deliverable, or preliminary estimate to contract price.</p>
+<h3 id="recommended-workflow-for-image-and-video-work">Recommended
+workflow for image and video work</h3>
+<pre class="text"><code>1. Confirm purpose, platform, audience, and completion criteria
+   → 2. Check source files, provenance, rights, software, and proficiency
+   → 3. Set size, aspect ratio, duration, FPS, codec, and audio specifications
+   → 4. Use #32 for images or #33 for video planning/production
+   → 5. Use #34 for video post-production
+   → 6. Use #35 to inspect the actual picture, playback, sound, and rights evidence
+   → 7. Preserve master/distribution files, settings, sources, and approvals</code></pre>
+<p>A generation or export log alone is not completion evidence. Inspect
+images at full and delivery size; play the video or inspect
+representative frames, audio, and metadata. Label anything unavailable
+for inspection as <code>unreviewed</code>, and any unsupported rights
+claim as <code>unverified</code>.</p>
 <h3 id="the-flow-for-adding-a-new-domain-persona-persona-create">The
 flow for adding a new domain persona (<code>$persona-create</code>)</h3>
 <pre class="text"><code>1. Call $persona-create
@@ -1552,7 +1674,7 @@ Codex versions.</p>
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 response format
     │   ├── persona-safety/SKILL.md       # Always-on security rules, irreversible-action gate
-    │   ├── persona-triggers/SKILL.md     # Full A-AK trigger-word detail and the 31-perspective mapping table
+    │   ├── persona-triggers/SKILL.md     # Full A-AO trigger-word detail and the 35-perspective mapping table
     │   ├── persona-investor/SKILL.md     # #13 professional investor domain
     │   ├── persona-lawyer/SKILL.md       # #11 professional lawyer domain
     │   ├── persona-accountant/SKILL.md   # #14 accounting/tax specialist domain
@@ -1573,6 +1695,10 @@ Codex versions.</p>
     │   ├── persona-product-owner/SKILL.md # #29 product value and backlog domain
     │   ├── persona-pmo-governance-expert/SKILL.md # #30 PMO and governance domain
     │   ├── persona-project-analyst-coordinator/SKILL.md # #31 project analysis and operations domain
+    │   ├── persona-image-production-expert/SKILL.md # #32 image production and editing domain
+    │   ├── persona-video-production-director/SKILL.md # #33 video planning and direction domain
+    │   ├── persona-video-post-production-expert/SKILL.md # #34 video post-production domain
+    │   ├── persona-media-quality-rights-reviewer/SKILL.md # #35 media quality and rights review domain
     │   ├── persona-create/SKILL.md       # Entry point for the new-persona creation interview
     │   └── persona-edit/SKILL.md         # Entry point for the trigger-editing interview
     ├── commands/
@@ -1580,7 +1706,8 @@ Codex versions.</p>
     │   └── edit.md                       # The procedure persona-edit reads and follows
     └── reference/
         ├── persona_full_core.md          # The full persona definition (for full L3 activation / session recovery)
-        ├── built_environment_collaboration.md # Shared inputs, handoffs, and conflict rules
+        ├── built_environment_collaboration.md
+        ├── media_production_collaboration.md # Shared inputs, handoffs, and conflict rules
         └── test_scenarios.md             # A set of sample utterances for verifying trigger behavior</code></pre>
 <p>The <code>commands/</code> folder preserves the original Claude Code
 workflow text as an internal reference. Codex does not run these as
@@ -1609,12 +1736,12 @@ entry</td>
 </tr>
 <tr>
 <td>2</td>
-<td>Labels such as "31 people" and "31 perspectives" match the actual
+<td>Labels such as "35 people" and "35 perspectives" match the actual
 count in every core file, skill, and README</td>
 </tr>
 <tr>
 <td>3</td>
-<td>The documented A-AK trigger-pattern count matches the actual section
+<td>The documented A-AO trigger-pattern count matches the actual section
 count</td>
 </tr>
 <tr>
@@ -1625,7 +1752,7 @@ English README cross-checks)</td>
 </tr>
 <tr>
 <td>5</td>
-<td>All 20 domain personas are wired into the core and marker, while
+<td>All 24 domain personas are wired into the core and marker, while
 both READMEs agree on domain counts, explicit invocations, and
 major-section structure</td>
 </tr>
@@ -1638,7 +1765,7 @@ paths</td>
 <tr>
 <td>7</td>
 <td>Required disclaimers, qualified-review boundaries, and non-final
-estimate wording exist for all 20 domains</td>
+estimate wording exist for all 24 domains</td>
 </tr>
 <tr>
 <td>8</td>
@@ -1831,7 +1958,7 @@ that passes this check.</p>
 <code>persona_marker.txt</code></td>
 </tr>
 <tr>
-<td>All 25 skills</td>
+<td>All 29 skills</td>
 <td><code>plugins/sodam-persona/skills/persona-*/SKILL.md</code></td>
 </tr>
 <tr>
@@ -1839,8 +1966,8 @@ that passes this check.</p>
 <td><code>plugins/sodam-persona/skills/persona-triggers/SKILL.md</code></td>
 </tr>
 <tr>
-<td>Details for all 20 domain experts</td>
-<td>The 20 domain-specific <code>persona-*</code> folders under
+<td>Details for all 24 domain experts</td>
+<td>The 24 domain-specific <code>persona-*</code> folders under
 <code>plugins/sodam-persona/skills/</code></td>
 </tr>
 <tr>
@@ -1890,6 +2017,22 @@ downloads this plugin, so this document does not cover it.</p>
 <h2 id="changelog-summary">Changelog Summary</h2>
 <p>Listed with the most recent entries at the top. Click (or tap) an
 item to expand its details.</p>
+<details>
+<summary><strong>2026-09-16 — Split image and video production responsibilities (v1.9.0)</strong></summary>
+
+<ul>
+<li>Added image production/editing (#32), video production/direction
+(#33), video editing/post-production (#34), and media quality/rights
+review (#35).</li>
+<li>Separated 3D render setup (#22), still-image finishing (#32),
+walkthrough direction (#33), video output (#34), and actual
+quality/rights review (#35).</li>
+<li>Added regression protection against bare image/video/render false
+positives, assumed software expertise, and treating successful
+generation/export as actual review.</li>
+</ul>
+</details>
+
 <details>
 <summary><strong>2026-09-16 — Split project-management responsibilities (v1.8.0)</strong></summary>
 
@@ -2241,6 +2384,22 @@ cases,” or “propose evidence-based alternatives,” or invoke the relevant
 skill directly</td>
 </tr>
 <tr>
+<td>Image/video work only activates general design or rendering
+roles</td>
+<td>The install cache predates v1.9.0, or the prompt only says
+image/video without an action</td>
+<td>Reinstall and ask for image compositing, walkthrough storyboards,
+video editing, or quality/license review, or invoke #32-#35</td>
+</tr>
+<tr>
+<td>Generation/export succeeds, but the output is broken or will not
+play</td>
+<td>A completion message was mistaken for actual visual/audio
+review</td>
+<td>View the image and play the video through while checking sync,
+captions, and loudness before marking it complete</td>
+</tr>
+<tr>
 <td>A project-management request only uses #9, or #28-#31 do not
 appear</td>
 <td>The installation cache predates v1.8.0, or the request only used an
@@ -2376,6 +2535,18 @@ guaranteed.</p>
 The plugin is designed to be self-contained, so it behaves identically
 on a brand-new computer with nothing more than a fresh install — no
 separate personal config files or memory needed.</p>
+<p><strong>Q. What is the difference among image production (#32), video
+direction (#33), video post-production (#34), and media review
+(#35)?</strong> A. #32 creates and finishes still images. #33 designs
+the message, storyboard, shots, camera movement, and source generation.
+#34 edits cuts, captions, audio, color, and deliverables. #35 reviews
+actual quality and evidence for provenance, consent, and licenses. #22
+owns 3D render-scene settings.</p>
+<p><strong>Q. Is an image or video complete as soon as a file is
+generated?</strong> A. No. Inspect the actual image and play the video.
+Anything not inspected is unreviewed. If provenance, consent, music,
+font, or model licensing is unclear, public, advertising, sales, or
+client-delivery use cannot be confirmed.</p>
 <p><strong>Q. What is the difference among the project manager (#28),
 product owner (#29), PMO (#30), and project analysis/operations
 (#31)?</strong> A. #28 integrates schedule, budget, resources, and risks
@@ -2430,7 +2601,7 @@ switches it to a short format immediately. This rule has the highest
 priority of all.</p>
 <p><strong>Q. I actually want it to go deeper and more
 thorough.</strong> A. Using expressions like "objectively", "in depth",
-"thoroughly", or "full persona version" brings all 31 perspectives into
+"thoroughly", or "full persona version" brings all 35 perspectives into
 the review.</p>
 <p><strong>Q. I found a bug or something misbehaving. Where do I report
 it?</strong> A. Please report it through the repository's GitHub Issues

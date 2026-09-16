@@ -131,7 +131,7 @@ for (const f of ['README.md']) {
 }
 
 // ── 5) 도메인 페르소나 배선 (core 파일맵 · marker 파일맵에 모두 존재) ────
-const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director', 'persona-spatial-3d-modeling-expert', 'persona-rendering-visualization-expert', 'persona-architectural-design-expert', 'persona-interior-design-expert', 'persona-source-verification-expert', 'persona-research-analyst', 'persona-ideation-strategist', 'persona-project-manager', 'persona-product-owner', 'persona-pmo-governance-expert', 'persona-project-analyst-coordinator'];
+const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director', 'persona-spatial-3d-modeling-expert', 'persona-rendering-visualization-expert', 'persona-architectural-design-expert', 'persona-interior-design-expert', 'persona-source-verification-expert', 'persona-research-analyst', 'persona-ideation-strategist', 'persona-project-manager', 'persona-product-owner', 'persona-pmo-governance-expert', 'persona-project-analyst-coordinator', 'persona-image-production-expert', 'persona-video-production-director', 'persona-video-post-production-expert', 'persona-media-quality-rights-reviewer'];
 const core = read(pluginPath('hooks/persona_core.md'));
 const marker = read(pluginPath('hooks/persona_marker.txt'));
 for (const d of DOMAINS) {
@@ -185,7 +185,7 @@ if (koH2Count !== enH2Count)
   err('한영 README 주요 목차 수 불일치: KO ' + koH2Count + ' ≠ EN ' + enH2Count);
 
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
-const EXPECTED_PLUGIN_VERSION = '1.8.0';
+const EXPECTED_PLUGIN_VERSION = '1.9.0';
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
 const manifestPaths = [
   pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
@@ -279,6 +279,23 @@ for (const [f, phrases] of PROJECT_MANAGEMENT_CHECKS) {
   for (const phrase of phrases) if (!text.includes(phrase)) err(`프로젝트관리 안전장치 누락 (${f}): "${phrase}"`);
 }
 if (!triggers.includes('| 9 | 시니어 기획·요구사항 라우터 |')) err('#9가 기획·요구사항 라우터로 축소되지 않음');
+
+
+// ── 7-3) 이미지·영상 역할 경계·실제 결과 검수·권리 안전성 검사 ────────
+const MEDIA_PRODUCTION_CHECKS = [
+  [pluginPath('skills/persona-image-production-expert/SKILL.md'), ['원본 보존', '실제 결과 이미지', '언급되거나 첨부됐다는 이유로 자동 활성하지 않는다']],
+  [pluginPath('skills/persona-video-production-director/SKILL.md'), ['스토리보드', '작은 테스트 샷', '프로그램 숙련도', '어느 목적이 필요한지 확인한다']],
+  [pluginPath('skills/persona-video-post-production-expert/SKILL.md'), ['실제 재생', '내보내기 성공 메시지', '마스터와 플랫폼별 배포본']],
+  [pluginPath('skills/persona-media-quality-rights-reviewer/SKILL.md'), ['미검수', '법률 판단', '공개·광고·판매·고객 납품']],
+  [pluginPath('skills/persona-triggers/SKILL.md'), ['## AL.', '## AM.', '## AN.', '## AO.', '미디어 중의어 안전선', 'React 이미지 컴포넌트 오류']],
+  [pluginPath('hooks/persona_core.md'), ['이미지·사진·영상·비디오 단독 언급', '정지 결과 보정=#32', '실제 전체 재생']],
+  [pluginPath('reference/media_production_collaboration.md'), ['사용자 역량 보정', '실제 파일을 열어 화면·소리를 검수', '파일 보유 사실', '딥페이크']],
+];
+for (const [f, phrases] of MEDIA_PRODUCTION_CHECKS) {
+  if (!existsSync(P(f))) { err(`미디어 검사 대상 파일 없음: ${f}`); continue; }
+  const text = read(f);
+  for (const phrase of phrases) if (!text.includes(phrase)) err(`미디어 안전장치 누락 (${f}): "${phrase}"`);
+}
 
 // ── 8) HTML 4개 동기화 경고 (소프트 — exit code에 영향 없음, 2026-07-26 추가) ──
 // 근거: HTML은 build-docs.mjs(pandoc)로 md에서 재생성되는 산출물이라 정본이 아님.
@@ -481,6 +498,10 @@ const DOMAIN_CORE_HEADINGS = [
   ['AI', '프로덕트 매니저·프로덕트 오너'],
   ['AJ', 'PMO·프로젝트 거버넌스 전문가'],
   ['AK', '프로젝트 분석·운영 코디네이터'],
+  ['AL', '이미지 제작·편집 전문가'],
+  ['AM', '영상 제작·연출 전문가'],
+  ['AN', '영상 편집·후반작업 전문가'],
+  ['AO', '미디어 품질·권리 검수 전문가'],
 ];
 function extractSection(text, marker, endRe) {
   const start = text.indexOf(marker);

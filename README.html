@@ -280,11 +280,11 @@ plugin — 원래 프로그램에 기능을 더해주는 작은 추가 프로그
 능력 위에 "이렇게 판단하고 이렇게 답하라"는 규칙 문서를 자동으로
 얹어주는 설정 모음입니다. 항상 켜지는 핵심 규칙(hook, 후크 — 특정 시점에
 자동으로 실행되는 작은 프로그램) 2개와, 상황에 맞을 때만 불러오는 전문
-지식 모음(skill, 스킬) 25개로 이루어져 있습니다.</p>
+지식 모음(skill, 스킬) 29개로 이루어져 있습니다.</p>
 <blockquote>
-<p><strong>지금 버전</strong>: <code>1.8.0</code> · <strong>관점
-수</strong>: 31명 · <strong>트리거 패턴</strong>: 37개(A~AK) ·
-<strong>스킬 수</strong>: 25개 · <strong>hook 수</strong>: 2개 ·
+<p><strong>지금 버전</strong>: <code>1.9.0</code> · <strong>관점
+수</strong>: 35명 · <strong>트리거 패턴</strong>: 41개(A~AO) ·
+<strong>스킬 수</strong>: 29개 · <strong>hook 수</strong>: 2개 ·
 <strong>라이선스</strong>: Apache License 2.0</p>
 </blockquote>
 <hr />
@@ -712,6 +712,49 @@ Cinema 4D, D5, Twinmotion, Unreal, Unity 등</li>
 질문을 먼저 해야 합니다. 이미지·3D 모델·렌더는 의사결정 자료이며,
 허가도서·구조 계산·소방 설계·제작도·시공도·확정 견적을 대신하지
 않습니다.</p>
+<h3 id="이미지영상-작업을-처음-요청하는-방법">이미지·영상 작업을 처음
+요청하는 방법</h3>
+<p>이미지와 영상은 아이디어·제작·편집·검수가 서로 다른 단계입니다.
+“이미지”나 “영상”만 말하면 목적을 한 번 확인하며, 원하는 결과를
+구체적으로 적으면 해당 역할이 바로 작동합니다.</p>
+<table>
+<thead>
+<tr>
+<th>하고 싶은 작업</th>
+<th>자연어 요청 예시</th>
+<th>주도 역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>이미지 생성·합성·보정</td>
+<td>“이 렌더 이미지를 원본은 보존하면서 합성하고 4K로 업스케일해줘”</td>
+<td>#32. 3D 장면 설정 변경은 #22 협업</td>
+</tr>
+<tr>
+<td>영상 콘셉트·스토리보드·샷</td>
+<td>“카페 워크스루 영상의 30초 스토리보드와 카메라 동선을 짜줘”</td>
+<td>#33. 3D 모델·렌더는 #21+#22 협업</td>
+</tr>
+<tr>
+<td>컷·자막·음향·색보정·출력</td>
+<td>“이 영상을 세로형 숏폼으로 편집하고 자막·음량·출력 사양을
+맞춰줘”</td>
+<td>#34</td>
+</tr>
+<tr>
+<td>실제 품질·출처·권리 확인</td>
+<td>“이미지와 영상을 실제로 검수하고 음원·폰트·모델의 상업적 이용 근거를
+정리해줘”</td>
+<td>#35, 법률 판단은 #11 협업</td>
+</tr>
+</tbody>
+</table>
+<p>처음 요청할 때 목적·플랫폼·화면비·크기 또는 길이·FPS·원본·유지할
+요소·사용 프로그램과 버전·프로그램별 숙련도·마감·권리 상태를 가능한 만큼
+알려주세요. 3D 시각화 경력만으로 이미지·영상 프로그램 전체를 전문가
+수준으로 가정하지 않습니다. 생성·내보내기 성공과 실제 화면·소리 검수도
+구분합니다.</p>
 <h3 id="사용-가능한-skill-목록-확인">사용 가능한 skill 목록 확인</h3>
 <p>Codex CLI와 IDE 확장에서는 <code>/skills</code>라고 입력하거나,
 <code>$</code>만 입력하면 지금 쓸 수 있는 skill 목록이 화면에
@@ -883,9 +926,25 @@ Cinema 4D, D5, Twinmotion, Unreal, Unity 등</li>
 <td>회의·결정·액션·요구사항·상태 데이터 추적 관점(#31)</td>
 </tr>
 <tr>
+<td><code>$persona-image-production-expert &lt;내용&gt;</code></td>
+<td>이미지 생성·보정·합성·배경 제거·업스케일 관점(#32)</td>
+</tr>
+<tr>
+<td><code>$persona-video-production-director &lt;내용&gt;</code></td>
+<td>영상 콘셉트·스토리보드·샷·카메라·생성 관점(#33)</td>
+</tr>
+<tr>
+<td><code>$persona-video-post-production-expert &lt;내용&gt;</code></td>
+<td>컷·자막·음향·색보정·인코딩 관점(#34)</td>
+</tr>
+<tr>
+<td><code>$persona-media-quality-rights-reviewer &lt;내용&gt;</code></td>
+<td>이미지·영상 품질·출처·동의·라이선스 검수 관점(#35)</td>
+</tr>
+<tr>
 <td><code>$persona-create</code></td>
 <td>인터뷰 방식으로 새 도메인 페르소나를 추가. 현재 번호 체계에서는 다음
-관점이 #32부터 시작</td>
+관점이 #36부터 시작</td>
 </tr>
 <tr>
 <td><code>$persona-edit</code></td>
@@ -951,7 +1010,7 @@ Cinema 4D, D5, Twinmotion, Unreal, Unity 등</li>
 <td><strong>L3</strong></td>
 <td>보안·금전·배포·되돌릴 수 없는 작업이 섞인 중대 작업</td>
 <td><code>persona-format</code> + <code>persona-triggers</code> +
-<code>persona-safety</code> 전부 활성화 + 31명 관점 전원 검토</td>
+<code>persona-safety</code> 전부 활성화 + 35명 관점 전원 검토</td>
 </tr>
 </tbody>
 </table>
@@ -971,7 +1030,8 @@ L2·L3로</li>
 회계·세무 → #14, 마케팅 → #15, 건축·인테리어·시공·견적·디자인·3D·렌더링
 → #16~#24, 자료 검색·출처 검증 → #25, 리서치·분석 → #26, 아이디어·콘셉트
 → #27, 프로젝트 실행관리 → #28, 제품 가치·백로그 → #29, PMO·거버넌스 →
-#30, 프로젝트 분석·운영 → #31</li>
+#30, 프로젝트 분석·운영 → #31, 이미지 제작·편집 → #32, 영상 제작·연출 →
+#33, 영상 편집·후반작업 → #34, 미디어 품질·권리 검수 → #35</li>
 <li><strong>단일 관점 전면 활성화</strong> — "보안" 단독 → #2,
 "디자인"/"UI" 단독 → #7, "UX" 단독 → #8, "테스트" 단독 → #4,
 "AI"/"에이전트"/"MCP" 단독 → #6</li>
@@ -979,15 +1039,15 @@ L2·L3로</li>
 "출처", "사례", "팩트" 등 → 실제 근거를 제시하고 추측과 사실을 구분해서
 표기</li>
 </ol>
-<p>이 트리거 단어들은 37개의 패턴 그룹(A~AK)으로 정리되어 있으며, 자세한
+<p>이 트리거 단어들은 41개의 패턴 그룹(A~AO)으로 정리되어 있으며, 자세한
 단어 목록과 충돌 시 우선순위는 <code>persona-triggers</code> skill에
 전부 정리되어 있습니다. 우선순위 요약: <strong>분량 제약(간단히 등) &gt;
 강도(깊게 등) &gt; 도메인 전문가 &gt; 단일 관점 &gt; 추가
 skill.</strong></p>
 <h3
-id="31명의-관점--매-응답-전-자동으로-검토되는-전문가-체크리스트">31명의
+id="35명의-관점--매-응답-전-자동으로-검토되는-전문가-체크리스트">35명의
 관점 — 매 응답 전 자동으로 검토되는 전문가 체크리스트</h3>
-<p>L1 이상의 모든 응답에서, 아래 31개 관점 중 그 작업과 관련 있는
+<p>L1 이상의 모든 응답에서, 아래 35개 관점 중 그 작업과 관련 있는
 3~5개를 짧게라도 내부적으로 검토한 뒤 답합니다(트리거 단어가 없어도 자동
 적용됩니다). L0 잡담이나 "간단히"류 요청에는 적용되지 않습니다.</p>
 <table>
@@ -1155,11 +1215,31 @@ id="31명의-관점--매-응답-전-자동으로-검토되는-전문가-체크�
 <td>프로젝트 분석·운영 코디네이터(15년+)</td>
 <td>회의·결정·액션·요구사항·상태 데이터·인수인계를 추적하는 작업</td>
 </tr>
+<tr>
+<td>32</td>
+<td>이미지 제작·편집 전문가(15년+)</td>
+<td>이미지 생성·보정·합성·배경 제거·업스케일과 출력 작업</td>
+</tr>
+<tr>
+<td>33</td>
+<td>영상 제작·연출 전문가(15년+)</td>
+<td>영상 콘셉트·스토리보드·샷·카메라·촬영·AI 생성 작업</td>
+</tr>
+<tr>
+<td>34</td>
+<td>영상 편집·후반작업 전문가(15년+)</td>
+<td>컷·자막·음향·색보정·합성·인코딩·납품본 작업</td>
+</tr>
+<tr>
+<td>35</td>
+<td>미디어 품질·권리 검수 전문가(15년+)</td>
+<td>기술 품질·AI 오류·연속성·출처·동의·라이선스 검수</td>
+</tr>
 </tbody>
 </table>
-<h3 id="도메인-전문가-20종--조건부로-깊게-들어가는-전문-지식">도메인
-전문가 20종 — 조건부로 깊게 들어가는 전문 지식</h3>
-<p>위 31개 관점 중 #11·#13~#31은 전용 skill을 따로 갖고 있어, 관련
+<h3 id="도메인-전문가-24종--조건부로-깊게-들어가는-전문-지식">도메인
+전문가 24종 — 조건부로 깊게 들어가는 전문 지식</h3>
+<p>위 35개 관점 중 #11·#13~#35은 전용 skill을 따로 갖고 있어, 관련
 트리거가 감지되면 훨씬 깊은 지식이 추가로 로드됩니다.</p>
 <ul>
 <li><strong>전문 투자자(#13, <code>persona-investor</code>)</strong>:
@@ -1233,6 +1313,22 @@ D5·Twinmotion·Unreal·Unity 등에서 재질·조명·카메라·렌더 품질
 <code>persona-project-analyst-coordinator</code>)</strong>:
 회의·결정·액션아이템·요구사항·상태 데이터·문서·인수인계를 근거와
 상태별로 추적합니다.</li>
+<li><strong>이미지 제작·편집 전문가(#32,
+<code>persona-image-production-expert</code>)</strong>: AI 이미지 생성,
+사진·렌더 보정, 합성, 배경 제거, 업스케일과 실제 결과 이미지 검수를
+담당합니다.</li>
+<li><strong>영상 제작·연출 전문가(#33,
+<code>persona-video-production-director</code>)</strong>: 영상
+목적·콘셉트·스토리보드·샷·카메라 움직임·촬영 또는 AI 생성과 장면
+연속성을 설계합니다.</li>
+<li><strong>영상 편집·후반작업 전문가(#34,
+<code>persona-video-post-production-expert</code>)</strong>:
+컷·자막·음향·색보정·합성·인코딩과 마스터·플랫폼별 납품본을
+담당합니다.</li>
+<li><strong>미디어 품질·권리 검수 전문가(#35,
+<code>persona-media-quality-rights-reviewer</code>)</strong>: 실제 파일
+품질, AI 오류, 재생·싱크·연속성, 출처·인물 동의·라이선스 상태를 검수하고
+법률 판단은 #11로 넘깁니다.</li>
 </ul>
 <p><code>도면</code>, <code>도면 작업</code>, <code>CAD</code>,
 <code>DWG</code>, <code>평면도</code>, <code>상세도</code>,
@@ -1293,7 +1389,7 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
        │
        ▼
 6. 조건에 맞는 skill 조건부 로드
-   (persona-triggers / persona-format / persona-safety / 도메인 20종 중 해당하는 것)
+   (persona-triggers / persona-format / persona-safety / 도메인 24종 중 해당하는 것)
        │
        ▼
 7. L2·L3는 7단계 응답 형식(복기 → 근본 원인 → 추천 방향 → 실행 순서 →
@@ -1339,6 +1435,19 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
 않습니다. 예를 들어 무드보드 → 마감표, 렌더 → 시공도, 3D 모델 → BIM
 납품본, 개략 견적 → 계약 금액으로 넘어갈 때마다 필요한
 치수·성능·속성·승인·가격 기준을 다시 확인합니다.</p>
+<h3 id="이미지영상-작업의-권장-흐름">이미지·영상 작업의 권장 흐름</h3>
+<pre class="text"><code>1. 목적·플랫폼·대상·완료 기준 확인
+   → 2. 원본·출처·권리·프로그램·숙련도 확인
+   → 3. 크기·비율·길이·FPS·코덱·오디오 사양 결정
+   → 4. #32 이미지 또는 #33 영상 기획·제작
+   → 5. #34 영상 후반작업
+   → 6. #35 실제 화면·재생·소리·권리 검수
+   → 7. 마스터·배포본·설정·출처·승인 기록 보관</code></pre>
+<p>파일 생성이나 내보내기 로그만으로 완성을 선언하지 않습니다. 이미지는
+실제 결과를 확대 보기와 게시 크기로 확인하고, 영상은 전체 재생 또는 대표
+프레임·오디오·메타데이터를 확인합니다. 확인하지 못한 항목은
+<code>미검수</code>, 권리 근거가 없는 항목은 <code>미확인</code>으로
+표시합니다.</p>
 <h3 id="새-도메인-페르소나를-추가하는-흐름-persona-create">새 도메인
 페르소나를 추가하는 흐름 (<code>$persona-create</code>)</h3>
 <pre class="text"><code>1. $persona-create 호출
@@ -1424,7 +1533,7 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 응답 형식
     │   ├── persona-safety/SKILL.md       # 보안 always-on, 비가역 작업 게이트
-    │   ├── persona-triggers/SKILL.md     # 트리거 단어 A~AK 상세, 31개 관점 매핑표
+    │   ├── persona-triggers/SKILL.md     # 트리거 단어 A~AO 상세, 35개 관점 매핑표
     │   ├── persona-investor/SKILL.md     # #13 전문 투자자 도메인
     │   ├── persona-lawyer/SKILL.md       # #11 전문 변호사 도메인
     │   ├── persona-accountant/SKILL.md   # #14 회계·세무 전문가 도메인
@@ -1445,6 +1554,10 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
     │   ├── persona-product-owner/SKILL.md # #29 제품 가치·백로그 도메인
     │   ├── persona-pmo-governance-expert/SKILL.md # #30 PMO·거버넌스 도메인
     │   ├── persona-project-analyst-coordinator/SKILL.md # #31 프로젝트 분석·운영 도메인
+    │   ├── persona-image-production-expert/SKILL.md # #32 이미지 제작·편집 도메인
+    │   ├── persona-video-production-director/SKILL.md # #33 영상 기획·연출 도메인
+    │   ├── persona-video-post-production-expert/SKILL.md # #34 영상 후반 제작 도메인
+    │   ├── persona-media-quality-rights-reviewer/SKILL.md # #35 미디어 품질·권리 검수 도메인
     │   ├── persona-create/SKILL.md       # 새 페르소나 생성 인터뷰 진입점
     │   └── persona-edit/SKILL.md         # 트리거 편집 인터뷰 진입점
     ├── commands/
@@ -1452,7 +1565,8 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
     │   └── edit.md                       # persona-edit이 읽어 수행하는 절차 본문
     └── reference/
         ├── persona_full_core.md          # 페르소나 풀 정의(L3 전면 활성/세션 복구용)
-        ├── built_environment_collaboration.md # 건축·인테리어 공통 입력·인계·충돌 규칙
+        ├── built_environment_collaboration.md
+        ├── media_production_collaboration.md # 건축·인테리어 공통 입력·인계·충돌 규칙
         └── test_scenarios.md             # 트리거 동작 검증용 발화 시나리오 모음</code></pre>
 <p><code>commands/</code> 폴더는 Claude Code 시절 workflow 원문을 보존한
 내부 참조입니다. Codex에서는 이를 직접 slash 명령으로 실행하지 않고,
@@ -1477,12 +1591,12 @@ Node.js 내장 기능만 사용합니다.</p>
 </tr>
 <tr>
 <td>2</td>
-<td>"31명"·"31관점" 같은 표기가 모든 핵심 파일(코어·마커·skill·README
+<td>"35명"·"35관점" 같은 표기가 모든 핵심 파일(코어·마커·skill·README
 등)에서 실제 관점 수와 일치하는가</td>
 </tr>
 <tr>
 <td>3</td>
-<td>트리거 패턴 ID(A~AK) 개수 표기가 실제 섹션 수와 일치하는가</td>
+<td>트리거 패턴 ID(A~AO) 개수 표기가 실제 섹션 수와 일치하는가</td>
 </tr>
 <tr>
 <td>4</td>
@@ -1492,7 +1606,7 @@ frontmatter <code>name</code>이 폴더명과 같은가(영문 README 교차검�
 </tr>
 <tr>
 <td>5</td>
-<td>도메인 페르소나 20종이 코어·마커 양쪽에 배선되고, 한영 README의
+<td>도메인 페르소나 24종이 코어·마커 양쪽에 배선되고, 한영 README의
 도메인 수·명시 호출 명령·주요 목차가 일치하는가</td>
 </tr>
 <tr>
@@ -1502,7 +1616,7 @@ JSON의 이름·버전·소스 경로가 올바른가</td>
 </tr>
 <tr>
 <td>7</td>
-<td>20개 도메인의 필수 면책·자격자 확인·확정 금액 경계가 실제로
+<td>24개 도메인의 필수 면책·자격자 확인·확정 금액 경계가 실제로
 존재하는가</td>
 </tr>
 <tr>
@@ -1684,7 +1798,7 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 <code>persona_marker.txt</code></td>
 </tr>
 <tr>
-<td>25개 skill 전체</td>
+<td>29개 skill 전체</td>
 <td><code>plugins/sodam-persona/skills/persona-*/SKILL.md</code></td>
 </tr>
 <tr>
@@ -1692,8 +1806,8 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 <td><code>plugins/sodam-persona/skills/persona-triggers/SKILL.md</code></td>
 </tr>
 <tr>
-<td>도메인 전문가 20종 상세</td>
-<td><code>plugins/sodam-persona/skills/</code> 아래 20개 도메인
+<td>도메인 전문가 24종 상세</td>
+<td><code>plugins/sodam-persona/skills/</code> 아래 24개 도메인
 <code>persona-*</code> 폴더</td>
 </tr>
 <tr>
@@ -1743,6 +1857,20 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 <h2 id="업데이트-내용-요약">업데이트 내용 요약</h2>
 <p>날짜가 최신인 항목이 위에 오도록 정리했습니다. 항목을 클릭(또는
 탭)하면 세부 내용이 펼쳐집니다.</p>
+<details>
+<summary><strong>2026-09-16 — 이미지·영상 제작 역할 분리 (v1.9.0)</strong></summary>
+
+<ul>
+<li>이미지 제작·편집(#32), 영상 제작·연출(#33), 영상 편집·후반작업(#34),
+미디어 품질·권리 검수(#35)를 추가했습니다.</li>
+<li>3D 렌더 설정(#22), 렌더 결과 보정(#32), 워크스루 연출(#33), 영상
+출력(#34), 실제 품질·권리 검수(#35)의 책임과 인계를 분리했습니다.</li>
+<li>단독 이미지·영상·렌더 오발동, 프로그램 숙련도 과대평가,
+생성·내보내기 성공을 실제 검수로 오인하는 문제를 회귀 검사로
+차단했습니다.</li>
+</ul>
+</details>
+
 <details>
 <summary><strong>2026-09-16 — 프로젝트 관리 역할 분리 (v1.8.0)</strong></summary>
 
@@ -2054,6 +2182,19 @@ $persona-interior-design-expert를 직접 호출</td>
 직접 호출</td>
 </tr>
 <tr>
+<td>이미지·영상 요청이 일반 디자인이나 렌더링 역할로만 처리됨</td>
+<td>설치 캐시가 v1.9.0 이전이거나 “이미지·영상”만 입력해 목적이
+불명확함</td>
+<td>최신 버전을 다시 설치하고 이미지 합성·워크스루 스토리보드·영상
+편집·품질/라이선스 검수처럼 작업을 적거나 #32~#35를 직접 호출</td>
+</tr>
+<tr>
+<td>생성·내보내기 성공 뒤 결과가 깨지거나 재생되지 않음</td>
+<td>완료 로그를 실제 화면·소리 검수로 잘못 판단함</td>
+<td>이미지 실제 보기와 영상 전체 재생·싱크·자막·음량 검수를 수행한 뒤
+완료로 판단</td>
+</tr>
+<tr>
 <td>프로젝트 관리 요청이 기존 #9로만 처리되거나 #28~#31이 보이지
 않음</td>
 <td>v1.8.0 이전 설치 캐시를 쓰거나 역할 문맥 없이 약어만 입력함</td>
@@ -2167,6 +2308,15 @@ Codex/OpenAI 계정·구독·사용량 요금과 인터넷 비용은 별개일 �
 <p><strong>Q. 여러 대의 컴퓨터에 설치해도 되나요?</strong> A. 네. 이
 플러그인은 자기완결적으로 설계되어 별도 개인 설정 파일이나 메모리
 없이도, 새 컴퓨터에서 설치만 하면 동일하게 동작합니다.</p>
+<p><strong>Q. 이미지 제작(#32), 영상 연출(#33), 영상 후반작업(#34),
+미디어 검수(#35)는 무엇이 다른가요?</strong> A. #32는 정지 이미지
+생성·보정·합성, #33은 메시지·스토리보드·샷·카메라·소스 생성, #34는
+컷·자막·음향·색보정·인코딩, #35는 실제 품질·출처·동의·라이선스 증거를
+담당합니다. 3D 렌더 장면 설정은 #22가 담당합니다.</p>
+<p><strong>Q. 이미지나 영상 파일이 생성되면 완성된 것인가요?</strong> A.
+아닙니다. 실제 이미지와 영상 재생을 확인해야 합니다. 확인하지 못한
+결과는 미검수이며, 권리 근거가 불명확하면 공개·광고·판매·납품 가능하다고
+판단할 수 없습니다.</p>
 <p><strong>Q. 프로젝트 매니저(#28), 프로덕트 오너(#29), PMO(#30),
 프로젝트 분석·운영(#31)은 어떻게 다른가요?</strong> A. #28은 프로젝트
 납품을 위해 일정·예산·자원·위험을 통합하고, #29는 사용자 가치와 제품
@@ -2212,7 +2362,7 @@ href="#워크플로우">워크플로우</a> 참고.</p>
 전환됩니다. 이 규칙은 다른 모든 규칙보다 우선순위가 가장 높습니다.</p>
 <p><strong>Q. 반대로 훨씬 더 깊고 꼼꼼하게 봐주면 좋겠어요.</strong> A.
 "객관적으로", "깊게", "철저히", "페르소나 풀버전" 같은 표현을 사용하면
-31명 관점 전원이 검토에 들어갑니다.</p>
+35명 관점 전원이 검토에 들어갑니다.</p>
 <p><strong>Q. 오작동이나 버그를 발견했어요. 어디에 알리면
 되나요?</strong> A. 저장소의 GitHub Issue 기능으로 신고해 주세요. 재현
 가능한 발화 예시를 함께 적어주시면 원인 파악이 빨라집니다.</p>

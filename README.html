@@ -282,8 +282,8 @@ plugin — 원래 프로그램에 기능을 더해주는 작은 추가 프로그
 자동으로 실행되는 작은 프로그램) 2개와, 상황에 맞을 때만 불러오는 전문
 지식 모음(skill, 스킬) 16개로 이루어져 있습니다.</p>
 <blockquote>
-<p><strong>지금 버전</strong>: <code>1.5.0</code> · <strong>관점
-수</strong>: 22명 · <strong>트리거 패턴</strong>: 27개(A~AA) ·
+<p><strong>지금 버전</strong>: <code>1.5.1</code> · <strong>관점
+수</strong>: 22명 · <strong>트리거 패턴</strong>: 28개(A~AB) ·
 <strong>스킬 수</strong>: 16개 · <strong>hook 수</strong>: 2개 ·
 <strong>라이선스</strong>: Apache License 2.0</p>
 </blockquote>
@@ -806,7 +806,7 @@ L2·L3로</li>
 "출처", "사례", "팩트" 등 → 실제 근거를 제시하고 추측과 사실을 구분해서
 표기</li>
 </ol>
-<p>이 트리거 단어들은 27개의 패턴 그룹(A~AA)으로 정리되어 있으며, 자세한
+<p>이 트리거 단어들은 28개의 패턴 그룹(A~AB)으로 정리되어 있으며, 자세한
 단어 목록과 충돌 시 우선순위는 <code>persona-triggers</code> skill에
 전부 정리되어 있습니다. 우선순위 요약: <strong>분량 제약(간단히 등) &gt;
 강도(깊게 등) &gt; 도메인 전문가 &gt; 단일 관점 &gt; 추가
@@ -982,6 +982,10 @@ skill을 따로 갖고 있어, 관련 트리거가 감지되면 훨씬 깊은 �
 D5·Twinmotion·Unreal·Unity 등에서 재질·조명·카메라·렌더 품질과 출력
 검증을 다룹니다.</li>
 </ul>
+<p><code>도면</code>, <code>도면 작업</code>, <code>CAD</code>,
+<code>DWG</code>, <code>평면도</code>, <code>상세도</code>,
+<code>시공도</code>는 AB 라우팅이 활성화되어 도면 종류와 목적에 따라
+#16~#21 중 주도·검토 역할을 자동으로 고릅니다.</p>
 <p>여러 도메인이 동시에 걸리면(예: "이 투자수익 세금과 법적 리스크")
 관련된 도메인 전문가가 모두 함께 활성화됩니다.</p>
 <h3 id="4가지-안티패턴--페르소나가-스스로-지키는-규율">4가지 안티패턴 —
@@ -1119,7 +1123,7 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 응답 형식
     │   ├── persona-safety/SKILL.md       # 보안 always-on, 비가역 작업 게이트
-    │   ├── persona-triggers/SKILL.md     # 트리거 단어 A~AA 상세, 22개 관점 매핑표
+    │   ├── persona-triggers/SKILL.md     # 트리거 단어 A~AB 상세, 22개 관점 매핑표
     │   ├── persona-investor/SKILL.md     # #13 전문 투자자 도메인
     │   ├── persona-lawyer/SKILL.md       # #11 전문 변호사 도메인
     │   ├── persona-accountant/SKILL.md   # #14 회계·세무 전문가 도메인
@@ -1168,7 +1172,7 @@ Node.js 내장 기능만 사용합니다.</p>
 </tr>
 <tr>
 <td>3</td>
-<td>트리거 패턴 ID(A~AA) 개수 표기가 실제 섹션 수와 일치하는가</td>
+<td>트리거 패턴 ID(A~AB) 개수 표기가 실제 섹션 수와 일치하는가</td>
 </tr>
 <tr>
 <td>4</td>
@@ -1429,6 +1433,18 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 <p>날짜가 최신인 항목이 위에 오도록 정리했습니다. 항목을 클릭(또는
 탭)하면 세부 내용이 펼쳐집니다.</p>
 <details>
+<summary><strong>2026-09-16 — 도면 작업 라우팅 보완 (v1.5.1)</strong></summary>
+
+<ul>
+<li><code>도면 관련 작업</code>, CAD/DWG와 평면·입면·단면·상세·시공도
+요청을 감지하는 AB 패턴을 추가했습니다.</li>
+<li>건축·인테리어 설계, 시공, 견적, 3D 모델링으로 목적별 분기하고 비건축
+도면과 자격자 업무 경계를 분리했습니다.</li>
+<li>22관점·28패턴·16스킬과 hook·문서·검증기를 동기화했습니다.</li>
+</ul>
+</details>
+
+<details>
 <summary><strong>2026-09-16 — 3D 모델링·렌더링 전문 페르소나 2종 추가 (v1.5.0)</strong></summary>
 
 <ul>
@@ -1467,7 +1483,7 @@ Codex 전용 구조에 맞춰 이식했습니다.</li>
 폴더명 안전성을 자동 검증합니다.</li>
 <li>Agent Plugins 1.0 루트 <code>plugin.json</code>을 정본으로 추가하고
 <code>.codex-plugin/plugin.json</code>을 fallback으로 유지했습니다. 현재
-세 매니페스트의 버전은 <code>1.5.0</code>으로 통일했습니다.</li>
+세 매니페스트의 버전은 <code>1.5.1</code>으로 통일했습니다.</li>
 <li>hook 주입 파일의 LF 고정 규칙을 추가했고, 기존 Codex 포트의 투자자
 필수 면책과 보안 보강은 그대로 보존했습니다.</li>
 <li>배포 전 검증에서 훅 44개, 패키지 32개, 실패·경계값 16개 시나리오와

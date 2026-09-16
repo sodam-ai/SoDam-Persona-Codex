@@ -6,7 +6,7 @@ This document is written so that even someone who has never used a computer, a s
 
 The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 16 conditional expert knowledge modules (**skills**) that load only when relevant.
 
-> **Current version**: `1.5.0` · **Perspectives**: 22 · **Trigger patterns**: 27 patterns (A-AA) · **Skills (16)** · **Hooks**: 2 · **License**: Apache License 2.0
+> **Current version**: `1.5.1` · **Perspectives**: 22 · **Trigger patterns**: 28 patterns (A-AB) · **Skills (16)** · **Hooks**: 2 · **License**: Apache License 2.0
 
 ---
 
@@ -311,7 +311,7 @@ When specific words (triggers) are detected in what you say, the following 6 eff
 5. **Fully activate a single perspective** — "security" alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone → #4, "AI"/"agent"/"MCP" alone → #6
 6. **Evidence mode** (intensity stays the same) — "evidence", "source", "example", "fact" etc. → present real evidence and clearly separate speculation from confirmed fact
 
-These trigger words are organized into 27 patterns (A-AA), and the full word lists plus the priority order for conflicts all live in the `persona-triggers` skill. Priority summary: **length constraints (e.g. "briefly") > intensity (e.g. "in depth") > domain expert > single perspective > additional skill.**
+These trigger words are organized into 28 patterns (A-AB), and the full word lists plus the priority order for conflicts all live in the `persona-triggers` skill. Priority summary: **length constraints (e.g. "briefly") > intensity (e.g. "in depth") > domain expert > single perspective > additional skill.**
 
 ### 22 perspectives — the expert checklist reviewed before every answer
 
@@ -357,6 +357,8 @@ Among the 22 perspectives above, #11, #13, #14, #15, #16, #17, #18, #19, #20, #2
 - **Design director (#20, `persona-design-director`)**: Covers concept, form, color, materials, and coherence between architecture and interiors.
 - **3D modeling specialist (#21, `persona-spatial-3d-modeling-expert`)**: Covers BIM, NURBS and mesh modeling, coordinates, units, conversion, and interoperability, including Revit and Rhino.
 - **Rendering and visualization specialist (#22, `persona-rendering-visualization-expert`)**: Covers materials, lighting, cameras, render quality, and output verification in tools such as D5, Twinmotion, Unreal, and Unity.
+
+`Drawing`, `drawing work`, `CAD`, `DWG`, floor plans, detail drawings, and shop drawings activate pattern AB, which routes the request to the appropriate lead and reviewing roles among #16 through #21.
 
 When multiple domains apply at once (e.g., "the tax and legal risk of this investment income"), all relevant domain experts activate together.
 
@@ -492,7 +494,7 @@ This project originally started as a plugin for Claude Code (a different AI codi
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 response format
     │   ├── persona-safety/SKILL.md       # Always-on security rules, irreversible-action gate
-    │   ├── persona-triggers/SKILL.md     # Full A-AA trigger-word detail and the 22-perspective mapping table
+    │   ├── persona-triggers/SKILL.md     # Full A-AB trigger-word detail and the 22-perspective mapping table
     │   ├── persona-investor/SKILL.md     # #13 professional investor domain
     │   ├── persona-lawyer/SKILL.md       # #11 professional lawyer domain
     │   ├── persona-accountant/SKILL.md   # #14 accounting/tax specialist domain
@@ -525,7 +527,7 @@ This checker mechanically prevents number drift when adding perspectives or chan
 |---|---|
 | 1 | Perspective numbers are continuous from 1 through the last entry |
 | 2 | Labels such as "22 people" and "22 perspectives" match the actual count in every core file, skill, and README |
-| 3 | The documented A-AA trigger-pattern count matches the actual section count |
+| 3 | The documented A-AB trigger-pattern count matches the actual section count |
 | 4 | The skill-folder count matches the docs and every skill frontmatter `name` matches its folder (including English README cross-checks) |
 | 5 | All 11 domain personas are wired into both the core and marker files |
 | 6 | The Agent Plugins 1.0, Codex fallback, and legacy manifests plus both marketplace JSON files have valid names, versions, and source paths |
@@ -630,6 +632,15 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 Listed with the most recent entries at the top. Click (or tap) an item to expand its details.
 
 <details>
+<summary><strong>2026-09-16 — Added drawing-work routing (v1.5.1)</strong></summary>
+
+- Added pattern AB for drawing-related work, CAD/DWG, plans, elevations, sections, details, and shop drawings.
+- Routes by purpose across architectural design, interior design, construction, estimating, and 3D modeling while separating non-building drawings and regulated work.
+- Synchronized 22 perspectives, 28 patterns, 16 skills, hooks, documentation, and validation.
+
+</details>
+
+<details>
 <summary><strong>2026-09-16 — Added 3D modeling and rendering specialist personas (v1.5.0)</strong></summary>
 
 - Added separate 15+ year perspectives for 3D modeling (#21, including Revit and Rhino) and architectural/interior rendering and visualization (#22).
@@ -652,7 +663,7 @@ Listed with the most recent entries at the top. Click (or tap) an item to expand
 
 - Ported the original project's visible hook-failure warnings, low-signal trigger cleanup, domain-trigger synchronization, legal/investor/accounting disclaimers, recovery-core repairs, and chat-visible activation indicator into the Codex-specific structure.
 - Expanded `validate.mjs` to 15 checks covering Codex hook variables and scripts, serialized-output limits, domain-trigger drift, and safe skill-folder names.
-- Added the Agent Plugins 1.0 root `plugin.json` as the canonical manifest while retaining `.codex-plugin/plugin.json` as a fallback. All three manifests now report the current version `1.5.0`.
+- Added the Agent Plugins 1.0 root `plugin.json` as the canonical manifest while retaining `.codex-plugin/plugin.json` as a fallback. All three manifests now report the current version `1.5.1`.
 - Added LF enforcement for injected hook files and preserved the Codex port's investor disclaimer and security hardening.
 - Passed 44 hook, 32 package, and 16 failure/boundary checks plus execution from a temporary Marketplace installation.
 - Fixed the README dark theme ending in a white area on wide screens and regenerated both Korean and English HTML files.

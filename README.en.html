@@ -287,9 +287,9 @@ ability Codex already has. It consists of 2 always-on core rules
 specific moment) and 16 conditional expert knowledge modules
 (<strong>skills</strong>) that load only when relevant.</p>
 <blockquote>
-<p><strong>Current version</strong>: <code>1.5.0</code> ·
+<p><strong>Current version</strong>: <code>1.5.1</code> ·
 <strong>Perspectives</strong>: 22 · <strong>Trigger patterns</strong>:
-27 patterns (A-AA) · <strong>Skills (16)</strong> ·
+28 patterns (A-AB) · <strong>Skills (16)</strong> ·
 <strong>Hooks</strong>: 2 · <strong>License</strong>: Apache License
 2.0</p>
 </blockquote>
@@ -852,7 +852,7 @@ alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone →
 "evidence", "source", "example", "fact" etc. → present real evidence and
 clearly separate speculation from confirmed fact</li>
 </ol>
-<p>These trigger words are organized into 27 patterns (A-AA), and the
+<p>These trigger words are organized into 28 patterns (A-AB), and the
 full word lists plus the priority order for conflicts all live in the
 <code>persona-triggers</code> skill. Priority summary: <strong>length
 constraints (e.g. "briefly") &gt; intensity (e.g. "in depth") &gt;
@@ -1042,6 +1042,10 @@ interoperability, including Revit and Rhino.</li>
 materials, lighting, cameras, render quality, and output verification in
 tools such as D5, Twinmotion, Unreal, and Unity.</li>
 </ul>
+<p><code>Drawing</code>, <code>drawing work</code>, <code>CAD</code>,
+<code>DWG</code>, floor plans, detail drawings, and shop drawings
+activate pattern AB, which routes the request to the appropriate lead
+and reviewing roles among #16 through #21.</p>
 <p>When multiple domains apply at once (e.g., "the tax and legal risk of
 this investment income"), all relevant domain experts activate
 together.</p>
@@ -1192,7 +1196,7 @@ Codex versions.</p>
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 response format
     │   ├── persona-safety/SKILL.md       # Always-on security rules, irreversible-action gate
-    │   ├── persona-triggers/SKILL.md     # Full A-AA trigger-word detail and the 22-perspective mapping table
+    │   ├── persona-triggers/SKILL.md     # Full A-AB trigger-word detail and the 22-perspective mapping table
     │   ├── persona-investor/SKILL.md     # #13 professional investor domain
     │   ├── persona-lawyer/SKILL.md       # #11 professional lawyer domain
     │   ├── persona-accountant/SKILL.md   # #14 accounting/tax specialist domain
@@ -1245,7 +1249,7 @@ count in every core file, skill, and README</td>
 </tr>
 <tr>
 <td>3</td>
-<td>The documented A-AA trigger-pattern count matches the actual section
+<td>The documented A-AB trigger-pattern count matches the actual section
 count</td>
 </tr>
 <tr>
@@ -1520,6 +1524,20 @@ downloads this plugin, so this document does not cover it.</p>
 <p>Listed with the most recent entries at the top. Click (or tap) an
 item to expand its details.</p>
 <details>
+<summary><strong>2026-09-16 — Added drawing-work routing (v1.5.1)</strong></summary>
+
+<ul>
+<li>Added pattern AB for drawing-related work, CAD/DWG, plans,
+elevations, sections, details, and shop drawings.</li>
+<li>Routes by purpose across architectural design, interior design,
+construction, estimating, and 3D modeling while separating non-building
+drawings and regulated work.</li>
+<li>Synchronized 22 perspectives, 28 patterns, 16 skills, hooks,
+documentation, and validation.</li>
+</ul>
+</details>
+
+<details>
 <summary><strong>2026-09-16 — Added 3D modeling and rendering specialist personas (v1.5.0)</strong></summary>
 
 <ul>
@@ -1563,7 +1581,7 @@ and safe skill-folder names.</li>
 <li>Added the Agent Plugins 1.0 root <code>plugin.json</code> as the
 canonical manifest while retaining
 <code>.codex-plugin/plugin.json</code> as a fallback. All three
-manifests now report the current version <code>1.5.0</code>.</li>
+manifests now report the current version <code>1.5.1</code>.</li>
 <li>Added LF enforcement for injected hook files and preserved the Codex
 port's investor disclaimer and security hardening.</li>
 <li>Passed 44 hook, 32 package, and 16 failure/boundary checks plus

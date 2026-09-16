@@ -141,7 +141,7 @@ for (const d of DOMAINS) {
 }
 
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
-const EXPECTED_PLUGIN_VERSION = '1.5.0';
+const EXPECTED_PLUGIN_VERSION = '1.5.1';
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
 const manifestPaths = [
   pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
@@ -469,6 +469,17 @@ for (const phrase of ['React 렌더링', '웹 렌더링', '브라우저 렌더']
 }
 for (const phrase of ['Revit', '레빗', 'Rhino', '라이노']) {
   if (!modelingSkill.includes(phrase)) err(`확정 3D 도구 트리거 누락: ${phrase}`);
+}
+
+const drawingSection = extractSection(triggers, '## AB. ', /\n## [A-Z]+\. /);
+for (const phrase of ['도면', '도면 관련 작업', 'CAD', 'DWG', '평면도', '입면도', '단면도', '상세도', '시공도', '샵드로잉', '준공도면']) {
+  if (!drawingSection?.includes(phrase)) err(`도면 라우팅 AB 필수 트리거 누락: ${phrase}`);
+}
+for (const [label, target] of [['core', core], ['marker', marker]]) {
+  if (!target.includes('도면') || !target.includes('AB')) err(`도면 라우팅이 ${label}에 연결되지 않음`);
+}
+for (const phrase of ['제품', '기계', '전자회로']) {
+  if (!drawingSection?.includes(phrase)) err(`도면 라우팅 비건축 제외 규칙 누락: ${phrase}`);
 }
 
 // ── 15) 페르소나 스킬 폴더명 안전성 검사 (2026-09-01 추가) ──────────────────

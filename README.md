@@ -6,7 +6,7 @@
 
 이 플러그인 자체는 별도의 AI가 아닙니다. Codex가 이미 갖고 있는 대화 능력 위에 "이렇게 판단하고 이렇게 답하라"는 규칙 문서를 자동으로 얹어주는 설정 모음입니다. 항상 켜지는 핵심 규칙(hook, 후크 — 특정 시점에 자동으로 실행되는 작은 프로그램) 2개와, 상황에 맞을 때만 불러오는 전문 지식 모음(skill, 스킬) 9개로 이루어져 있습니다.
 
-> **지금 버전**: `1.1.1` · **관점 수**: 15명 · **트리거 패턴**: 20개(A~T) · **스킬 수**: 9개 · **hook 수**: 2개 · **라이선스**: Apache License 2.0
+> **지금 버전**: `1.3.0` · **관점 수**: 15명 · **트리거 패턴**: 20개(A~T) · **스킬 수**: 9개 · **hook 수**: 2개 · **라이선스**: Apache License 2.0
 
 ---
 
@@ -40,12 +40,14 @@
 |---|---|---|---|
 | 1 | Codex CLI(터미널에서 쓰는 버전) 또는 Codex 데스크톱 앱, 또는 Codex가 연결된 IDE(코드 편집기) 확장 | 이 플러그인은 Codex "안"에서 동작하는 부가 기능이라, Codex 자체가 먼저 있어야 합니다 | 플러그인을 설치할 대상이 없어 진행 불가 |
 | 2 | Node.js 18 이상 | hook 2개와 검증 스크립트(`validate.mjs`)가 JavaScript로 작성되어 Node.js가 실행 엔진 역할을 합니다 | hook이 실행되지 않아 페르소나가 전혀 동작하지 않음 |
-| 3 | Git(GitHub에서 설치할 경우에만 필요) | `codex plugin marketplace add sodam-ai/SoDam-Persona`처럼 GitHub 주소로 설치할 때 Codex 내부적으로 저장소를 내려받는 데 사용 | 로컬 저장소 설치 방식으로 대체 가능(Git 없이도 가능) |
+| 3 | Git(GitHub에서 설치할 경우에만 필요) | `codex plugin marketplace add sodam-ai/SoDam-Persona-Codex`처럼 GitHub 주소로 설치할 때 Codex 내부적으로 저장소를 내려받는 데 사용 | 로컬 저장소 설치 방식으로 대체 가능(Git 없이도 가능) |
 | 4 | 터미널(명령어를 글자로 입력해 컴퓨터에 지시하는 검은 화면 프로그램) 사용 경험 아주 조금 | 설치 명령을 한 줄씩 입력하고 Enter를 누르는 정도만 할 수 있으면 충분 | 이 문서의 [실행 방법](#실행-방법)에서 터미널 여는 법부터 설명 |
 
-**운영체제**: Windows, macOS, Linux 어디서나 동작합니다. 이 문서의 명령 예시는 Windows PowerShell 기준이며, macOS/Linux는 같은 명령을 Terminal(터미널) 앱에 그대로 입력하면 됩니다.
+**지원 범위**: Codex 플러그인 기능과 Node.js 18 이상을 사용할 수 있는 Windows·macOS·Linux 환경을 대상으로 합니다. 명령 예시는 Windows PowerShell 기준입니다. macOS/Linux에서는 해당 운영체제의 Terminal에서 같은 `codex`, `node`, `git` 명령을 사용하되, Codex 플러그인 제공 여부와 화면 이름은 설치한 Codex 버전·계정·조직 정책에 따라 다를 수 있습니다.
 
-**계정**: Codex를 쓰기 위한 OpenAI 계정/구독은 이 플러그인과 별개로 이미 준비되어 있어야 합니다(이 플러그인은 계정을 만들어주거나 로그인을 대신 처리하지 않습니다).
+**현재 검증 기준(2026-09-16)**: Windows에서 Codex CLI 설치·제거, Node.js 20 CI 호환 실행, hook 정상/오류/대용량 입력, Chrome 데스크톱·태블릿·모바일 문서를 확인했습니다. macOS/Linux 실기기와 모든 Codex 앱·IDE 화면 조합은 자동 시험 대상이 아니므로, 그 환경에서는 아래 [설치 확인](#설치-확인)까지 직접 확인하세요.
+
+**계정과 권한**: Codex를 쓰기 위한 OpenAI 계정·이용 권한은 이 플러그인과 별도로 준비해야 합니다. 조직용 계정은 관리자가 플러그인 설치를 제한할 수 있습니다. 이 플러그인은 계정을 만들거나 로그인·결제·조직 권한을 대신 처리하지 않습니다.
 
 ---
 
@@ -93,7 +95,7 @@ Codex가 설치 시점에 저장소를 알아서 가져오므로, 사람이 미�
 1. **Git으로 복제(clone, 원격 저장소를 내 컴퓨터로 그대로 복사)**
 
    ```powershell
-   git clone https://github.com/sodam-ai/SoDam-Persona.git
+   git clone https://github.com/sodam-ai/SoDam-Persona-Codex.git
    ```
 
 2. **또는 Git 없이 ZIP으로 다운로드**
@@ -112,7 +114,7 @@ Codex가 설치 시점에 저장소를 알아서 가져오므로, 사람이 미�
 터미널을 열고 아래 두 줄을 순서대로 입력합니다(각 줄 입력 후 Enter).
 
 ```powershell
-codex plugin marketplace add sodam-ai/SoDam-Persona
+codex plugin marketplace add sodam-ai/SoDam-Persona-Codex
 codex plugin add sodam-persona@sodam-persona
 ```
 
@@ -130,15 +132,16 @@ codex plugin add sodam-persona@sodam-persona
 
 `.`(마침표 하나)은 "지금 내가 있는 이 폴더"라는 뜻입니다.
 
-### 설치 뒤 신뢰 승인 (반드시 필요)
+### 설치 뒤 권한·신뢰 확인
 
 설치만으로는 아직 끝난 것이 아닙니다.
 
-1. 새 Codex task(작업 세션)를 하나 시작합니다.
-2. 이 플러그인의 hook(자동 실행 규칙)이 처음 활성화되려는 순간, Codex가 "이 hook을 신뢰하시겠습니까?" 같은 확인 창을 띄웁니다.
-3. hook 내용(무엇을 하는지)을 확인한 뒤 **허용**을 선택해야 항상 켜짐 코어가 실제로 동작합니다.
+1. 새 Codex task(작업 세션)를 시작합니다.
+2. 설치·hook 실행·연결 권한을 묻는 화면이 나타나면, 표시된 플러그인 이름과 실행 내용을 읽습니다.
+3. `sodam-persona`가 맞고 `node`로 이 플러그인의 `hooks/inject-*.js`를 실행하는 내용인지 확인한 뒤 허용합니다.
+4. 계정·조직·Codex 버전에 따라 확인 화면의 문구나 표시 시점이 다르거나 별도 화면이 없을 수 있습니다. 조직 정책으로 설치가 막히면 관리자 승인이 필요합니다.
 
-이 승인 절차는 Codex 자체의 안전장치이며, 이 플러그인이 우회하거나 생략할 수 없습니다([보안과 데이터 흐름](#보안과-데이터-흐름) 참고).
+이 플러그인은 Codex의 권한 절차를 우회하지 않습니다. 실제 실행 권한은 사용 중인 Codex의 보안 정책이 결정합니다([보안과 데이터 흐름](#보안과-데이터-흐름) 참고).
 
 ### 설치 확인
 
@@ -147,7 +150,19 @@ codex plugin marketplace list
 codex plugin list
 ```
 
-첫 번째 명령은 등록된 마켓플레이스 목록을, 두 번째 명령은 실제로 설치된 플러그인 목록을 보여줍니다. 둘 다에서 `sodam-persona`가 보이면 설치가 정상적으로 끝난 것입니다.
+첫 번째 명령은 등록된 마켓플레이스 목록을, 두 번째 명령은 실제로 설치된 플러그인 목록을 보여줍니다. 둘 다에서 `sodam-persona`가 보이고 설치 상태가 활성화되어 있으면 패키지 설치가 끝난 것입니다. 이어서 새 task에서 평범한 질문과 `객관적으로 깊게 검토해줘`를 각각 입력해 응답 깊이가 달라지는지 확인하면 실제 사용 점검까지 끝납니다.
+
+### 업데이트와 제거
+
+새 버전으로 바꿀 때는 아래 순서를 지키세요. 설치 캐시 때문에 마켓플레이스만 갱신하고 끝내면 기존 플러그인 파일이 계속 쓰일 수 있습니다.
+
+```powershell
+codex plugin marketplace upgrade sodam-persona
+codex plugin remove sodam-persona@sodam-persona
+codex plugin add sodam-persona@sodam-persona
+```
+
+업데이트 뒤에는 기존 task를 계속 쓰지 말고 새 task를 시작합니다. 완전히 제거하려면 마지막 `add`를 실행하지 말고, 필요할 때 `codex plugin marketplace remove sodam-persona`로 마켓플레이스 등록도 지웁니다. 제거 명령은 플러그인 캐시를 삭제하므로 필요한 사용자 수정본이 있다면 먼저 별도 폴더에 복사하세요.
 
 ---
 
@@ -156,9 +171,9 @@ codex plugin list
 이미 사전 준비물을 다 갖췄고, 세세한 설명 없이 바로 시작하고 싶은 분을 위한 5단계 요약입니다.
 
 1. 터미널을 연다.
-2. `codex plugin marketplace add sodam-ai/SoDam-Persona` 입력 후 Enter.
+2. `codex plugin marketplace add sodam-ai/SoDam-Persona-Codex` 입력 후 Enter.
 3. `codex plugin add sodam-persona@sodam-persona` 입력 후 Enter.
-4. 새 Codex task를 시작하고, hook 신뢰 확인 창이 뜨면 **허용**을 누른다.
+4. 새 Codex task를 시작한다. 권한·신뢰 확인 창이 뜨면 플러그인 이름과 실행 명령을 확인하고 **허용**을 누른다.
 5. 그냥 평소처럼 한국어로 말을 건다. 예: `이 코드에서 버그 찾아줘` — 특별한 명령어를 외울 필요 없이 자연어(사람이 평소 쓰는 말) 그대로 사용하면 페르소나가 자동으로 판단해서 반응합니다.
 
 막히면 [문제와 오류 대처 방법](#문제와-오류-대처-방법)으로 바로 이동하세요.
@@ -198,7 +213,7 @@ Codex가 연결된 IDE 확장을 쓰는 경우, IDE 안에서 Codex 패널을 �
 
 ### 아무것도 외우지 않고 쓰는 방법 (기본)
 
-평소 Codex에게 말하듯 한국어로 자연스럽게 요청하면 됩니다. 페르소나 코어가 항상 켜져 있어 자동으로 적용되고, 요청 내용이 특정 전문 skill의 설명과 맞아떨어지면 해당 skill이 조건 없이 자동으로 함께 불려옵니다.
+평소 Codex에게 말하듯 한국어로 자연스럽게 요청하면 됩니다. hook이 활성화된 세션에서는 페르소나 코어가 자동으로 적용되고, 요청 내용이 특정 전문 skill의 설명과 맞으면 Codex가 해당 skill을 선택해 읽을 수 있습니다. 자동 선택은 모델과 요청 맥락의 영향을 받으므로 반드시 적용해야 하는 전문 분야는 아래처럼 `$skill-name`을 직접 적으세요.
 
 ```text
 이 코드에서 버그 좀 찾아줘
@@ -242,7 +257,7 @@ Codex CLI와 IDE 확장에서는 `/skills`라고 입력하거나, `$`만 입력�
 
 | 명령 | 설명 |
 |---|---|
-| `codex plugin marketplace add <출처>` | 마켓플레이스(플러그인 후보 목록)에 등록. `<출처>`는 `sodam-ai/SoDam-Persona`처럼 GitHub 저장소 이름이거나 `.`처럼 로컬 폴더 경로 |
+| `codex plugin marketplace add <출처>` | 마켓플레이스(플러그인 후보 목록)에 등록. `<출처>`는 `sodam-ai/SoDam-Persona-Codex`처럼 GitHub 저장소 이름이거나 `.`처럼 로컬 폴더 경로 |
 | `codex plugin marketplace list` | 등록된 마켓플레이스 목록 확인 |
 | `codex plugin marketplace upgrade sodam-persona` | 마켓플레이스에 등록된 소스를 최신 상태로 갱신 |
 | `codex plugin add sodam-persona@sodam-persona` | 실제로 플러그인을 설치 |
@@ -253,7 +268,7 @@ Codex CLI와 IDE 확장에서는 `/skills`라고 입력하거나, `$`만 입력�
 
 | 명령 | 설명 |
 |---|---|
-| `/skills` 또는 `$` | 지금 쓸 수 있는 skill 목록 보기 |
+| `/skills` 또는 `$` | 이 기능을 지원하는 Codex 화면에서 지금 쓸 수 있는 skill 목록 보기. 표시되지 않으면 `codex plugin list`로 설치를 먼저 확인 |
 | `$persona-investor <내용>` | 전문 투자자 관점(#13) 명시 호출 |
 | `$persona-lawyer <내용>` | 전문 변호사 관점(#11) 명시 호출 |
 | `$persona-accountant <내용>` | 회계·세무 전문가 관점(#14) 명시 호출 |
@@ -340,7 +355,7 @@ L1 이상의 모든 응답에서, 아래 15개 관점 중 그 작업과 관련 �
 
 ### 비가역(되돌릴 수 없는) 작업 앞에서는 항상 멈춘다
 
-파일·폴더 삭제, git 강제 푸시, 데이터베이스 변경, 배포, 결제, 외부 메시지 발송 같은 작업은 **자동으로 실행하지 않고 항상 먼저 확인을 구합니다.** 이는 [보안과 데이터 흐름](#보안과-데이터-흐름)에서 더 자세히 설명합니다.
+이 페르소나 규칙은 파일·폴더 삭제, git 강제 푸시, 데이터베이스 변경, 배포, 결제, 외부 메시지 발송처럼 되돌리기 어려운 작업에서 사용자 의도와 승인 상태를 확인하도록 지시합니다. 실제 실행 허용·차단은 Codex의 권한 설정과 사용자가 이미 준 승인에 따릅니다. 자세한 내용은 [보안과 데이터 흐름](#보안과-데이터-흐름)을 보세요.
 
 ---
 
@@ -353,7 +368,7 @@ L1 이상의 모든 응답에서, 아래 15개 관점 중 그 작업과 관련 �
        │
        ▼
 2. SessionStart hook 실행 (inject-core.js)
-   → persona_core.md 전문을 세션 컨텍스트에 주입 (최초 1회, 신뢰 승인 필요)
+   → persona_core.md 전문을 세션 컨텍스트에 주입 (권한 확인 표시 여부는 Codex 환경에 따름)
        │
        ▼
 3. 사용자가 메시지 입력
@@ -425,7 +440,7 @@ Codex의 "플러그인"은 다음 4가지 요소로 이루어진 하나의 묶�
 
 ### 이 저장소가 Claude Code용 파일도 함께 갖고 있는 이유
 
-이 프로젝트는 원래 Claude Code(다른 AI 코딩 도구)의 플러그인으로 시작했다가 Codex 전용으로 이식(porting)되었습니다. 그 흔적으로 `plugins/sodam-persona/.claude-plugin/plugin.json`과 루트의 `.claude-plugin/marketplace.json`이 남아 있지만, **이 둘은 이전 호스트와의 호환을 위한 것일 뿐 Codex 설치 과정에서는 전혀 사용되지 않습니다.** Codex가 실제로 읽는 파일은 `.agents/plugins/marketplace.json`과 `plugins/sodam-persona/.codex-plugin/plugin.json`입니다.
+이 프로젝트는 원래 Claude Code(다른 AI 코딩 도구)의 플러그인으로 시작했다가 Codex 전용으로 이식(porting)되었습니다. 그 흔적으로 `plugins/sodam-persona/.claude-plugin/plugin.json`과 루트의 `.claude-plugin/marketplace.json`이 남아 있지만, **이 둘은 이전 호스트와의 호환을 위한 것일 뿐 Codex 설치 과정에서는 전혀 사용되지 않습니다.** Codex가 실제로 읽는 마켓플레이스 정의는 `.agents/plugins/marketplace.json`이며, 플러그인 본체의 정본 매니페스트는 Agent Plugins 1.0 형식의 `plugins/sodam-persona/plugin.json`입니다. `.codex-plugin/plugin.json`은 이전 Codex 버전용 fallback으로 함께 유지합니다.
 
 ### 저장소 전체 구조
 
@@ -443,8 +458,9 @@ Codex의 "플러그인"은 다음 4가지 요소로 이루어진 하나의 묶�
 ├── doc-theme.html                        # 위 스크립트가 쓰는 HTML 테마(CSS)
 ├── validate.mjs                          # 정합성 자동 검사기
 └── plugins/sodam-persona/                # 실제로 배포·설치되는 플러그인 본체
+    ├── plugin.json                       # Agent Plugins 1.0 매니페스트 (정본)
+    ├── .codex-plugin/plugin.json         # 이전 Codex 버전용 fallback 매니페스트
     ├── .claude-plugin/plugin.json        # [예전 호스트 호환용] Claude Code 매니페스트
-    ├── .codex-plugin/plugin.json         # Codex 매니페스트 (정본)
     ├── hooks/
     │   ├── hooks.json                    # SessionStart / UserPromptSubmit hook 등록표
     │   ├── inject-core.js                # SessionStart 시 실행되는 스크립트
@@ -471,7 +487,7 @@ Codex의 "플러그인"은 다음 4가지 요소로 이루어진 하나의 묶�
 
 `commands/` 폴더는 Claude Code 시절 workflow 원문을 보존한 내부 참조입니다. Codex에서는 이를 직접 slash 명령으로 실행하지 않고, `persona-create`/`persona-edit` skill이 그 내용을 읽어서 수행합니다.
 
-### 자동 정합성 검사 (`validate.mjs`)가 지키는 10가지
+### 자동 정합성 검사 (`validate.mjs`)가 지키는 15가지
 
 새 관점을 추가하거나 트리거를 바꿀 때 숫자가 어긋나는 것("드리프트")을 기계적으로 막기 위한 검사기입니다. 외부 라이브러리 없이 Node.js 내장 기능만 사용합니다.
 
@@ -480,20 +496,24 @@ Codex의 "플러그인"은 다음 4가지 요소로 이루어진 하나의 묶�
 | 1 | 관점 번호가 1번부터 마지막까지 빠짐없이 연속되는가 |
 | 2 | "15명"·"15관점" 같은 표기가 모든 핵심 파일(코어·마커·skill·README 등)에서 실제 관점 수와 일치하는가 |
 | 3 | 트리거 패턴 알파벳(A~T) 개수 표기가 실제 섹션 수와 일치하는가 |
-| 4 | skill 폴더 수와 문서상 표기가 일치하고, 각 skill의 frontmatter `name`이 폴더명과 같은가 |
-| 4-1 | 영문 README의 skill 수·패턴 수 표기도 동일 기준으로 일치하는가 |
+| 4 | skill 폴더 수와 문서상 표기가 일치하고, 각 skill의 frontmatter `name`이 폴더명과 같은가(영문 README 교차검사 포함) |
 | 5 | 도메인 페르소나 4종(투자·법률·회계세무·마케팅)이 코어와 마커 파일 양쪽에 모두 배선되어 있는가 |
-| 6 | `.codex-plugin/plugin.json`/`.agents/plugins/marketplace.json`이 유효한 JSON이고, 이름·소스 경로가 올바른가 |
-| 7 | 회계·세무(#14), 법률(#11) 답변에 필요한 면책 규칙이 실제로 존재하는가 |
-| 8 | (경고만, 실패 아님) HTML 4개 파일이 최신 수치와 어긋나 재생성이 필요해 보이는가 |
+| 6 | Agent Plugins 1.0·Codex fallback·legacy 매니페스트와 두 마켓플레이스 JSON의 이름·버전·소스 경로가 올바른가 |
+| 7 | 회계·세무(#14), 법률(#11), 투자(#13) 답변에 필요한 면책 규칙이 실제로 존재하는가 |
+| 8 | (경고만, 실패 아님) HTML 문서가 최신 수치와 어긋나 재생성이 필요해 보이는가 |
 | 9 | 문서 안에서 백틱으로 감싼 파일 참조가 실제로 존재하는 파일을 가리키는가(깨진 링크 방지) |
 | 10 | 문서와 플러그인 파일에 개발자 개인 컴퓨터의 실제 사용자 계정이 담긴 절대경로가 실수로 노출되지 않았는가 |
+| 11 | Codex hook이 `${PLUGIN_ROOT}`를 쓰고 실제 스크립트를 가리키며 컨텍스트 한도 설정이 안전 규칙과 맞는가 |
+| 12 | 도메인 skill의 트리거 단어 목록이 `persona-triggers` 정본과 일치하는가 |
+| 13 | 실제 직렬화된 hook 출력이 저장소 자체 10,000자 상한을 넘지 않는가 |
+| 14 | 코어의 도메인 트리거 목록이 `persona-triggers` 정본을 빠짐없이 포함하는가 |
+| 15 | 모든 `persona-*` skill 폴더명이 경로 조작 문자를 허용하지 않는 안전한 형식인가 |
 
 실행 방법과 결과 읽는 법은 [명령어](#명령어)와 [문제와 오류 대처 방법](#문제와-오류-대처-방법)을 참고하세요.
 
 ### 지속적 통합(CI)
 
-`.github/workflows/validate.yml`이 `main` 브랜치로의 push와 모든 Pull Request마다 `node validate.mjs`를 자동으로 실행해, 위 10가지 검사를 통과하지 못한 변경이 `main`에 들어오지 못하도록 막습니다.
+`.github/workflows/validate.yml`이 `main` 브랜치로의 push와 모든 Pull Request마다 `node validate.mjs`를 자동으로 실행해, 위 15가지 검사를 통과하지 못한 변경이 `main`에 들어오지 못하도록 막습니다.
 
 ---
 
@@ -511,7 +531,7 @@ Codex의 "플러그인"은 다음 4가지 요소로 이루어진 하나의 묶�
 
 ### 신뢰 승인 절차
 
-플러그인을 설치했다고 hook이 곧바로 실행되는 것은 아닙니다. Codex가 최초 활성화 시점에 hook의 정확한 내용을 사용자에게 보여주고 승인을 받은 뒤에만 실행을 허용합니다. 이 절차는 Codex 플랫폼 자체의 안전장치이며, 이 플러그인이 임의로 건너뛸 수 없습니다.
+플러그인의 설치·활성화·hook 실행 허용 여부는 Codex 버전, 사용 화면, 계정, 조직 정책이 결정합니다. 권한 확인 화면이 나타나면 플러그인 이름과 `node` 실행 대상을 확인한 뒤 승인하세요. 별도 화면이 없더라도 이 플러그인이 Codex 권한 체계를 우회하는 것은 아니며, 조직 정책이 차단한 기능을 스스로 켤 수 없습니다.
 
 ### 비가역 작업 게이트는 "행동 지침"이지 "시스템 방화벽"이 아님
 
@@ -556,14 +576,19 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 | 라이선스 전문 | 저장소 루트 `LICENSE` |
 | 저작권·상표·제3자 인용 고지 | 저장소 루트 `NOTICE` |
 | 실제 설치되는 플러그인 본체 | `plugins/sodam-persona/` |
-| 항상 켜지는 페르소나 코어 본문 | `plugins/sodam-persona/hooks/persona_core.md` |
-| 매 입력마다 주입되는 압축 마커 | `plugins/sodam-persona/hooks/persona_marker.txt` |
+| hook 이벤트와 실행 명령 정의 | `plugins/sodam-persona/hooks/hooks.json` |
+| SessionStart 실행 스크립트 / 코어 본문 | `plugins/sodam-persona/hooks/inject-core.js`, `persona_core.md` |
+| UserPromptSubmit 실행 스크립트 / 압축 마커 | `plugins/sodam-persona/hooks/inject-marker.js`, `persona_marker.txt` |
+| 9개 skill 전체 | `plugins/sodam-persona/skills/persona-*/SKILL.md` |
 | 트리거 단어 전체 목록과 관점 매핑표 | `plugins/sodam-persona/skills/persona-triggers/SKILL.md` |
 | 도메인 전문가 4종 상세 | `plugins/sodam-persona/skills/persona-investor|lawyer|accountant|marketer/SKILL.md` |
 | 새 페르소나 생성/편집 절차 원문 | `plugins/sodam-persona/commands/create.md`, `edit.md` |
 | 정합성 검사 스크립트 | 저장소 루트 `validate.mjs` |
 | 문서 HTML 재생성 스크립트 | 저장소 루트 `build-docs.mjs`, `doc-theme.html` |
 | Codex 마켓플레이스 정의(정본) | `.agents/plugins/marketplace.json` |
+| Agent Plugins 1.0 매니페스트(정본) | `plugins/sodam-persona/plugin.json` |
+| Codex fallback / 이전 Claude 호환 매니페스트 | `plugins/sodam-persona/.codex-plugin/plugin.json`, `.claude-plugin/plugin.json` |
+| 수동·자동 시험 시나리오 | `plugins/sodam-persona/reference/test_scenarios.md` |
 | CI(자동 검사) 설정 | `.github/workflows/validate.yml` |
 
 > 이 표에 없는 폴더(예: 개발 중 생긴 로컬 캐시·메모 파일)는 `.gitignore`에 등록되어 저장소에 포함되지 않으며, 이 플러그인을 새로 내려받는 사용자에게는 존재하지 않는 파일이므로 이 문서에서 다루지 않습니다.
@@ -575,13 +600,25 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 날짜가 최신인 항목이 위에 오도록 정리했습니다. 항목을 클릭(또는 탭)하면 세부 내용이 펼쳐집니다.
 
 <details>
+<summary><strong>2026-09-16 — 원본 v1.3.0 개선사항을 Codex 포트에 동기화</strong></summary>
+
+- 원본의 silent-failure 경고, 저신호 트리거 정리, 도메인 트리거 동기화, 법률·투자·회계세무 면책, 복구용 풀 코어 보완, 채팅 활성 표시를 Codex 전용 구조에 맞춰 이식했습니다.
+- `validate.mjs`를 15개 검사로 확장해 Codex hook 변수·스크립트, 실제 직렬화 출력 상한, 도메인 트리거 드리프트, skill 폴더명 안전성을 자동 검증합니다.
+- Agent Plugins 1.0 루트 `plugin.json`을 정본으로 추가하고 `.codex-plugin/plugin.json`을 fallback으로 유지했습니다. 세 매니페스트의 버전은 `1.3.0`으로 통일했습니다.
+- hook 주입 파일의 LF 고정 규칙을 추가했고, 기존 Codex 포트의 투자자 필수 면책과 보안 보강은 그대로 보존했습니다.
+- 배포 전 검증에서 훅 44개, 패키지 32개, 실패·경계값 16개 시나리오와 임시 Marketplace 설치본 실행을 통과했습니다.
+- README 다크 모드가 넓은 화면의 오른쪽에서 흰색으로 끊기던 문제를 수정하고 한국어·영문 HTML을 다시 생성했습니다.
+
+</details>
+
+<details>
 <summary><strong>2026-08-09 — 법률/저작권/라이선스/상업적 용도 전수 감사</strong></summary>
 
 - 회계·세무(#14)·법률(#11) 도메인에만 있던 "실행성 답변 시 면책 문구 필수" 규칙이 투자자(#13, 매매·포지션·타이밍 판단)에는 없었던 것을 발견.
 - `skills/persona-investor/SKILL.md`에 필수 면책 조항 추가, `validate.mjs`의 면책 검사(7번)에 편입 — **적용 완료**(`node validate.mjs` 통과 확인).
-- `hooks/persona_core.md`·`hooks/persona_marker.txt`(항상-주입 코어)의 "[면책 강제]" 규칙을 #13까지 넓히는 수정과 `plugins/sodam-persona/.claude-plugin/plugin.json`에 `license` 필드를 추가하는 수정은 저장소 자기보호 가드레일이 자동 편집을 막아 **미반영** — 수정할 정확한 내용은 채팅 보고로 전달, 사용자가 직접 편집기로 반영 필요.
+- 당시에는 코어·마커의 #13 면책 강제와 legacy 매니페스트의 `license` 필드가 미반영 상태였습니다. 이 후속 항목은 **2026-09-16 v1.3.0 동기화에서 모두 반영 완료**되었고, 현재 `validate.mjs`가 회귀 여부를 검사합니다.
 - LICENSE(Apache License 2.0 공식 원문)·NOTICE(저작권자·제3자 인용·상표 고지)·이 문서의 [법률, 저작권, 라이선스, 상업적 용도](#법률-저작권-라이선스-상업적-용도) 섹션은 내용·구조 모두 이상 없음을 재확인.
-- 의존성 파일(package.json 등)·이미지·폰트·assets 폴더가 저장소 전체에서 0건인 것도 재확인 — 제3자 라이선스 충돌 위험 없음.
+- 의존성 파일(package.json 등)·이미지·폰트·assets 폴더가 저장소 전체에서 0건인 것도 재확인 — 배포물에 포함된 제3자 패키지·자산은 발견되지 않음.
 
 </details>
 
@@ -664,13 +701,13 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 |---|---|---|
 | `codex plugin marketplace add .` 실행 시 실패 | 저장소 루트 폴더가 아닌 다른 위치에서 실행했거나, `.agents/plugins/marketplace.json`이 없음 | 저장소를 내려받은 폴더로 이동한 뒤(`README.md`가 보이는 위치) 다시 실행 |
 | 업데이트하려는데 "Marketplace not found" 오류 | `remove`를 `upgrade`보다 먼저 실행해서 마켓플레이스 등록 자체가 사라짐 | 반드시 **`upgrade` → `remove` → `add`** 순서를 지킬 것. 순서를 바꾸면 이 오류가 재현됩니다 |
-| 설치는 됐는데 페르소나가 전혀 활성화 안 되는 느낌 | 최초 hook 신뢰 승인 창을 놓치거나 거부함 | 새 task를 다시 시작해 신뢰 승인 창이 다시 뜨는지 확인하고 **허용**을 선택 |
+| 설치는 됐는데 페르소나가 전혀 활성화 안 되는 느낌 | 플러그인이 비활성화됐거나 권한·조직 정책·설치 캐시 때문에 hook이 실행되지 않음 | `codex plugin list`에서 활성화 상태 확인 → 새 task 시작 → 권한 창이 뜨면 내용을 확인하고 허용. 창이 없는데도 동작하지 않으면 조직 정책과 설치 캐시 확인 |
 | 플러그인 코드를 고쳤는데 실제 대화에 반영이 안 됨 | 설치 캐시는 파일을 고친다고 자동으로 갱신되지 않음 | `codex plugin marketplace upgrade sodam-persona` → `codex plugin remove sodam-persona@sodam-persona` → `codex plugin add sodam-persona@sodam-persona` 순서로 재설치 후 새 task 시작 |
 | 터미널에 `node`를 입력했더니 "인식할 수 없는 명령"이라고 나옴 | Node.js가 설치되지 않았거나, 설치 후 터미널을 새로 열지 않음 | `nodejs.org`에서 설치 후 열려 있던 터미널을 모두 닫고 새로 열기 |
 | `node build-docs.mjs` 실행 시 "pandoc이 설치되어 있지 않습니다" | Pandoc 미설치 | 문서를 직접 고칠 사람만 필요. 플러그인을 그냥 "쓰기"만 한다면 이 오류는 무시해도 됨. 고치려면 `pandoc.org/installing.html`에서 설치 |
-| `codex plugin marketplace add sodam-ai/SoDam-Persona` 실행 시 네트워크 오류 | Git 미설치, 저장소 이름 오탈자, 방화벽/프록시 차단 | `git --version`으로 Git 설치 확인 → 저장소 이름 철자 재확인 → 회사·학교망이라면 프록시 설정 확인 |
-| `node validate.mjs` 실행 결과가 `❌ FAIL` | 관점 수·트리거 수·스킬 수 등 어딘가 숫자가 어긋남(주로 새 페르소나 추가/편집 도중) | 출력된 오류 목록을 한 줄씩 읽고, 표시된 파일을 직접 열어 숫자를 맞춘 뒤 다시 실행. [아키텍처](#아키텍처)의 "10가지 검사표"에서 각 번호의 의미를 확인 |
-| 회계·세무 또는 법률 답변에 면책 문구가 안 보임 | 예상된 동작이 아닌 실제 결함일 가능성이 높음 | 저장소의 GitHub Issue로 신고 권장. `validate.mjs` 검사 7번이 이런 회귀를 막기 위한 장치이므로, 최신 버전인지도 함께 확인 |
+| `codex plugin marketplace add sodam-ai/SoDam-Persona-Codex` 실행 시 네트워크 오류 | Git 미설치, 저장소 이름 오탈자, 방화벽/프록시 차단 | `git --version`으로 Git 설치 확인 → 저장소 이름 철자 재확인 → 회사·학교망이라면 프록시 설정 확인 |
+| `node validate.mjs` 실행 결과가 `❌ FAIL` | 관점 수·트리거 수·스킬 수 등 어딘가 숫자가 어긋남(주로 새 페르소나 추가/편집 도중) | 출력된 오류 목록을 한 줄씩 읽고, 표시된 파일을 직접 열어 숫자를 맞춘 뒤 다시 실행. [아키텍처](#아키텍처)의 "15가지 검사표"에서 각 번호의 의미를 확인 |
+| 투자·회계세무·법률의 실행성 답변에 면책 문구가 안 보임 | 예상된 동작이 아닌 실제 결함일 가능성이 높음 | 최신 버전으로 재설치하고 새 task에서 다시 확인. 계속되면 재현 문장과 버전을 GitHub Issue에 기록. `validate.mjs` 검사 7번도 실행 |
 | Windows PowerShell에서 명령을 입력했더니 경로 관련 오류 | 따옴표·백슬래시가 사람이 옮겨 적는 과정에서 바뀜 | 이 문서의 코드 블록을 그대로 복사해서 붙여넣기(직접 타이핑하지 말 것) |
 | 세션이 길어진 뒤 페르소나가 흐트러진 느낌 | 정상적인 현상 — 매 입력마다 마커가 다시 주입되어 자동 복구되도록 설계됨 | 특별한 조치 불필요. 그래도 이상하면 새 task로 세션을 새로 시작 |
 
@@ -679,7 +716,7 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 ## 자주 묻는 질문 (FAQ)
 
 **Q. 이 플러그인은 무료인가요?**
-A. 네. Apache License 2.0으로 공개된 무료 오픈소스이며, 개인·상업적 용도 모두 사용할 수 있습니다. 자세한 조건은 [법률, 저작권, 라이선스, 상업적 용도](#법률-저작권-라이선스-상업적-용도)를 확인하세요.
+A. 이 저장소의 코드는 Apache License 2.0으로 공개되어 별도의 플러그인 사용료가 없습니다. 다만 Codex/OpenAI 계정·구독·사용량 요금과 인터넷 비용은 별개일 수 있습니다. 자세한 조건은 [법률, 저작권, 라이선스, 상업적 용도](#법률-저작권-라이선스-상업적-용도)를 확인하세요.
 
 **Q. 제 컴퓨터 파일을 마음대로 지우거나 고치나요?**
 A. 아니요. 이 플러그인의 hook은 플러그인 폴더 안 고정된 텍스트 파일 2개를 읽는 것 외에는 아무 파일도 쓰거나 지우지 않습니다. 삭제·배포처럼 되돌릴 수 없는 작업은 항상 사용자에게 먼저 확인을 구하도록 설계되어 있습니다. 자세히는 [보안과 데이터 흐름](#보안과-데이터-흐름) 참고.
@@ -721,12 +758,13 @@ A. 아니요. `UserPromptSubmit` hook이 매 입력마다 압축된 마커를 �
 
 ## 법률, 저작권, 라이선스, 상업적 용도
 
-> 아래 내용은 이해를 돕기 위한 요약입니다. **법률 자문이 아니며**, 법적 효력을 갖는 원문은 저장소의 `LICENSE`와 `NOTICE` 파일입니다. 상업적으로 재배포하거나 법적 판단이 필요한 상황이라면 독립적인 법률 검토를 받으시길 권장합니다(이는 `NOTICE` 파일에 명시된 안내이기도 합니다).
+> 아래 내용은 이해를 돕기 위한 요약이며 **법률 자문이 아닙니다**. 라이선스 조건을 정하는 문서는 저장소의 `LICENSE`입니다. `NOTICE`는 출처·고지를 전달하는 문서이며 라이선스 조건을 추가하거나 바꾸지 않습니다. 상업적 재배포나 권리 귀속 판단이 중요하면 독립적인 법률 검토를 받으세요.
 
 ### 라이선스: Apache License 2.0
 
-- **저작권자**: Copyright 2026 SoDam AI Studio
+- **프로젝트에 표시된 저작권 고지**: Copyright 2026 SoDam AI Studio (`NOTICE` 기준). 실제 법적 주체명, 기여자 권리 이전, AI 보조 작성물의 권리 귀속은 이번 기술 점검에서 독립적으로 입증하지 않았으므로 공식 납품·투자·권리 보증이 필요한 경우 **법무/전문가 검토 필요**
 - **원문 위치**: 저장소 루트 `LICENSE` 파일
+- **공식 참고 링크**: `https://www.apache.org/licenses/LICENSE-2.0` (저장소의 `LICENSE` 원문이 우선이며, 아래 설명은 쉬운 요약입니다)
 
 Apache License 2.0은 아래 4가지를 **명시적으로 허용**합니다.
 
@@ -735,7 +773,7 @@ Apache License 2.0은 아래 4가지를 **명시적으로 허용**합니다.
 | 상업적 이용 | 이 코드를 회사·개인 사업에 그대로 쓰거나 판매하는 제품에 포함해도 됩니다 |
 | 수정 | 코드를 자유롭게 고칠 수 있습니다 |
 | 배포 | 원본 그대로든 수정한 형태든 다른 사람에게 다시 배포할 수 있습니다 |
-| 특허 사용 | 기여자가 보유한 관련 특허권도 함께 사용할 수 있는 라이선스가 부여됩니다 |
+| 특허 사용 | 각 기여자가 허여할 수 있고 그 기여분 때문에 필연적으로 침해되는 특허 청구항에 한해 사용권이 부여됩니다. 특정 특허 소송을 제기하면 해당 특허 라이선스가 종료될 수 있습니다(원문 제3조) |
 
 대신 아래 조건을 **반드시 지켜야** 합니다.
 
@@ -754,14 +792,16 @@ Apache License 2.0은 아래 4가지를 **명시적으로 허용**합니다.
 
 ### 저작권 및 제3자 인용 (`NOTICE` 파일 요약)
 
-- 이 프로젝트는 아래 개념을 **짧은 인용구 형태로만 참조**하며, 해당 개념을 자신의 언어로 다시 구현했을 뿐 제3자의 소스 코드를 포함하거나 재배포하지 않습니다.
-  - "Chesterton's Fence"(체스터턴의 울타리) — G. K. Chesterton에게 귀속되는 개념
-  - "Hyrum's Law"(하이럼의 법칙) — Hyrum Wright에게 귀속되는 격언
-  - Goal-Driven Execution(목표 지향 실행) — Andrej Karpathy에게 귀속되는 짧은 문구
+- `plugins/sodam-persona/skills/persona-triggers/SKILL.md`에는 제3자의 소스 코드가 아니라 아래 **짧은 인용 또는 축약·의역 문구**가 들어 있습니다.
+  - "Chesterton's Fence" — G. K. Chesterton의 *The Thing* 중 "The Drift from Domesticity"와 연결되는 원칙을 단순화한 의역
+  - "Hyrum's Law" — Hyrum Wright에게 귀속되고 `https://www.hyrumslaw.com/`에 게시된 관찰을 축약한 표현
+  - Goal-Driven Execution — Andrej Karpathy에게 귀속되는 공개 게시물의 짧은 발췌. 확인한 공개 아카이브: `https://adhx.com/karpathy/status/2015883857489522876`
+- 이 출처 표시는 해당 문구가 퍼블릭 도메인이거나 이 프로젝트에 별도 허락되었거나 모든 국가에서 자유롭게 재사용 가능하다는 보장이 아닙니다. 공개·상업적 재배포 전에 인용 허용 범위, 관할법, 정확한 출처와 표시 방법은 **법무/전문가 검토 필요**입니다.
+- 현재 배포 후보에서는 제3자 소스 코드·이미지·아이콘·폰트·영상·음원 파일은 발견되지 않았습니다.
 
 ### 상표 고지
 
-이 문서와 프로젝트에서 언급하는 "Claude", "Claude Code", "Anthropic", "Codex", "OpenAI", "GitHub", "Node.js" 등의 제품·회사명은 각 소유자의 상표 또는 등록상표입니다. 이 프로젝트는 이들 중 어느 누구와도 제휴·후원·승인 관계가 없는 독립적인 프로젝트이며, 위 이름들은 오직 해당 제품을 가리키기 위한 목적으로만(명목적 사용) 사용되었습니다.
+이 문서와 프로젝트에서 언급하는 "Claude", "Claude Code", "Anthropic", "Codex", "OpenAI", "GitHub", "Node.js" 등의 제품·회사명은 각 소유자의 상표 또는 등록상표입니다. 이 프로젝트는 이들 중 어느 누구와도 제휴·후원·승인 관계가 없는 독립적인 프로젝트입니다. Apache License 2.0은 상표 사용권을 주지 않으므로, 해당 이름은 제품 식별·호환성·원본 출처 설명과 `NOTICE` 재현에 필요한 합리적인 범위에서만 사용해야 합니다.
 
 ### 도메인 전문가 페르소나에 대한 중요한 법적 고지
 
@@ -779,7 +819,7 @@ Apache License 2.0은 아래 4가지를 **명시적으로 허용**합니다.
   - 그 결과물이 기존 저작물과 실질적으로 유사하지 않은지(저작권 침해 가능성)
   - 사용한 AI 서비스(Codex/OpenAI 등)의 이용약관이 그 결과물의 상업적 이용을 허용하는지
   - 결과물이 참조했을 수 있는 오픈소스 코드의 라이선스 조건과 충돌하지 않는지
-- 이 플러그인의 규칙 문서 자체도 AI 코딩 도구를 이용한 반복 작업 과정에서 작성·정리되었습니다. 라이선스(Apache License 2.0)의 효력에는 영향이 없지만 참고로 밝혀둡니다.
+- 이 플러그인의 규칙 문서 자체도 AI 코딩 도구를 이용한 반복 작업 과정에서 작성·정리되었습니다. AI 도구 사용 사실만으로 저작권 귀속이나 라이선스 효력을 단정할 수는 없으므로 투명성을 위해 밝힙니다. 권리 귀속이 중요한 재배포는 독립적인 법률 검토를 받으세요.
 
 ### 외부 서비스, API 요금제, 모델 이용 정책은 별도로 확인해야 합니다
 
@@ -789,34 +829,45 @@ Apache License 2.0은 아래 4가지를 **명시적으로 허용**합니다.
 - 모델 사용 정책(허용/금지되는 사용 사례)
 - Codex/OpenAI의 서비스 약관 및 개인정보처리방침
 - 상업적 서비스에서 Codex 응답을 재판매·재사용할 때 별도 조건이 있는지 여부
+- 공식 플러그인 설치·권한 안내: `https://help.openai.com/en/articles/20001256/`
 
-### 점검 완료: 이미지·폰트·외부 의존성 라이선스 충돌 없음
+### 저장소에 포함된 자산·외부 의존성 점검
 
-이 저장소를 코드·문서 전체 기준으로 점검한 결과(2026-08-09 기준)입니다.
+이 저장소를 코드·문서 전체 기준으로 점검한 결과(2026-09-16 기준)입니다.
 
 | 점검 항목 | 결과 |
 |---|---|
-| package.json, package-lock.json, pnpm-lock.yaml, yarn.lock, requirements.txt, pyproject.toml, Cargo.toml, go.mod 등 의존성 파일 | 저장소 전체에서 **0건 확인** — 외부 라이브러리 의존성이 없어 서드파티 라이선스 충돌 위험 자체가 없음 |
+| package.json, package-lock.json, pnpm-lock.yaml, yarn.lock, requirements.txt, pyproject.toml, Cargo.toml, go.mod 등 의존성 파일 | 저장소 전체에서 **0건 확인** — 배포물에 묶여 들어가는 외부 패키지 의존성은 확인되지 않음 |
 | 이미지·아이콘·폰트·영상·음원 파일(png, svg, ico, woff, ttf, mp4, mp3 등) | 저장소 전체에서 **0건 확인** |
 | assets, public, static, samples, examples, fixtures 폴더 | 저장소 전체에서 **0건 확인** |
+| 샘플 계정, 이메일, 전화번호, 사용자 홈 절대경로, 실제 고객 데이터 | 배포 후보 35개 파일에서 **0건 확인**. 텍스트 테스트 시나리오는 일반화된 입력만 사용 |
+| 로컬 작업 기록(`.omc`, `.omx`, `.remember`, `.plugin-config`, `CHECKPOINT.md` 등) | `.gitignore`로 배포 대상에서 제외됨. 수동으로 폴더를 압축할 때 포함하지 말 것 |
 | hook 스크립트(inject-core.js, inject-marker.js)의 외부 패키지 사용 여부 | Node.js 내장 모듈만 사용, 외부 패키지 import/require **0건** |
 
-즉 이 플러그인은 코드·문서 텍스트만으로 이루어져 있어, 이미지·폰트·서드파티 패키지 라이선스로 인한 상업적 사용 제약이 현재 시점에는 존재하지 않습니다. 다만 이후 이미지·의존성이 추가되면 이 표는 다시 점검이 필요합니다.
+현재 저장소에 포함된 이미지·폰트·외부 패키지에서 추가 라이선스 의무는 확인되지 않았습니다. Node.js·Pandoc·Codex처럼 사용자가 별도로 설치하는 도구의 라이선스와 이용약관은 각각 따로 적용됩니다. 이후 자산이나 의존성을 추가하면 다시 점검해야 합니다.
 
 ### 상업적 용도 요약
 
-**왕초보를 위한 한 줄 정리**: 그대로 쓰기·고쳐 쓰기·복제(포크)·재배포·판매·서비스 운영·교육 자료 활용·고객사 납품까지 전부 가능합니다. 다만 "SoDam" 브랜드 자체를 내 것처럼 사칭하는 것만은 안 됩니다.
+**왕초보를 위한 한 줄 정리**: Apache License 2.0이 적용되는 이 프로젝트의 코드·문서는 그대로 쓰기, 고쳐 쓰기, 포크, 재배포, 판매, 서비스 운영, 교육 및 고객사 납품에 사용할 수 있습니다. 다만 상표, 제3자 인용, AI 생성 결과, 추가한 자료, 외부 서비스 약관과 실제 권리 귀속은 별도 확인 대상입니다.
 
 | 하고 싶은 것 | 가능 여부 | 조건 |
 |---|---|---|
-| 이 플러그인을 회사·개인 업무에 그대로 사용 | 가능 | 조건 없음 |
+| 이 플러그인을 회사·개인 업무에 그대로 사용(재배포하지 않음) | 가능 | 이 저장소 라이선스상 별도 재배포 의무 없음. Codex/OpenAI 이용약관·요금은 별도 |
 | 복제하거나 GitHub에서 포크(fork)해서 내 계정에 두기 | 가능 | 조건 없음(다른 사람에게 재배포할 때는 아래 "조건" 준수) |
 | 이 플러그인을 수정해서 내 상업 제품/서비스에 포함 | 가능 | 위 "조건" 표(라이선스 사본·변경 명시·고지 유지) 준수 |
 | 이 코드를 다시 패키징해서 유료로 재배포 | 가능 | 위와 동일. Apache License 2.0은 재배포 자체에 요금을 매기는 것을 금지하지 않습니다 |
-| 이 플러그인을 기반으로 한 서비스를 운영(SaaS 등) | 가능 | 위 "조건" 표 준수. 서비스가 실제 투자·법률·세무 자문으로 오인되지 않도록, 위 "도메인 전문가 페르소나에 대한 중요한 법적 고지" 내용을 서비스 이용자에게도 안내하는 것을 권장 |
+| 이 플러그인을 기반으로 한 서비스를 운영(SaaS 등) | 가능 | 소스·플러그인을 고객에게 배포하면 위 재배포 조건 준수. 서버 내부에서만 사용하더라도 Codex/OpenAI 약관, 개인정보, 전문업 규제를 별도 확인. 실제 투자·법률·세무 자문으로 오인되지 않도록 면책 고지 제공 권장 |
 | 교육 자료(강의·튜토리얼·사내 교육)로 활용 | 가능 | 조건 없음(자료를 재배포 형태로 나눠준다면 위 "조건" 표 준수) |
 | 회사/고객사에 납품하는 산출물에 포함 | 가능 | 위 "조건" 표 준수. 고객사에도 라이선스 사본과 NOTICE 고지가 함께 전달되어야 함 |
-| "SoDam", "sodam-ai" 브랜드명을 그대로 써서 내 제품인 것처럼 배포 | **권장하지 않음** | 라이선스는 코드 사용권이지 상표 사용권이 아닙니다(원문 제6조). 브랜드 원본 출처를 명확히 구분해 표기하세요 |
+| "SoDam", "sodam-ai" 브랜드명을 그대로 써서 내 제품의 출처·후원자로 오인되게 배포 | **허용된다고 볼 수 없음** | 라이선스는 상표 사용권을 주지 않습니다(원문 제6조). 원본 출처 설명 등 합리적이고 통상적인 표시 범위를 넘는 사용은 권리자 확인 필요 |
+
+### 공개·배포·납품 전 우선순위
+
+| 우선순위 | 해야 할 일 |
+|---|---|
+| **Must Have** | `LICENSE` 사본 제공, `NOTICE`의 관련 고지 전달, 수정 파일에 변경 사실 표시, 상표로 제휴·후원을 오인시키지 않기, 외부 서비스 약관·개인정보·고객 자료 사용 동의 확인 |
+| **Should Have** | 제3자 인용의 정확한 출처·허용 범위를 확인하고, 저작권자 표기의 법적 주체명·기여자 권리 이전·AI 보조 작성물의 권리 귀속 기록을 정리하기 |
+| **Could Have** | 회사/고객사 납품 계약, 면책·보증·손해배상 범위, 국가별 규제에 대해 변호사 검토를 받고 외부 자료 목록 또는 SBOM을 릴리스마다 보관하기 |
 
 ### 하면 안 되는 것 (요약)
 

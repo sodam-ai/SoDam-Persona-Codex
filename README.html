@@ -282,9 +282,9 @@ plugin — 원래 프로그램에 기능을 더해주는 작은 추가 프로그
 자동으로 실행되는 작은 프로그램) 2개와, 상황에 맞을 때만 불러오는 전문
 지식 모음(skill, 스킬) 9개로 이루어져 있습니다.</p>
 <blockquote>
-<p><strong>지금 버전</strong>: <code>1.3.0</code> · <strong>관점
-수</strong>: 15명 · <strong>트리거 패턴</strong>: 20개(A~T) ·
-<strong>스킬 수</strong>: 9개 · <strong>hook 수</strong>: 2개 ·
+<p><strong>지금 버전</strong>: <code>1.4.0</code> · <strong>관점
+수</strong>: 20명 · <strong>트리거 패턴</strong>: 25개(A~Y) ·
+<strong>스킬 수</strong>: 14개 · <strong>hook 수</strong>: 2개 ·
 <strong>라이선스</strong>: Apache License 2.0</p>
 </blockquote>
 <hr />
@@ -781,7 +781,7 @@ $persona-edit 투자자 트리거에 &quot;리밸런싱&quot;을 추가해줘</c
 <td><strong>L3</strong></td>
 <td>보안·금전·배포·되돌릴 수 없는 작업이 섞인 중대 작업</td>
 <td><code>persona-format</code> + <code>persona-triggers</code> +
-<code>persona-safety</code> 전부 활성화 + 15명 관점 전원 검토</td>
+<code>persona-safety</code> 전부 활성화 + 20명 관점 전원 검토</td>
 </tr>
 </tbody>
 </table>
@@ -806,15 +806,15 @@ L2·L3로</li>
 "출처", "사례", "팩트" 등 → 실제 근거를 제시하고 추측과 사실을 구분해서
 표기</li>
 </ol>
-<p>이 트리거 단어들은 20개의 패턴 그룹(A~T)으로 정리되어 있으며, 자세한
+<p>이 트리거 단어들은 25개의 패턴 그룹(A~Y)으로 정리되어 있으며, 자세한
 단어 목록과 충돌 시 우선순위는 <code>persona-triggers</code> skill에
 전부 정리되어 있습니다. 우선순위 요약: <strong>분량 제약(간단히 등) &gt;
 강도(깊게 등) &gt; 도메인 전문가 &gt; 단일 관점 &gt; 추가
 skill.</strong></p>
 <h3
-id="15명의-관점--매-응답-전-자동으로-검토되는-전문가-체크리스트">15명의
+id="20명의-관점--매-응답-전-자동으로-검토되는-전문가-체크리스트">20명의
 관점 — 매 응답 전 자동으로 검토되는 전문가 체크리스트</h3>
-<p>L1 이상의 모든 응답에서, 아래 15개 관점 중 그 작업과 관련 있는
+<p>L1 이상의 모든 응답에서, 아래 20개 관점 중 그 작업과 관련 있는
 3~5개를 짧게라도 내부적으로 검토한 뒤 답합니다(트리거 단어가 없어도 자동
 적용됩니다). L0 잡담이나 "간단히"류 요청에는 적용되지 않습니다.</p>
 <table>
@@ -901,12 +901,38 @@ id="15명의-관점--매-응답-전-자동으로-검토되는-전문가-체크�
 <td>마케팅·세일즈 전문가(15년+)</td>
 <td>카피·광고·전환·SEO가 걸린 작업</td>
 </tr>
+<tr>
+<td>16</td>
+<td>건축 설계 전문가(15년+)</td>
+<td>배치·법규·인허가·협력 설계가 걸린 작업</td>
+</tr>
+<tr>
+<td>17</td>
+<td>인테리어 설계 전문가(15년+)</td>
+<td>공간·동선·마감·조명·가구가 걸린 작업</td>
+</tr>
+<tr>
+<td>18</td>
+<td>건축·인테리어 시공 전문가(15년+)</td>
+<td>공법·공정·품질·안전·하자가 걸린 작업</td>
+</tr>
+<tr>
+<td>19</td>
+<td>건축·인테리어 견적 전문가(15년+)</td>
+<td>물량·단가·공사비·VE가 걸린 작업</td>
+</tr>
+<tr>
+<td>20</td>
+<td>건축·인테리어 디자인 디렉터(15년+)</td>
+<td>공간 콘셉트·재료·디자인 일관성이 걸린 작업</td>
+</tr>
 </tbody>
 </table>
-<h3 id="도메인-전문가-4종--조건부로-깊게-들어가는-전문-지식">도메인
-전문가 4종 — 조건부로 깊게 들어가는 전문 지식</h3>
-<p>위 15개 관점 중 #11·#13·#14·#15는 전용 skill을 따로 갖고 있어, 관련
-트리거가 감지되면 훨씬 깊은 지식이 추가로 로드됩니다.</p>
+<h3 id="도메인-전문가-9종--조건부로-깊게-들어가는-전문-지식">도메인
+전문가 9종 — 조건부로 깊게 들어가는 전문 지식</h3>
+<p>위 20개 관점 중 #11·#13·#14·#15·#16·#17·#18·#19·#20은 전용 skill을
+따로 갖고 있어, 관련 트리거가 감지되면 훨씬 깊은 지식이 추가로
+로드됩니다.</p>
 <ul>
 <li><strong>전문 투자자(#13, <code>persona-investor</code>)</strong>:
 "이게 실패하면 사용자가 돈을 잃는가?"를 항상 자문. 체결
@@ -923,6 +949,21 @@ id="15명의-관점--매-응답-전-자동으로-검토되는-전문가-체크�
 <li><strong>마케팅·세일즈 전문가(#15,
 <code>persona-marketer</code>)</strong>: 포지셔닝·카피·전환율·SEO를
 다루되, 과장·허위 광고 표현은 걸러냅니다.</li>
+<li><strong>건축 설계 전문가(#16,
+<code>persona-architectural-designer</code>)</strong>:
+배치·법규·인허가·도면 정합성과 협력 설계를 다룹니다.</li>
+<li><strong>인테리어 설계 전문가(#17,
+<code>persona-interior-designer</code>)</strong>:
+공간·동선·마감·조명·가구와 실내 상세를 다룹니다.</li>
+<li><strong>시공 전문가(#18,
+<code>persona-construction-expert</code>)</strong>:
+공법·공정·품질·안전·하자와 현장 조건을 다룹니다.</li>
+<li><strong>견적 전문가(#19,
+<code>persona-cost-estimator</code>)</strong>:
+물량·단가·공사비·VE·변경비용과 견적 조건을 다룹니다.</li>
+<li><strong>디자인 디렉터(#20,
+<code>persona-design-director</code>)</strong>: 콘셉트·형태·색채·재료와
+건축·인테리어의 일관성을 다룹니다.</li>
 </ul>
 <p>여러 도메인이 동시에 걸리면(예: "이 투자수익 세금과 법적 리스크")
 관련된 도메인 전문가가 모두 함께 활성화됩니다.</p>
@@ -969,7 +1010,7 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
        │
        ▼
 6. 조건에 맞는 skill 조건부 로드
-   (persona-triggers / persona-format / persona-safety / 도메인 4종 중 해당하는 것)
+   (persona-triggers / persona-format / persona-safety / 도메인 9종 중 해당하는 것)
        │
        ▼
 7. L2·L3는 7단계 응답 형식(복기 → 근본 원인 → 추천 방향 → 실행 순서 →
@@ -1061,11 +1102,16 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 응답 형식
     │   ├── persona-safety/SKILL.md       # 보안 always-on, 비가역 작업 게이트
-    │   ├── persona-triggers/SKILL.md     # 트리거 단어 A~T 상세, 15개 관점 매핑표
+    │   ├── persona-triggers/SKILL.md     # 트리거 단어 A~Y 상세, 20개 관점 매핑표
     │   ├── persona-investor/SKILL.md     # #13 전문 투자자 도메인
     │   ├── persona-lawyer/SKILL.md       # #11 전문 변호사 도메인
     │   ├── persona-accountant/SKILL.md   # #14 회계·세무 전문가 도메인
     │   ├── persona-marketer/SKILL.md     # #15 마케팅·세일즈 전문가 도메인
+    │   ├── persona-architectural-designer/SKILL.md # #16 건축 설계 도메인
+    │   ├── persona-interior-designer/SKILL.md      # #17 인테리어 설계 도메인
+    │   ├── persona-construction-expert/SKILL.md    # #18 시공 도메인
+    │   ├── persona-cost-estimator/SKILL.md         # #19 견적 도메인
+    │   ├── persona-design-director/SKILL.md        # #20 디자인 디렉션 도메인
     │   ├── persona-create/SKILL.md       # 새 페르소나 생성 인터뷰 진입점
     │   └── persona-edit/SKILL.md         # 트리거 편집 인터뷰 진입점
     ├── commands/
@@ -1073,6 +1119,7 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
     │   └── edit.md                       # persona-edit이 읽어 수행하는 절차 본문
     └── reference/
         ├── persona_full_core.md          # 페르소나 풀 정의(L3 전면 활성/세션 복구용)
+        ├── built_environment_collaboration.md # 건축·인테리어 공통 입력·인계·충돌 규칙
         └── test_scenarios.md             # 트리거 동작 검증용 발화 시나리오 모음</code></pre>
 <p><code>commands/</code> 폴더는 Claude Code 시절 workflow 원문을 보존한
 내부 참조입니다. Codex에서는 이를 직접 slash 명령으로 실행하지 않고,
@@ -1097,12 +1144,12 @@ Node.js 내장 기능만 사용합니다.</p>
 </tr>
 <tr>
 <td>2</td>
-<td>"15명"·"15관점" 같은 표기가 모든 핵심 파일(코어·마커·skill·README
+<td>"20명"·"20관점" 같은 표기가 모든 핵심 파일(코어·마커·skill·README
 등)에서 실제 관점 수와 일치하는가</td>
 </tr>
 <tr>
 <td>3</td>
-<td>트리거 패턴 알파벳(A~T) 개수 표기가 실제 섹션 수와 일치하는가</td>
+<td>트리거 패턴 알파벳(A~Y) 개수 표기가 실제 섹션 수와 일치하는가</td>
 </tr>
 <tr>
 <td>4</td>
@@ -1111,8 +1158,8 @@ Node.js 내장 기능만 사용합니다.</p>
 </tr>
 <tr>
 <td>5</td>
-<td>도메인 페르소나 4종(투자·법률·회계세무·마케팅)이 코어와 마커 파일
-양쪽에 모두 배선되어 있는가</td>
+<td>도메인 페르소나 9종이 코어와 마커 파일 양쪽에 모두 배선되어
+있는가</td>
 </tr>
 <tr>
 <td>6</td>
@@ -1121,8 +1168,8 @@ JSON의 이름·버전·소스 경로가 올바른가</td>
 </tr>
 <tr>
 <td>7</td>
-<td>회계·세무(#14), 법률(#11), 투자(#13) 답변에 필요한 면책 규칙이
-실제로 존재하는가</td>
+<td>9개 도메인의 필수 면책·자격자 확인·확정 금액 경계가 실제로
+존재하는가</td>
 </tr>
 <tr>
 <td>8</td>
@@ -1156,8 +1203,8 @@ JSON의 이름·버전·소스 경로가 올바른가</td>
 </tr>
 <tr>
 <td>14</td>
-<td>코어의 도메인 트리거 목록이 <code>persona-triggers</code> 정본을
-빠짐없이 포함하는가</td>
+<td>코어 트리거가 정본과 일치하며, 건축·인테리어 5종이 공통 협업 규칙을
+참조하고 일반어 단독 트리거를 피하는가</td>
 </tr>
 <tr>
 <td>15</td>
@@ -1303,7 +1350,7 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 <code>persona_marker.txt</code></td>
 </tr>
 <tr>
-<td>9개 skill 전체</td>
+<td>14개 skill 전체</td>
 <td><code>plugins/sodam-persona/skills/persona-*/SKILL.md</code></td>
 </tr>
 <tr>
@@ -1311,7 +1358,7 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 <td><code>plugins/sodam-persona/skills/persona-triggers/SKILL.md</code></td>
 </tr>
 <tr>
-<td>도메인 전문가 4종 상세</td>
+<td>도메인 전문가 9종 상세</td>
 <td>`plugins/sodam-persona/skills/persona-investor</td>
 </tr>
 <tr>
@@ -1362,6 +1409,20 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 <p>날짜가 최신인 항목이 위에 오도록 정리했습니다. 항목을 클릭(또는
 탭)하면 세부 내용이 펼쳐집니다.</p>
 <details>
+<summary><strong>2026-09-16 — 건축·인테리어 프로젝트 전문 페르소나 5종 추가</strong></summary>
+
+<ul>
+<li>건축 설계·인테리어 설계·시공·견적·디자인 디렉터를 15년+ 경력의
+조건부 전문 관점으로 추가했습니다.</li>
+<li>공통 프로젝트 입력, 역할 인계, 충돌 우선순위, 동시 활성, 법정 자격
+오인 방지를 <code>built_environment_collaboration.md</code>에
+통합했습니다.</li>
+<li>관점 20개, 트리거 패턴 25개(A~Y), 스킬 14개로 확장하고
+hook·문서·검증기를 동기화했습니다.</li>
+</ul>
+</details>
+
+<details>
 <summary><strong>2026-09-16 — 원본 v1.3.0 개선사항을 Codex 포트에 동기화</strong></summary>
 
 <ul>
@@ -1373,7 +1434,7 @@ Codex 전용 구조에 맞춰 이식했습니다.</li>
 폴더명 안전성을 자동 검증합니다.</li>
 <li>Agent Plugins 1.0 루트 <code>plugin.json</code>을 정본으로 추가하고
 <code>.codex-plugin/plugin.json</code>을 fallback으로 유지했습니다. 세
-매니페스트의 버전은 <code>1.3.0</code>으로 통일했습니다.</li>
+매니페스트의 버전은 <code>1.4.0</code>으로 통일했습니다.</li>
 <li>hook 주입 파일의 LF 고정 규칙을 추가했고, 기존 Codex 포트의 투자자
 필수 면책과 보안 보강은 그대로 보존했습니다.</li>
 <li>배포 전 검증에서 훅 44개, 패키지 32개, 실패·경계값 16개 시나리오와
@@ -1462,8 +1523,8 @@ skill 신설 — 코드를 몰라도 대화로 새 도메인 전문가를 추가
 
 <p>이 프로젝트에서 가장 큰 변화가 몰린 날입니다.</p>
 <ul>
-<li>관점 수를 13에서 14로(회계·세무 전문가 신설), 다시
-15명으로(마케팅·세일즈 전문가 신설) 확장.</li>
+<li>관점 수를 13에서 14로(회계·세무 전문가 신설), 다시 당시 15번째
+관점으로 마케팅·세일즈 전문가를 신설.</li>
 <li>회계·세무(#14)·법률(#11) 도메인에 고빈도 트리거 단어를 대폭
 확충.</li>
 <li>기존 관점 5개에 트리거 단어를 보강(관점 수 자체는 변경 없음).</li>
@@ -1639,7 +1700,7 @@ href="#워크플로우">워크플로우</a> 참고.</p>
 전환됩니다. 이 규칙은 다른 모든 규칙보다 우선순위가 가장 높습니다.</p>
 <p><strong>Q. 반대로 훨씬 더 깊고 꼼꼼하게 봐주면 좋겠어요.</strong> A.
 "객관적으로", "깊게", "철저히", "페르소나 풀버전" 같은 표현을 사용하면
-15명 관점 전원이 검토에 들어갑니다.</p>
+20명 관점 전원이 검토에 들어갑니다.</p>
 <p><strong>Q. 오작동이나 버그를 발견했어요. 어디에 알리면
 되나요?</strong> A. 저장소의 GitHub Issue 기능으로 신고해 주세요. 재현
 가능한 발화 예시를 함께 적어주시면 원인 파악이 빨라집니다.</p>

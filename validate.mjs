@@ -2,7 +2,7 @@
 /**
  * SoDam-Persona 정합성 검사기 (자기완결 — Node 내장만 사용, 의존성 0)
  *
- * 목적: 관점 수(11→12→13→14→15 같은) 드리프트·스킬 수 불일치·도메인 배선 누락·
+ * 목적: 관점 수(15→20 같은) 드리프트·스킬 수 불일치·도메인 배선 누락·
  *       JSON 오류를 push 전에 기계적으로 잡는다. (AGENTS.md 하네스 원칙: 골든 룰을 규칙으로 인코딩)
  *
  * 사용: node validate.mjs   (저장소 루트에서. 종료코드 0=통과, 1=실패)
@@ -128,7 +128,7 @@ for (const f of ['README.md']) {
 }
 
 // ── 5) 도메인 페르소나 배선 (core 파일맵 · marker 파일맵에 모두 존재) ────
-const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer'];
+const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director'];
 const core = read(pluginPath('hooks/persona_core.md'));
 const marker = read(pluginPath('hooks/persona_marker.txt'));
 for (const d of DOMAINS) {
@@ -138,7 +138,7 @@ for (const d of DOMAINS) {
 }
 
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
-const EXPECTED_PLUGIN_VERSION = '1.3.0';
+const EXPECTED_PLUGIN_VERSION = '1.4.0';
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
 const manifestPaths = [
   pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
@@ -188,6 +188,11 @@ const DISCLAIMER_CHECKS = [
   [pluginPath('skills/persona-accountant/SKILL.md'), '면책'],
   [pluginPath('skills/persona-lawyer/SKILL.md'), '면책'],
   [pluginPath('skills/persona-investor/SKILL.md'), '면책'],
+  [pluginPath('skills/persona-architectural-designer/SKILL.md'), '최종 확인'],
+  [pluginPath('skills/persona-interior-designer/SKILL.md'), '최종 확인'],
+  [pluginPath('skills/persona-construction-expert/SKILL.md'), '최종 확인'],
+  [pluginPath('skills/persona-cost-estimator/SKILL.md'), '확정 금액'],
+  [pluginPath('skills/persona-design-director/SKILL.md'), '자격자 확인'],
 ];
 for (const [f, kw] of DISCLAIMER_CHECKS) {
   if (!existsSync(P(f))) { err(`면책 검사 대상 파일 없음: ${f}`); continue; }
@@ -379,6 +384,11 @@ const DOMAIN_CORE_HEADINGS = [
   ['K', '전문 변호사 페르소나'],
   ['S', '회계·세무 전문가 페르소나'],
   ['T', '마케팅·세일즈 전문가 페르소나'],
+  ['U', '건축 설계 전문가 페르소나'],
+  ['V', '인테리어 설계 전문가 페르소나'],
+  ['W', '건축·인테리어 시공 전문가 페르소나'],
+  ['X', '건축·인테리어 견적 전문가 페르소나'],
+  ['Y', '건축·인테리어 디자인 디렉터 페르소나'],
 ];
 function extractSection(text, marker, endRe) {
   const start = text.indexOf(marker);
@@ -412,6 +422,33 @@ for (const [letter, coreHeading] of DOMAIN_CORE_HEADINGS) {
   for (const w of canonicalWords) {
     if (!coreWords.has(w)) err(`persona_core.md "${coreHeading}" 트리거 누락: "${w}" (persona-triggers ${letter}절엔 있음, 정본이라던 core엔 없음)`);
   }
+}
+
+// ── 14-1) 건축·인테리어 계열의 경계·협업·오발동 안전성 ────────────────
+const BUILT_ENVIRONMENT_DOMAINS = [
+  ['U', 'persona-architectural-designer'],
+  ['V', 'persona-interior-designer'],
+  ['W', 'persona-construction-expert'],
+  ['X', 'persona-cost-estimator'],
+  ['Y', 'persona-design-director'],
+];
+const BUILT_COLLAB_REF = 'reference/built_environment_collaboration.md';
+const OVERBROAD_BUILT_TRIGGERS = new Set(['건축', '인테리어', '설계', '시공', '견적', '디자인', '공간', '공사']);
+for (const [letter, skillName] of BUILT_ENVIRONMENT_DOMAINS) {
+  const skillPath = pluginPath(`skills/${skillName}/SKILL.md`);
+  if (!existsSync(P(skillPath))) { err(`건축·인테리어 도메인 skill 누락: ${skillName}`); continue; }
+  const skillText = read(skillPath);
+  if (!skillText.includes(BUILT_COLLAB_REF)) err(`${skillName}에 공통 협업 프로토콜 참조 누락`);
+  if (!skillText.includes('15년+')) err(`${skillName}에 15년+ 경력 기준 누락`);
+
+  const triggerSection = extractSection(triggers, `## ${letter}. `, /\n## [A-Z]\. /);
+  const triggerWordLine = triggerSection && triggerSection.match(/트리거 단어군:\s*([^\n]+)/);
+  if (!triggerWordLine) continue; // 14번 검사가 상세 오류를 이미 보고한다.
+  const overbroad = wordsFromList(triggerWordLine[1]).filter((w) => OVERBROAD_BUILT_TRIGGERS.has(w));
+  if (overbroad.length) err(`${skillName}의 단독 일반어 트리거가 오발동 위험: ${overbroad.join(', ')}`);
+}
+for (const target of [core, marker]) {
+  if (!target.includes(BUILT_COLLAB_REF)) err(`건축·인테리어 공통 협업 프로토콜이 core/marker에 연결되지 않음`);
 }
 
 // ── 15) 페르소나 스킬 폴더명 안전성 검사 (2026-09-01 추가) ──────────────────

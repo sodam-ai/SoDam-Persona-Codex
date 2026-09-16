@@ -287,9 +287,9 @@ ability Codex already has. It consists of 2 always-on core rules
 specific moment) and 9 conditional expert knowledge modules
 (<strong>skills</strong>) that load only when relevant.</p>
 <blockquote>
-<p><strong>Current version</strong>: <code>1.3.0</code> ·
-<strong>Perspectives</strong>: 15 · <strong>Trigger patterns</strong>:
-20 patterns (A-T) · <strong>Skills (9)</strong> ·
+<p><strong>Current version</strong>: <code>1.4.0</code> ·
+<strong>Perspectives</strong>: 20 · <strong>Trigger patterns</strong>:
+25 patterns (A-Y) · <strong>Skills (14)</strong> ·
 <strong>Hooks</strong>: 2 · <strong>License</strong>: Apache License
 2.0</p>
 </blockquote>
@@ -824,7 +824,7 @@ procedure</td>
 <td>Major work involving security, money, deployment, or irreversible
 actions</td>
 <td><code>persona-format</code> + <code>persona-triggers</code> +
-<code>persona-safety</code> all activate, plus a full review by all 15
+<code>persona-safety</code> all activate, plus a full review by all 20
 perspectives</td>
 </tr>
 </tbody>
@@ -852,16 +852,16 @@ alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone →
 "evidence", "source", "example", "fact" etc. → present real evidence and
 clearly separate speculation from confirmed fact</li>
 </ol>
-<p>These trigger words are organized into 20 patterns (A-T), and the
+<p>These trigger words are organized into 25 patterns (A-Y), and the
 full word lists plus the priority order for conflicts all live in the
 <code>persona-triggers</code> skill. Priority summary: <strong>length
 constraints (e.g. "briefly") &gt; intensity (e.g. "in depth") &gt;
 domain expert &gt; single perspective &gt; additional
 skill.</strong></p>
 <h3
-id="15-perspectives--the-expert-checklist-reviewed-before-every-answer">15
+id="20-perspectives--the-expert-checklist-reviewed-before-every-answer">20
 perspectives — the expert checklist reviewed before every answer</h3>
-<p>For every response at L1 or above, 3-5 of the 15 perspectives below
+<p>For every response at L1 or above, 3-5 of the 20 perspectives below
 that are relevant to the task are briefly reviewed internally before
 answering — automatically, even without a trigger word. This does not
 apply to L0 small talk or "briefly"-style requests.</p>
@@ -952,13 +952,38 @@ required)</td>
 <td>Marketing/sales specialist (15+ years)</td>
 <td>Work involving copy, ads, conversion, SEO</td>
 </tr>
+<tr>
+<td>16</td>
+<td>Architectural design specialist (15+ years)</td>
+<td>Site planning, codes, permits, multidisciplinary design</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Interior design specialist (15+ years)</td>
+<td>Space, circulation, finishes, lighting, furniture</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Building/interior construction specialist (15+ years)</td>
+<td>Methods, schedule, quality, safety, defects</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Building/interior cost estimator (15+ years)</td>
+<td>Quantities, unit rates, construction cost, value engineering</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Building/interior design director (15+ years)</td>
+<td>Spatial concept, materials, design coherence</td>
+</tr>
 </tbody>
 </table>
-<h3 id="4-domain-experts--conditionally-going-deep">4 domain experts —
+<h3 id="9-domain-experts--conditionally-going-deep">9 domain experts —
 conditionally going deep</h3>
-<p>Among the 15 perspectives above, #11, #13, #14, and #15 each have
-their own dedicated skill, which loads much deeper knowledge when a
-related trigger is detected.</p>
+<p>Among the 20 perspectives above, #11, #13, #14, #15, #16, #17, #18,
+#19, and #20 each have their own dedicated skill, which loads much
+deeper knowledge when a related trigger is detected.</p>
 <ul>
 <li><strong>Professional investor (#13,
 <code>persona-investor</code>)</strong>: Always asks "if this fails,
@@ -980,6 +1005,23 @@ CPA confirm before actually filing or paying."</li>
 <code>persona-marketer</code>)</strong>: Covers positioning,
 copywriting, conversion rate, and SEO, while filtering out exaggerated
 or false advertising claims.</li>
+<li><strong>Architectural design specialist (#16,
+<code>persona-architectural-designer</code>)</strong>: Covers site
+planning, codes, permits, drawing coordination, and multidisciplinary
+design.</li>
+<li><strong>Interior design specialist (#17,
+<code>persona-interior-designer</code>)</strong>: Covers space,
+circulation, finishes, lighting, furniture, and interior details.</li>
+<li><strong>Construction specialist (#18,
+<code>persona-construction-expert</code>)</strong>: Covers methods,
+schedule, quality, safety, defects, and site conditions.</li>
+<li><strong>Cost estimator (#19,
+<code>persona-cost-estimator</code>)</strong>: Covers quantities, unit
+rates, construction cost, value engineering, changes, and estimate
+assumptions.</li>
+<li><strong>Design director (#20,
+<code>persona-design-director</code>)</strong>: Covers concept, form,
+color, materials, and coherence between architecture and interiors.</li>
 </ul>
 <p>When multiple domains apply at once (e.g., "the tax and legal risk of
 this investment income"), all relevant domain experts activate
@@ -1131,11 +1173,16 @@ Codex versions.</p>
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 response format
     │   ├── persona-safety/SKILL.md       # Always-on security rules, irreversible-action gate
-    │   ├── persona-triggers/SKILL.md     # Full A-T trigger-word detail and the 15-perspective mapping table
+    │   ├── persona-triggers/SKILL.md     # Full A-Y trigger-word detail and the 20-perspective mapping table
     │   ├── persona-investor/SKILL.md     # #13 professional investor domain
     │   ├── persona-lawyer/SKILL.md       # #11 professional lawyer domain
     │   ├── persona-accountant/SKILL.md   # #14 accounting/tax specialist domain
     │   ├── persona-marketer/SKILL.md     # #15 marketing/sales specialist domain
+    │   ├── persona-architectural-designer/SKILL.md # #16 architectural design domain
+    │   ├── persona-interior-designer/SKILL.md      # #17 interior design domain
+    │   ├── persona-construction-expert/SKILL.md    # #18 construction domain
+    │   ├── persona-cost-estimator/SKILL.md         # #19 estimating domain
+    │   ├── persona-design-director/SKILL.md        # #20 design direction domain
     │   ├── persona-create/SKILL.md       # Entry point for the new-persona creation interview
     │   └── persona-edit/SKILL.md         # Entry point for the trigger-editing interview
     ├── commands/
@@ -1143,6 +1190,7 @@ Codex versions.</p>
     │   └── edit.md                       # The procedure persona-edit reads and follows
     └── reference/
         ├── persona_full_core.md          # The full persona definition (for full L3 activation / session recovery)
+        ├── built_environment_collaboration.md # Shared inputs, handoffs, and conflict rules
         └── test_scenarios.md             # A set of sample utterances for verifying trigger behavior</code></pre>
 <p>The <code>commands/</code> folder preserves the original Claude Code
 workflow text as an internal reference. Codex does not run these as
@@ -1171,12 +1219,12 @@ entry</td>
 </tr>
 <tr>
 <td>2</td>
-<td>Labels such as "15 people" and "15 perspectives" match the actual
+<td>Labels such as "20 people" and "20 perspectives" match the actual
 count in every core file, skill, and README</td>
 </tr>
 <tr>
 <td>3</td>
-<td>The documented A-T trigger-pattern count matches the actual section
+<td>The documented A-Y trigger-pattern count matches the actual section
 count</td>
 </tr>
 <tr>
@@ -1187,7 +1235,7 @@ cross-checks)</td>
 </tr>
 <tr>
 <td>5</td>
-<td>All four domain personas are wired into both the core and marker
+<td>All nine domain personas are wired into both the core and marker
 files</td>
 </tr>
 <tr>
@@ -1198,8 +1246,8 @@ paths</td>
 </tr>
 <tr>
 <td>7</td>
-<td>Mandatory disclaimer rules exist for accounting/tax (#14), legal
-(#11), and investor (#13) answers</td>
+<td>Required disclaimers, qualified-review boundaries, and non-final
+estimate wording exist for all nine domains</td>
 </tr>
 <tr>
 <td>8</td>
@@ -1233,8 +1281,9 @@ scripts, and pair context-limit settings with the project cap</td>
 </tr>
 <tr>
 <td>14</td>
-<td>Core domain-trigger lists fully contain the canonical trigger
-lists</td>
+<td>Core triggers match the canonical lists, and all five
+built-environment skills share the collaboration protocol without broad
+single-word triggers</td>
 </tr>
 <tr>
 <td>15</td>
@@ -1450,6 +1499,20 @@ downloads this plugin, so this document does not cover it.</p>
 <p>Listed with the most recent entries at the top. Click (or tap) an
 item to expand its details.</p>
 <details>
+<summary><strong>2026-09-16 — Added five built-environment specialist personas</strong></summary>
+
+<ul>
+<li>Added 15+ year perspectives for architectural design, interior
+design, construction, cost estimating, and design direction.</li>
+<li>Centralized shared project inputs, handoffs, conflict priority,
+joint activation, and regulated-title safeguards in
+<code>built_environment_collaboration.md</code>.</li>
+<li>Expanded the plugin to 20 perspectives, 25 trigger patterns (A-Y),
+and 14 skills, with hooks, docs, and validation synchronized.</li>
+</ul>
+</details>
+
+<details>
 <summary><strong>2026-09-16 — Synced the original v1.3.0 improvements into the Codex port</strong></summary>
 
 <ul>
@@ -1464,7 +1527,7 @@ and safe skill-folder names.</li>
 <li>Added the Agent Plugins 1.0 root <code>plugin.json</code> as the
 canonical manifest while retaining
 <code>.codex-plugin/plugin.json</code> as a fallback. All three
-manifests now report version <code>1.3.0</code>.</li>
+manifests now report version <code>1.4.0</code>.</li>
 <li>Added LF enforcement for injected hook files and preserved the Codex
 port's investor disclaimer and security hardening.</li>
 <li>Passed 44 hook, 32 package, and 16 failure/boundary checks plus
@@ -1768,7 +1831,7 @@ switches it to a short format immediately. This rule has the highest
 priority of all.</p>
 <p><strong>Q. I actually want it to go deeper and more
 thorough.</strong> A. Using expressions like "objectively", "in depth",
-"thoroughly", or "full persona version" brings all 15 perspectives into
+"thoroughly", or "full persona version" brings all 20 perspectives into
 the review.</p>
 <p><strong>Q. I found a bug or something misbehaving. Where do I report
 it?</strong> A. Please report it through the repository's GitHub Issues

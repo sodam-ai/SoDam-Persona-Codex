@@ -62,4 +62,3 @@ test('validate.mjs: unsafe skill folder 차단', () => {
     assert.match(result.stdout, /안전한 형식/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
-

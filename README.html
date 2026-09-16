@@ -282,7 +282,7 @@ plugin — 원래 프로그램에 기능을 더해주는 작은 추가 프로그
 자동으로 실행되는 작은 프로그램) 2개와, 상황에 맞을 때만 불러오는 전문
 지식 모음(skill, 스킬) 31개로 이루어져 있습니다.</p>
 <blockquote>
-<p><strong>지금 버전</strong>: <code>1.10.0</code> · <strong>관점
+<p><strong>지금 버전</strong>: <code>1.10.1</code> · <strong>관점
 수</strong>: 37명 · <strong>트리거 패턴</strong>: 43개(A~AQ) ·
 <strong>스킬 수</strong>: 31개 · <strong>hook 수</strong>: 2개 ·
 <strong>라이선스</strong>: Apache License 2.0</p>
@@ -363,7 +363,7 @@ Windows PowerShell 기준입니다. macOS/Linux에서는 해당 운영체제의
 Terminal에서 같은 <code>codex</code>, <code>node</code>,
 <code>git</code> 명령을 사용하되, Codex 플러그인 제공 여부와 화면 이름은
 설치한 Codex 버전·계정·조직 정책에 따라 다를 수 있습니다.</p>
-<p><strong>현재 검증 기준(2026-09-16)</strong>: Windows의 Codex CLI
+<p><strong>현재 검증 기준(2026-09-17)</strong>: Windows의 Codex CLI
 <code>0.154.0</code> 도움말과 설치·제거 명령 구문을 확인했고, Node.js 20
 CI 호환 실행, hook 정상/오류/대용량 입력, Chrome 데스크톱·태블릿·모바일
 문서를 확인했습니다. macOS/Linux 실기기와 모든 Codex 앱·IDE 화면 조합은
@@ -1031,6 +1031,21 @@ Midjourney·Higgsfield·Runway는 필요한 정보와 위험이 다릅니다. �
 등 정합성 자동 검사</td>
 </tr>
 <tr>
+<td><code>node --test test-hooks.mjs</code></td>
+<td>두 hook의 정상·빈·잘못된·2 MiB 입력과 원문 누락·공백 복구 동작
+검사</td>
+</tr>
+<tr>
+<td><code>node --test test-validator.mjs</code></td>
+<td>등록부·버전·배선·크기·개인 경로·폴더명 오류를 검증기가 실제로
+차단하는지 검사</td>
+</tr>
+<tr>
+<td><code>node diagnose.mjs</code></td>
+<td>소스/설치 버전, 활성 상태, 두 hook 실행, 저장소 정합성을 한 번에
+읽기 전용 진단</td>
+</tr>
+<tr>
 <td><code>node build-docs.mjs</code></td>
 <td><code>README.md</code>/<code>README.en.md</code>를 다시 읽어
 <code>README.html</code>/<code>README.en.html</code>을 재생성(Pandoc
@@ -1620,6 +1635,10 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
 ├── build-docs.mjs                        # README(.md) → README(.html) 재생성 스크립트
 ├── doc-theme.html                        # 위 스크립트가 쓰는 HTML 테마(CSS)
 ├── validate.mjs                          # 정합성 자동 검사기
+├── test-hooks.mjs                         # hook 정상·경계·실패 복구 실행 테스트
+├── test-validator.mjs                     # 검증기 실패 감지 회귀 테스트
+├── diagnose.mjs                           # 소스·설치본·hook·정합성 통합 진단
+├── plugins/sodam-persona/persona-registry.json # 관점·패턴·도메인·버전·hook 상한 구조화 정본
 └── plugins/sodam-persona/                # 실제로 배포·설치되는 플러그인 본체
     ├── plugin.json                       # Agent Plugins 1.0 매니페스트 (정본)
     ├── .codex-plugin/plugin.json         # 이전 Codex 버전용 fallback 매니페스트
@@ -1709,7 +1728,7 @@ frontmatter <code>name</code>이 폴더명과 같은가(영문 README 교차검�
 </tr>
 <tr>
 <td>5</td>
-<td>도메인 페르소나 24종이 코어·마커 양쪽에 배선되고, 한영 README의
+<td>도메인 페르소나 26종이 코어·마커 양쪽에 배선되고, 한영 README의
 도메인 수·명시 호출 명령·주요 목차가 일치하는가</td>
 </tr>
 <tr>
@@ -1719,7 +1738,7 @@ JSON의 이름·버전·소스 경로가 올바른가</td>
 </tr>
 <tr>
 <td>7</td>
-<td>24개 도메인의 필수 면책·자격자 확인·확정 금액 경계가 실제로
+<td>26개 도메인의 필수 면책·자격자 확인·확정 금액 경계가 실제로
 존재하는가</td>
 </tr>
 <tr>
@@ -1749,7 +1768,7 @@ JSON의 이름·버전·소스 경로가 올바른가</td>
 </tr>
 <tr>
 <td>13</td>
-<td>실제 직렬화된 hook 출력이 저장소 자체 15,000자 상한을 넘지
+<td>실제 직렬화된 hook 출력이 저장소 자체 12,000자 상한을 넘지
 않는가</td>
 </tr>
 <tr>
@@ -1769,9 +1788,9 @@ href="#문제와-오류-대처-방법">문제와 오류 대처 방법</a>을
 참고하세요.</p>
 <h3 id="지속적-통합ci">지속적 통합(CI)</h3>
 <p><code>.github/workflows/validate.yml</code>이 <code>main</code>
-브랜치로의 push와 모든 Pull Request마다 <code>node validate.mjs</code>를
-자동으로 실행해, 위 15가지 검사를 통과하지 못한 변경이
-<code>main</code>에 들어오지 못하도록 막습니다.</p>
+브랜치로의 push와 모든 Pull Request마다 정합성 검사와 두 실행 회귀
+테스트를 자동으로 실행해, 오류가 있는 변경이 <code>main</code>에
+들어오지 못하도록 막습니다.</p>
 <hr />
 <h2 id="보안과-데이터-흐름">보안과 데이터 흐름</h2>
 <h3 id="hook이-하는-일--하지-않는-일">hook이 하는 일 / 하지 않는 일</h3>
@@ -1960,6 +1979,21 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 <h2 id="업데이트-내용-요약">업데이트 내용 요약</h2>
 <p>날짜가 최신인 항목이 위에 오도록 정리했습니다. 항목을 클릭(또는
 탭)하면 세부 내용이 펼쳐집니다.</p>
+<details open>
+<summary><strong>2026-09-17 — 실행 안정성·진단·정본 등록부 보강 (v1.10.1)</strong></summary>
+
+<ul>
+<li>실제 hook 실행 테스트와 검증기 실패 감지 테스트를 추가하고 CI에
+연결했습니다.</li>
+<li><code>persona-registry.json</code>을 관점·패턴·도메인·버전·hook
+상한의 구조화 정본으로 연결했습니다.</li>
+<li>SessionStart 직렬화 출력을 14,153자에서 12,000자 미만으로 줄이고
+검사 상한도 12,000자로 고정했습니다.</li>
+<li><code>node diagnose.mjs</code>로 소스와 설치본의 버전 차이, 활성
+상태, hook 실행, 저장소 정합성을 한 번에 확인할 수 있습니다.</li>
+</ul>
+</details>
+
 <details>
 <summary><strong>2026-09-16 — 생성형 AI 도구·플랫폼 역할 분리 (v1.10.0)</strong></summary>
 

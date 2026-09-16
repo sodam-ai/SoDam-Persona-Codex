@@ -287,7 +287,7 @@ ability Codex already has. It consists of 2 always-on core rules
 specific moment) and 31 conditional expert knowledge modules
 (<strong>skills</strong>) that load only when relevant.</p>
 <blockquote>
-<p><strong>Current version</strong>: <code>1.10.0</code> ·
+<p><strong>Current version</strong>: <code>1.10.1</code> ·
 <strong>Perspectives</strong>: 37 · <strong>Trigger patterns</strong>:
 43 patterns (A-AQ) · <strong>Skills</strong>: 31 ·
 <strong>Hooks</strong>: 2 · <strong>License</strong>: Apache License
@@ -373,7 +373,7 @@ available. Commands are shown for Windows PowerShell. On macOS/Linux,
 use the same <code>codex</code>, <code>node</code>, and <code>git</code>
 commands in that system's Terminal; plugin availability and UI labels
 can vary by Codex version, account, and organization policy.</p>
-<p><strong>Current verification baseline (2026-09-16)</strong>: Verified
+<p><strong>Current verification baseline (2026-09-17)</strong>: Verified
 install/remove command syntax against Codex CLI <code>0.154.0</code> on
 Windows, plus Node.js 20 CI-compatible execution, normal/error/large
 hook inputs, and Chrome desktop/tablet/mobile documentation. macOS/Linux
@@ -1105,6 +1105,21 @@ count, skill count, domain wiring, disclaimer text, personal path leaks,
 and more</td>
 </tr>
 <tr>
+<td><code>node --test test-hooks.mjs</code></td>
+<td>Tests both hooks with normal, empty, malformed, 2 MiB,
+missing-source, and blank-source inputs</td>
+</tr>
+<tr>
+<td><code>node --test test-validator.mjs</code></td>
+<td>Proves the validator rejects registry, version, wiring, size,
+personal-path, and unsafe-folder errors</td>
+</tr>
+<tr>
+<td><code>node diagnose.mjs</code></td>
+<td>Read-only diagnosis of source/installed versions, enabled state,
+both hooks, and repository consistency</td>
+</tr>
+<tr>
 <td><code>node build-docs.mjs</code></td>
 <td>Re-reads <code>README.md</code>/<code>README.en.md</code> and
 regenerates <code>README.html</code>/<code>README.en.html</code>
@@ -1770,6 +1785,10 @@ Codex versions.</p>
 ├── build-docs.mjs                        # Script that regenerates README(.html) from README(.md)
 ├── doc-theme.html                        # The HTML theme (CSS) used by that script
 ├── validate.mjs                          # The automated consistency checker
+├── test-hooks.mjs                         # Hook execution, boundary, and recovery tests
+├── test-validator.mjs                     # Validator failure-detection regression tests
+├── diagnose.mjs                           # Source/install/hook/consistency diagnosis
+├── plugins/sodam-persona/persona-registry.json # Structured source of truth for roles, patterns, domains, version, and hook cap
 └── plugins/sodam-persona/                # The actual plugin body that gets distributed and installed
     ├── plugin.json                       # Agent Plugins 1.0 manifest (source of truth)
     ├── .codex-plugin/plugin.json         # Fallback manifest for earlier Codex versions
@@ -1907,7 +1926,7 @@ scripts, and pair context-limit settings with the project cap</td>
 <tr>
 <td>13</td>
 <td>The serialized hook output stays below the project's
-15,000-character cap</td>
+12,000-character cap</td>
 </tr>
 <tr>
 <td>14</td>
@@ -1925,9 +1944,9 @@ broad single-word triggers and overlapping design roles</td>
 href="#troubleshooting">Troubleshooting</a> for how to run the checker
 and read its output.</p>
 <h3 id="continuous-integration-ci">Continuous integration (CI)</h3>
-<p><code>.github/workflows/validate.yml</code> automatically runs
-<code>node validate.mjs</code> on every push to <code>main</code> and on
-every pull request, blocking any change that fails the 15 checks above
+<p><code>.github/workflows/validate.yml</code> automatically runs the
+consistency checker and both execution regression suites on every push
+to <code>main</code> and every pull request, blocking erroneous changes
 from reaching <code>main</code>.</p>
 <hr />
 <h2 id="security--data-flow">Security &amp; Data Flow</h2>
@@ -2129,6 +2148,23 @@ downloads this plugin, so this document does not cover it.</p>
 <h2 id="changelog-summary">Changelog Summary</h2>
 <p>Listed with the most recent entries at the top. Click (or tap) an
 item to expand its details.</p>
+<details open>
+<summary><strong>2026-09-17 — Execution stability, diagnosis, and registry hardening (v1.10.1)</strong></summary>
+
+<ul>
+<li>Added real hook-execution tests and validator failure-detection
+tests, then connected both to CI.</li>
+<li>Connected <code>persona-registry.json</code> as the structured
+source of truth for perspectives, patterns, domains, version, and the
+hook cap.</li>
+<li>Reduced serialized SessionStart output from 14,153 characters to
+below 12,000 and fixed the enforced cap at 12,000.</li>
+<li>Added <code>node diagnose.mjs</code> to report source/installed
+version drift, enabled state, hook execution, and repository consistency
+in one read-only command.</li>
+</ul>
+</details>
+
 <details>
 <summary><strong>2026-09-16 — Added generative-AI tool and platform personas (v1.10.0)</strong></summary>
 

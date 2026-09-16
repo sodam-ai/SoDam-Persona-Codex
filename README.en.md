@@ -6,7 +6,7 @@ This document is written so that even someone who has never used a computer, a s
 
 The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 31 conditional expert knowledge modules (**skills**) that load only when relevant.
 
-> **Current version**: `1.10.0` · **Perspectives**: 37 · **Trigger patterns**: 43 patterns (A-AQ) · **Skills**: 31 · **Hooks**: 2 · **License**: Apache License 2.0
+> **Current version**: `1.10.1` · **Perspectives**: 37 · **Trigger patterns**: 43 patterns (A-AQ) · **Skills**: 31 · **Hooks**: 2 · **License**: Apache License 2.0
 
 ---
 
@@ -45,7 +45,7 @@ Before you start, make sure the 4 items below are in place. If anything is missi
 
 **Supported scope**: The target is any Windows, macOS, or Linux environment where Codex plugins and Node.js 18 or newer are available. Commands are shown for Windows PowerShell. On macOS/Linux, use the same `codex`, `node`, and `git` commands in that system's Terminal; plugin availability and UI labels can vary by Codex version, account, and organization policy.
 
-**Current verification baseline (2026-09-16)**: Verified install/remove command syntax against Codex CLI `0.154.0` on Windows, plus Node.js 20 CI-compatible execution, normal/error/large hook inputs, and Chrome desktop/tablet/mobile documentation. macOS/Linux devices and every Codex app/IDE combination were not part of the automated run, so verify through [Verify the installation](#verify-the-installation) on those environments.
+**Current verification baseline (2026-09-17)**: Verified install/remove command syntax against Codex CLI `0.154.0` on Windows, plus Node.js 20 CI-compatible execution, normal/error/large hook inputs, and Chrome desktop/tablet/mobile documentation. macOS/Linux devices and every Codex app/IDE combination were not part of the automated run, so verify through [Verify the installation](#verify-the-installation) on those environments.
 
 **Account and permissions**: Your OpenAI account and permission to use Codex must be arranged separately. Organization accounts may restrict plugin installation. This plugin does not create accounts or handle sign-in, billing, or organization permissions.
 
@@ -362,6 +362,9 @@ Mixing certain words into your request automatically changes how deep the respon
 | Command | Description |
 |---|---|
 | `node validate.mjs` | Automatically checks consistency: perspective count, trigger pattern count, skill count, domain wiring, disclaimer text, personal path leaks, and more |
+| `node --test test-hooks.mjs` | Tests both hooks with normal, empty, malformed, 2 MiB, missing-source, and blank-source inputs |
+| `node --test test-validator.mjs` | Proves the validator rejects registry, version, wiring, size, personal-path, and unsafe-folder errors |
+| `node diagnose.mjs` | Read-only diagnosis of source/installed versions, enabled state, both hooks, and repository consistency |
 | `node build-docs.mjs` | Re-reads `README.md`/`README.en.md` and regenerates `README.html`/`README.en.html` (requires Pandoc) |
 
 ---
@@ -670,6 +673,10 @@ This project originally started as a plugin for Claude Code (a different AI codi
 ├── build-docs.mjs                        # Script that regenerates README(.html) from README(.md)
 ├── doc-theme.html                        # The HTML theme (CSS) used by that script
 ├── validate.mjs                          # The automated consistency checker
+├── test-hooks.mjs                         # Hook execution, boundary, and recovery tests
+├── test-validator.mjs                     # Validator failure-detection regression tests
+├── diagnose.mjs                           # Source/install/hook/consistency diagnosis
+├── plugins/sodam-persona/persona-registry.json # Structured source of truth for roles, patterns, domains, version, and hook cap
 └── plugins/sodam-persona/                # The actual plugin body that gets distributed and installed
     ├── plugin.json                       # Agent Plugins 1.0 manifest (source of truth)
     ├── .codex-plugin/plugin.json         # Fallback manifest for earlier Codex versions
@@ -743,7 +750,7 @@ This checker mechanically prevents number drift when adding perspectives or chan
 | 10 | No personal absolute path containing a developer account name leaked into distributed files |
 | 11 | Codex hooks use `${PLUGIN_ROOT}`, point to existing scripts, and pair context-limit settings with the project cap |
 | 12 | Domain-skill trigger lists match the canonical `persona-triggers` list |
-| 13 | The serialized hook output stays below the project's 15,000-character cap |
+| 13 | The serialized hook output stays below the project's 12,000-character cap |
 | 14 | Core triggers match the canonical lists, and all nine built-environment skills share the collaboration protocol while avoiding broad single-word triggers and overlapping design roles |
 | 15 | Every `persona-*` skill folder uses a path-safe name |
 
@@ -751,7 +758,7 @@ See [Commands](#commands) and [Troubleshooting](#troubleshooting) for how to run
 
 ### Continuous integration (CI)
 
-`.github/workflows/validate.yml` automatically runs `node validate.mjs` on every push to `main` and on every pull request, blocking any change that fails the 15 checks above from reaching `main`.
+`.github/workflows/validate.yml` automatically runs the consistency checker and both execution regression suites on every push to `main` and every pull request, blocking erroneous changes from reaching `main`.
 
 ---
 
@@ -836,6 +843,16 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 ## Changelog Summary
 
 Listed with the most recent entries at the top. Click (or tap) an item to expand its details.
+
+<details open>
+<summary><strong>2026-09-17 — Execution stability, diagnosis, and registry hardening (v1.10.1)</strong></summary>
+
+- Added real hook-execution tests and validator failure-detection tests, then connected both to CI.
+- Connected `persona-registry.json` as the structured source of truth for perspectives, patterns, domains, version, and the hook cap.
+- Reduced serialized SessionStart output from 14,153 characters to below 12,000 and fixed the enforced cap at 12,000.
+- Added `node diagnose.mjs` to report source/installed version drift, enabled state, hook execution, and repository consistency in one read-only command.
+
+</details>
 
 <details>
 <summary><strong>2026-09-16 — Added generative-AI tool and platform personas (v1.10.0)</strong></summary>

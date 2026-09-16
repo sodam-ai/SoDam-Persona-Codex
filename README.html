@@ -282,7 +282,7 @@ plugin — 원래 프로그램에 기능을 더해주는 작은 추가 프로그
 자동으로 실행되는 작은 프로그램) 2개와, 상황에 맞을 때만 불러오는 전문
 지식 모음(skill, 스킬) 16개로 이루어져 있습니다.</p>
 <blockquote>
-<p><strong>지금 버전</strong>: <code>1.5.1</code> · <strong>관점
+<p><strong>지금 버전</strong>: <code>1.5.2</code> · <strong>관점
 수</strong>: 22명 · <strong>트리거 패턴</strong>: 28개(A~AB) ·
 <strong>스킬 수</strong>: 16개 · <strong>hook 수</strong>: 2개 ·
 <strong>라이선스</strong>: Apache License 2.0</p>
@@ -1433,6 +1433,20 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 <p>날짜가 최신인 항목이 위에 오도록 정리했습니다. 항목을 클릭(또는
 탭)하면 세부 내용이 펼쳐집니다.</p>
 <details>
+<summary><strong>2026-09-16 — 건축·인테리어 사용자 역량 보정 (v1.5.2)</strong></summary>
+
+<ul>
+<li><code>15년+</code>가 페르소나의 검토 깊이라는 점을 명시하고, 사용자
+숙련도로 오인하지 않도록 했습니다.</li>
+<li>사용자의 3D 시각화 업종 경험과 설계·시공·견적 입문 상태를 분리하고,
+Revit·Rhino를 포함한 프로그램별 숙련도는 별도로 판단합니다.</li>
+<li>설계·시공은 쉬운 설명부터 자격자 확인까지 단계화하고, 시각화
+경력만으로 모든 3D 도구를 전문가 수준으로 가정하지 않도록 회귀 검사를
+추가했습니다.</li>
+</ul>
+</details>
+
+<details>
 <summary><strong>2026-09-16 — 도면 작업 라우팅 보완 (v1.5.1)</strong></summary>
 
 <ul>
@@ -1482,7 +1496,7 @@ Codex 전용 구조에 맞춰 이식했습니다.</li>
 변수·스크립트, 실제 직렬화 출력 상한, 도메인 트리거 드리프트, skill
 폴더명 안전성을 자동 검증합니다.</li>
 <li>Agent Plugins 1.0 루트 <code>plugin.json</code>을 정본으로 추가하고
-<code>.codex-plugin/plugin.json</code>을 fallback으로 유지했습니다. 현재
+<code>.codex-plugin/plugin.json</code>을 fallback으로 유지했습니다. 당시
 세 매니페스트의 버전은 <code>1.5.1</code>으로 통일했습니다.</li>
 <li>hook 주입 파일의 LF 고정 규칙을 추가했고, 기존 Codex 포트의 투자자
 필수 면책과 보안 보강은 그대로 보존했습니다.</li>

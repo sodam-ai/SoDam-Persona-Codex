@@ -287,7 +287,7 @@ ability Codex already has. It consists of 2 always-on core rules
 specific moment) and 16 conditional expert knowledge modules
 (<strong>skills</strong>) that load only when relevant.</p>
 <blockquote>
-<p><strong>Current version</strong>: <code>1.5.1</code> ·
+<p><strong>Current version</strong>: <code>1.5.2</code> ·
 <strong>Perspectives</strong>: 22 · <strong>Trigger patterns</strong>:
 28 patterns (A-AB) · <strong>Skills (16)</strong> ·
 <strong>Hooks</strong>: 2 · <strong>License</strong>: Apache License
@@ -1524,6 +1524,22 @@ downloads this plugin, so this document does not cover it.</p>
 <p>Listed with the most recent entries at the top. Click (or tap) an
 item to expand its details.</p>
 <details>
+<summary><strong>2026-09-16 — Added built-environment user proficiency calibration (v1.5.2)</strong></summary>
+
+<ul>
+<li>Clarified that <code>15+ years</code> describes each persona's
+review depth, not the user's proficiency.</li>
+<li>Kept the user's architectural/interior 3D visualization industry
+experience separate from beginner-level design, construction, and
+estimating knowledge; proficiency is assessed per application, including
+Revit and Rhino.</li>
+<li>Added regression checks so design and construction guidance starts
+with plain-language context and visualization experience is never
+generalized to expert-level use of every 3D tool.</li>
+</ul>
+</details>
+
+<details>
 <summary><strong>2026-09-16 — Added drawing-work routing (v1.5.1)</strong></summary>
 
 <ul>
@@ -1581,7 +1597,7 @@ and safe skill-folder names.</li>
 <li>Added the Agent Plugins 1.0 root <code>plugin.json</code> as the
 canonical manifest while retaining
 <code>.codex-plugin/plugin.json</code> as a fallback. All three
-manifests now report the current version <code>1.5.1</code>.</li>
+manifests reported version <code>1.5.1</code> at that release.</li>
 <li>Added LF enforcement for injected hook files and preserved the Codex
 port's investor disclaimer and security hardening.</li>
 <li>Passed 44 hook, 32 package, and 16 failure/boundary checks plus

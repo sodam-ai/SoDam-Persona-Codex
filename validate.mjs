@@ -141,7 +141,7 @@ for (const d of DOMAINS) {
 }
 
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
-const EXPECTED_PLUGIN_VERSION = '1.5.1';
+const EXPECTED_PLUGIN_VERSION = '1.5.2';
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
 const manifestPaths = [
   pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
@@ -458,6 +458,20 @@ for (const [letter, skillName] of BUILT_ENVIRONMENT_DOMAINS) {
 }
 for (const target of [core, marker]) {
   if (!target.includes(BUILT_COLLAB_REF)) err(`건축·인테리어 공통 협업 프로토콜이 core/marker에 연결되지 않음`);
+}
+
+const builtCollab = read(pluginPath(BUILT_COLLAB_REF));
+for (const phrase of ['사용자 역량 보정', '업종 경력', '개별 프로그램 숙련도', '설계·시공·견적은 입문', 'Revit·Rhino', '자격자·현장 책임자 확인 필요']) {
+  if (!builtCollab.includes(phrase)) err(`사용자 역량 보정 공통 규칙 누락: ${phrase}`);
+}
+for (const skillName of BUILT_ENVIRONMENT_DOMAINS.map(([, name]) => name)) {
+  const skillText = read(pluginPath(`skills/${skillName}/SKILL.md`));
+  if (!skillText.includes('사용자 역량 보정')) err(`${skillName}에 사용자 역량 보정 연결 누락`);
+}
+for (const [label, target] of [['core', core], ['marker', marker]]) {
+  for (const phrase of ['15년+', '사용자', '숙련']) {
+    if (!target.includes(phrase)) err(`사용자 역량 보정이 ${label}에 불완전함: ${phrase}`);
+  }
 }
 const modelingSkill = read(pluginPath('skills/persona-spatial-3d-modeling-expert/SKILL.md'));
 const renderingSkill = read(pluginPath('skills/persona-rendering-visualization-expert/SKILL.md'));

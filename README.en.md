@@ -6,7 +6,7 @@ This document is written so that even someone who has never used a computer, a s
 
 The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 16 conditional expert knowledge modules (**skills**) that load only when relevant.
 
-> **Current version**: `1.5.1` · **Perspectives**: 22 · **Trigger patterns**: 28 patterns (A-AB) · **Skills (16)** · **Hooks**: 2 · **License**: Apache License 2.0
+> **Current version**: `1.5.2` · **Perspectives**: 22 · **Trigger patterns**: 28 patterns (A-AB) · **Skills (16)** · **Hooks**: 2 · **License**: Apache License 2.0
 
 ---
 
@@ -632,6 +632,15 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 Listed with the most recent entries at the top. Click (or tap) an item to expand its details.
 
 <details>
+<summary><strong>2026-09-16 — Added built-environment user proficiency calibration (v1.5.2)</strong></summary>
+
+- Clarified that `15+ years` describes each persona's review depth, not the user's proficiency.
+- Kept the user's architectural/interior 3D visualization industry experience separate from beginner-level design, construction, and estimating knowledge; proficiency is assessed per application, including Revit and Rhino.
+- Added regression checks so design and construction guidance starts with plain-language context and visualization experience is never generalized to expert-level use of every 3D tool.
+
+</details>
+
+<details>
 <summary><strong>2026-09-16 — Added drawing-work routing (v1.5.1)</strong></summary>
 
 - Added pattern AB for drawing-related work, CAD/DWG, plans, elevations, sections, details, and shop drawings.
@@ -663,7 +672,7 @@ Listed with the most recent entries at the top. Click (or tap) an item to expand
 
 - Ported the original project's visible hook-failure warnings, low-signal trigger cleanup, domain-trigger synchronization, legal/investor/accounting disclaimers, recovery-core repairs, and chat-visible activation indicator into the Codex-specific structure.
 - Expanded `validate.mjs` to 15 checks covering Codex hook variables and scripts, serialized-output limits, domain-trigger drift, and safe skill-folder names.
-- Added the Agent Plugins 1.0 root `plugin.json` as the canonical manifest while retaining `.codex-plugin/plugin.json` as a fallback. All three manifests now report the current version `1.5.1`.
+- Added the Agent Plugins 1.0 root `plugin.json` as the canonical manifest while retaining `.codex-plugin/plugin.json` as a fallback. All three manifests reported version `1.5.1` at that release.
 - Added LF enforcement for injected hook files and preserved the Codex port's investor disclaimer and security hardening.
 - Passed 44 hook, 32 package, and 16 failure/boundary checks plus execution from a temporary Marketplace installation.
 - Fixed the README dark theme ending in a white area on wide screens and regenerated both Korean and English HTML files.

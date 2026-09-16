@@ -2,7 +2,7 @@
 /**
  * SoDam-Persona 정합성 검사기 (자기완결 — Node 내장만 사용, 의존성 0)
  *
- * 목적: 관점 수(15→20 같은) 드리프트·스킬 수 불일치·도메인 배선 누락·
+ * 목적: 관점 수(20→22 같은) 드리프트·스킬 수 불일치·도메인 배선 누락·
  *       JSON 오류를 push 전에 기계적으로 잡는다. (AGENTS.md 하네스 원칙: 골든 룰을 규칙으로 인코딩)
  *
  * 사용: node validate.mjs   (저장소 루트에서. 종료코드 0=통과, 1=실패)
@@ -73,10 +73,13 @@ for (const f of KEY_FILES) {
   }
 }
 
-// ── 3) 패턴 수 (A~T) 일관성 ──────────────────────────────────────────────
-const letters = [...triggers.matchAll(/^## ([A-Z])\. /gm)].map((m) => m[1]);
-const uniqLetters = [...new Set(letters)].sort();
-const descMatch = triggers.match(/A~([A-Z])\s*(\d+)패턴/);
+// ── 3) 패턴 수 (A~AA 이상) 일관성 ──────────────────────────────────────────────
+const patternIds = [...triggers.matchAll(/^## ([A-Z]+)\. /gm)].map((m) => m[1]);
+const patternOrdinal = (id) => [...id].reduce((n, ch) => n * 26 + ch.charCodeAt(0) - 64, 0);
+const uniqLetters = [...new Set(patternIds)].sort((a, b) => patternOrdinal(a) - patternOrdinal(b));
+if (uniqLetters.some((id, index) => patternOrdinal(id) !== index + 1))
+  err(`pattern IDs are not contiguous from A: ${uniqLetters.join(', ')}`);
+const descMatch = triggers.match(/A~([A-Z]+)\s*(\d+)패턴/);
 if (!descMatch) err('트리거 description에서 "A~X N패턴" 표기를 못 찾음');
 else {
   const [, lastLetter, patCount] = descMatch;
@@ -128,7 +131,7 @@ for (const f of ['README.md']) {
 }
 
 // ── 5) 도메인 페르소나 배선 (core 파일맵 · marker 파일맵에 모두 존재) ────
-const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director'];
+const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director', 'persona-spatial-3d-modeling-expert', 'persona-rendering-visualization-expert'];
 const core = read(pluginPath('hooks/persona_core.md'));
 const marker = read(pluginPath('hooks/persona_marker.txt'));
 for (const d of DOMAINS) {
@@ -138,7 +141,7 @@ for (const d of DOMAINS) {
 }
 
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
-const EXPECTED_PLUGIN_VERSION = '1.4.0';
+const EXPECTED_PLUGIN_VERSION = '1.5.0';
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
 const manifestPaths = [
   pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
@@ -193,6 +196,8 @@ const DISCLAIMER_CHECKS = [
   [pluginPath('skills/persona-construction-expert/SKILL.md'), '최종 확인'],
   [pluginPath('skills/persona-cost-estimator/SKILL.md'), '확정 금액'],
   [pluginPath('skills/persona-design-director/SKILL.md'), '자격자 확인'],
+  [pluginPath('skills/persona-spatial-3d-modeling-expert/SKILL.md'), '확정하지 않는다'],
+  [pluginPath('skills/persona-rendering-visualization-expert/SKILL.md'), '법정 설계도서'],
 ];
 for (const [f, kw] of DISCLAIMER_CHECKS) {
   if (!existsSync(P(f))) { err(`면책 검사 대상 파일 없음: ${f}`); continue; }
@@ -389,6 +394,8 @@ const DOMAIN_CORE_HEADINGS = [
   ['W', '건축·인테리어 시공 전문가 페르소나'],
   ['X', '건축·인테리어 견적 전문가 페르소나'],
   ['Y', '건축·인테리어 디자인 디렉터 페르소나'],
+  ['Z', '건축·인테리어 3D 모델링 전문가 페르소나'],
+  ['AA', '건축·인테리어 렌더링·시각화 전문가 페르소나'],
 ];
 function extractSection(text, marker, endRe) {
   const start = text.indexOf(marker);
@@ -406,7 +413,7 @@ function wordsFromList(line) {
     .filter(Boolean);
 }
 for (const [letter, coreHeading] of DOMAIN_CORE_HEADINGS) {
-  const triggerSection = extractSection(triggers, `## ${letter}. `, /\n## [A-Z]\. /);
+  const triggerSection = extractSection(triggers, `## ${letter}. `, /\n## [A-Z]+\. /);
   const triggerWordLine = triggerSection && triggerSection.match(/트리거 단어군:\s*([^\n]+)/);
   if (!triggerWordLine) { err(`persona-triggers ${letter}절에서 "트리거 단어군:" 줄을 못 찾음`); continue; }
   const canonicalWords = wordsFromList(triggerWordLine[1]);
@@ -431,6 +438,8 @@ const BUILT_ENVIRONMENT_DOMAINS = [
   ['W', 'persona-construction-expert'],
   ['X', 'persona-cost-estimator'],
   ['Y', 'persona-design-director'],
+  ['Z', 'persona-spatial-3d-modeling-expert'],
+  ['AA', 'persona-rendering-visualization-expert'],
 ];
 const BUILT_COLLAB_REF = 'reference/built_environment_collaboration.md';
 const OVERBROAD_BUILT_TRIGGERS = new Set(['건축', '인테리어', '설계', '시공', '견적', '디자인', '공간', '공사']);
@@ -441,7 +450,7 @@ for (const [letter, skillName] of BUILT_ENVIRONMENT_DOMAINS) {
   if (!skillText.includes(BUILT_COLLAB_REF)) err(`${skillName}에 공통 협업 프로토콜 참조 누락`);
   if (!skillText.includes('15년+')) err(`${skillName}에 15년+ 경력 기준 누락`);
 
-  const triggerSection = extractSection(triggers, `## ${letter}. `, /\n## [A-Z]\. /);
+  const triggerSection = extractSection(triggers, `## ${letter}. `, /\n## [A-Z]+\. /);
   const triggerWordLine = triggerSection && triggerSection.match(/트리거 단어군:\s*([^\n]+)/);
   if (!triggerWordLine) continue; // 14번 검사가 상세 오류를 이미 보고한다.
   const overbroad = wordsFromList(triggerWordLine[1]).filter((w) => OVERBROAD_BUILT_TRIGGERS.has(w));
@@ -449,6 +458,17 @@ for (const [letter, skillName] of BUILT_ENVIRONMENT_DOMAINS) {
 }
 for (const target of [core, marker]) {
   if (!target.includes(BUILT_COLLAB_REF)) err(`건축·인테리어 공통 협업 프로토콜이 core/marker에 연결되지 않음`);
+}
+const modelingSkill = read(pluginPath('skills/persona-spatial-3d-modeling-expert/SKILL.md'));
+const renderingSkill = read(pluginPath('skills/persona-rendering-visualization-expert/SKILL.md'));
+for (const phrase of ['데이터 모델링', 'DB 모델링', 'AI 모델']) {
+  if (!modelingSkill.includes(phrase)) err(`3D 모델링 충돌 제외 규칙 누락: ${phrase}`);
+}
+for (const phrase of ['React 렌더링', '웹 렌더링', '브라우저 렌더']) {
+  if (!renderingSkill.includes(phrase)) err(`렌더링 충돌 제외 규칙 누락: ${phrase}`);
+}
+for (const phrase of ['Revit', '레빗', 'Rhino', '라이노']) {
+  if (!modelingSkill.includes(phrase)) err(`확정 3D 도구 트리거 누락: ${phrase}`);
 }
 
 // ── 15) 페르소나 스킬 폴더명 안전성 검사 (2026-09-01 추가) ──────────────────

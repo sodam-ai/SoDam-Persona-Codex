@@ -4,9 +4,9 @@
 
 This document is written so that even someone who has never used a computer, a smartphone, a messenger app, or AI before can follow it from installation to actual use. Whenever an unfamiliar term appears for the first time, it is explained in `plain words (technical term)` form. Example: repository (an online storage place that holds code and documents together).
 
-The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 9 conditional expert knowledge modules (**skills**) that load only when relevant.
+The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 16 conditional expert knowledge modules (**skills**) that load only when relevant.
 
-> **Current version**: `1.4.0` · **Perspectives**: 20 · **Trigger patterns**: 25 patterns (A-Y) · **Skills (14)** · **Hooks**: 2 · **License**: Apache License 2.0
+> **Current version**: `1.5.0` · **Perspectives**: 22 · **Trigger patterns**: 27 patterns (A-AA) · **Skills (16)** · **Hooks**: 2 · **License**: Apache License 2.0
 
 ---
 
@@ -298,7 +298,7 @@ Every request is classified into one of the 4 levels below, which determines how
 | **L0** | Greetings/small talk, 1-2 word requests, simple status checks ("what did you do?") | 1-3 lines, free tone |
 | **L1** | Concept explanations, opinions/advice requests | Core point + rationale + a light check, a firm recommendation plus stated limitations |
 | **L2** | General work: code changes, debugging, implementation | The `persona-format` skill activates, following a 7-step procedure |
-| **L3** | Major work involving security, money, deployment, or irreversible actions | `persona-format` + `persona-triggers` + `persona-safety` all activate, plus a full review by all 20 perspectives |
+| **L3** | Major work involving security, money, deployment, or irreversible actions | `persona-format` + `persona-triggers` + `persona-safety` all activate, plus a full review by all 22 perspectives |
 
 ### Trigger words — how a single word shifts intensity and perspective
 
@@ -311,11 +311,11 @@ When specific words (triggers) are detected in what you say, the following 6 eff
 5. **Fully activate a single perspective** — "security" alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone → #4, "AI"/"agent"/"MCP" alone → #6
 6. **Evidence mode** (intensity stays the same) — "evidence", "source", "example", "fact" etc. → present real evidence and clearly separate speculation from confirmed fact
 
-These trigger words are organized into 25 patterns (A-Y), and the full word lists plus the priority order for conflicts all live in the `persona-triggers` skill. Priority summary: **length constraints (e.g. "briefly") > intensity (e.g. "in depth") > domain expert > single perspective > additional skill.**
+These trigger words are organized into 27 patterns (A-AA), and the full word lists plus the priority order for conflicts all live in the `persona-triggers` skill. Priority summary: **length constraints (e.g. "briefly") > intensity (e.g. "in depth") > domain expert > single perspective > additional skill.**
 
-### 20 perspectives — the expert checklist reviewed before every answer
+### 22 perspectives — the expert checklist reviewed before every answer
 
-For every response at L1 or above, 3-5 of the 20 perspectives below that are relevant to the task are briefly reviewed internally before answering — automatically, even without a trigger word. This does not apply to L0 small talk or "briefly"-style requests.
+For every response at L1 or above, 3-5 of the 22 perspectives below that are relevant to the task are briefly reviewed internally before answering — automatically, even without a trigger word. This does not apply to L0 small talk or "briefly"-style requests.
 
 | # | Perspective | Especially important when |
 |---|---|---|
@@ -339,10 +339,12 @@ For every response at L1 or above, 3-5 of the 20 perspectives below that are rel
 | 18 | Building/interior construction specialist (15+ years) | Methods, schedule, quality, safety, defects |
 | 19 | Building/interior cost estimator (15+ years) | Quantities, unit rates, construction cost, value engineering |
 | 20 | Building/interior design director (15+ years) | Spatial concept, materials, design coherence |
+| 21 | Building/interior 3D modeling specialist (15+ years) | BIM, geometry, coordinates, topology, file interoperability |
+| 22 | Building/interior rendering and visualization specialist (15+ years) | Materials, lighting, cameras, render output |
 
-### 9 domain experts — conditionally going deep
+### 11 domain experts — conditionally going deep
 
-Among the 20 perspectives above, #11, #13, #14, #15, #16, #17, #18, #19, and #20 each have their own dedicated skill, which loads much deeper knowledge when a related trigger is detected.
+Among the 22 perspectives above, #11, #13, #14, #15, #16, #17, #18, #19, #20, #21, and #22 each have their own dedicated skill, which loads much deeper knowledge when a related trigger is detected.
 
 - **Professional investor (#13, `persona-investor`)**: Always asks "if this fails, does the user lose money?" Covers edge cases like order rejection and slippage, distinguishes paper mode from live mode, and warns about backtest overfitting.
 - **Professional lawyer (#11, `persona-lawyer`)**: Covers audit-log obligations, staying clear of capital-markets-law boundaries (avoiding investment-advisory language), personal-data protection/GDPR, and disclaimer/consent standards.
@@ -353,6 +355,8 @@ Among the 20 perspectives above, #11, #13, #14, #15, #16, #17, #18, #19, and #20
 - **Construction specialist (#18, `persona-construction-expert`)**: Covers methods, schedule, quality, safety, defects, and site conditions.
 - **Cost estimator (#19, `persona-cost-estimator`)**: Covers quantities, unit rates, construction cost, value engineering, changes, and estimate assumptions.
 - **Design director (#20, `persona-design-director`)**: Covers concept, form, color, materials, and coherence between architecture and interiors.
+- **3D modeling specialist (#21, `persona-spatial-3d-modeling-expert`)**: Covers BIM, NURBS and mesh modeling, coordinates, units, conversion, and interoperability, including Revit and Rhino.
+- **Rendering and visualization specialist (#22, `persona-rendering-visualization-expert`)**: Covers materials, lighting, cameras, render quality, and output verification in tools such as D5, Twinmotion, Unreal, and Unity.
 
 When multiple domains apply at once (e.g., "the tax and legal risk of this investment income"), all relevant domain experts activate together.
 
@@ -488,7 +492,7 @@ This project originally started as a plugin for Claude Code (a different AI codi
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 response format
     │   ├── persona-safety/SKILL.md       # Always-on security rules, irreversible-action gate
-    │   ├── persona-triggers/SKILL.md     # Full A-Y trigger-word detail and the 20-perspective mapping table
+    │   ├── persona-triggers/SKILL.md     # Full A-AA trigger-word detail and the 22-perspective mapping table
     │   ├── persona-investor/SKILL.md     # #13 professional investor domain
     │   ├── persona-lawyer/SKILL.md       # #11 professional lawyer domain
     │   ├── persona-accountant/SKILL.md   # #14 accounting/tax specialist domain
@@ -498,6 +502,8 @@ This project originally started as a plugin for Claude Code (a different AI codi
     │   ├── persona-construction-expert/SKILL.md    # #18 construction domain
     │   ├── persona-cost-estimator/SKILL.md         # #19 estimating domain
     │   ├── persona-design-director/SKILL.md        # #20 design direction domain
+    │   ├── persona-spatial-3d-modeling-expert/SKILL.md # #21 3D modeling/BIM domain
+    │   ├── persona-rendering-visualization-expert/SKILL.md # #22 rendering/visualization domain
     │   ├── persona-create/SKILL.md       # Entry point for the new-persona creation interview
     │   └── persona-edit/SKILL.md         # Entry point for the trigger-editing interview
     ├── commands/
@@ -518,19 +524,19 @@ This checker mechanically prevents number drift when adding perspectives or chan
 | # | What it checks |
 |---|---|
 | 1 | Perspective numbers are continuous from 1 through the last entry |
-| 2 | Labels such as "20 people" and "20 perspectives" match the actual count in every core file, skill, and README |
-| 3 | The documented A-Y trigger-pattern count matches the actual section count |
+| 2 | Labels such as "22 people" and "22 perspectives" match the actual count in every core file, skill, and README |
+| 3 | The documented A-AA trigger-pattern count matches the actual section count |
 | 4 | The skill-folder count matches the docs and every skill frontmatter `name` matches its folder (including English README cross-checks) |
-| 5 | All nine domain personas are wired into both the core and marker files |
+| 5 | All 11 domain personas are wired into both the core and marker files |
 | 6 | The Agent Plugins 1.0, Codex fallback, and legacy manifests plus both marketplace JSON files have valid names, versions, and source paths |
-| 7 | Required disclaimers, qualified-review boundaries, and non-final estimate wording exist for all nine domains |
+| 7 | Required disclaimers, qualified-review boundaries, and non-final estimate wording exist for all 11 domains |
 | 8 | Warning only: generated HTML appears out of sync with current counts |
 | 9 | Backtick-wrapped repository file references point to files that exist |
 | 10 | No personal absolute path containing a developer account name leaked into distributed files |
 | 11 | Codex hooks use `${PLUGIN_ROOT}`, point to existing scripts, and pair context-limit settings with the project cap |
 | 12 | Domain-skill trigger lists match the canonical `persona-triggers` list |
 | 13 | The serialized hook output stays below the project's 10,000-character cap |
-| 14 | Core triggers match the canonical lists, and all five built-environment skills share the collaboration protocol without broad single-word triggers |
+| 14 | Core triggers match the canonical lists, and all seven built-environment skills share the collaboration protocol without broad single-word triggers |
 | 15 | Every `persona-*` skill folder uses a path-safe name |
 
 See [Commands](#commands) and [Troubleshooting](#troubleshooting) for how to run the checker and read its output.
@@ -624,11 +630,20 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 Listed with the most recent entries at the top. Click (or tap) an item to expand its details.
 
 <details>
+<summary><strong>2026-09-16 — Added 3D modeling and rendering specialist personas (v1.5.0)</strong></summary>
+
+- Added separate 15+ year perspectives for 3D modeling (#21, including Revit and Rhino) and architectural/interior rendering and visualization (#22).
+- Recognizes Korean and English modeling/rendering variants while preventing false activation for data modeling and web rendering.
+- Synchronized multi-letter pattern IDs (Z then AA), 22 perspectives, 27 patterns, 16 skills, tool-state verification, and model-to-render-to-construction/cost handoffs.
+
+</details>
+
+<details>
 <summary><strong>2026-09-16 — Added five built-environment specialist personas</strong></summary>
 
 - Added 15+ year perspectives for architectural design, interior design, construction, cost estimating, and design direction.
 - Centralized shared project inputs, handoffs, conflict priority, joint activation, and regulated-title safeguards in `built_environment_collaboration.md`.
-- Expanded the plugin to 20 perspectives, 25 trigger patterns (A-Y), and 14 skills, with hooks, docs, and validation synchronized.
+- Expanded that release through perspective #20, pattern Y, and 14 skills, with hooks, docs, and validation synchronized.
 
 </details>
 
@@ -637,7 +652,7 @@ Listed with the most recent entries at the top. Click (or tap) an item to expand
 
 - Ported the original project's visible hook-failure warnings, low-signal trigger cleanup, domain-trigger synchronization, legal/investor/accounting disclaimers, recovery-core repairs, and chat-visible activation indicator into the Codex-specific structure.
 - Expanded `validate.mjs` to 15 checks covering Codex hook variables and scripts, serialized-output limits, domain-trigger drift, and safe skill-folder names.
-- Added the Agent Plugins 1.0 root `plugin.json` as the canonical manifest while retaining `.codex-plugin/plugin.json` as a fallback. All three manifests now report version `1.4.0`.
+- Added the Agent Plugins 1.0 root `plugin.json` as the canonical manifest while retaining `.codex-plugin/plugin.json` as a fallback. All three manifests now report the current version `1.5.0`.
 - Added LF enforcement for injected hook files and preserved the Codex port's investor disclaimer and security hardening.
 - Passed 44 hook, 32 package, and 16 failure/boundary checks plus execution from a temporary Marketplace installation.
 - Fixed the README dark theme ending in a white area on wide screens and regenerated both Korean and English HTML files.
@@ -773,7 +788,7 @@ A. Call `$persona-edit` (to edit an existing perspective) or `$persona-create` (
 A. Mixing in words like "briefly", "in short", or "just the key point" switches it to a short format immediately. This rule has the highest priority of all.
 
 **Q. I actually want it to go deeper and more thorough.**
-A. Using expressions like "objectively", "in depth", "thoroughly", or "full persona version" brings all 20 perspectives into the review.
+A. Using expressions like "objectively", "in depth", "thoroughly", or "full persona version" brings all 22 perspectives into the review.
 
 **Q. I found a bug or something misbehaving. Where do I report it?**
 A. Please report it through the repository's GitHub Issues feature. Including a reproducible example of what you typed speeds up diagnosis a lot.

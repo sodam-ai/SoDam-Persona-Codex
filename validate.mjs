@@ -131,7 +131,7 @@ for (const f of ['README.md']) {
 }
 
 // ── 5) 도메인 페르소나 배선 (core 파일맵 · marker 파일맵에 모두 존재) ────
-const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director', 'persona-spatial-3d-modeling-expert', 'persona-rendering-visualization-expert', 'persona-architectural-design-expert', 'persona-interior-design-expert', 'persona-source-verification-expert', 'persona-research-analyst', 'persona-ideation-strategist', 'persona-project-manager', 'persona-product-owner', 'persona-pmo-governance-expert', 'persona-project-analyst-coordinator', 'persona-image-production-expert', 'persona-video-production-director', 'persona-video-post-production-expert', 'persona-media-quality-rights-reviewer'];
+const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director', 'persona-spatial-3d-modeling-expert', 'persona-rendering-visualization-expert', 'persona-architectural-design-expert', 'persona-interior-design-expert', 'persona-source-verification-expert', 'persona-research-analyst', 'persona-ideation-strategist', 'persona-project-manager', 'persona-product-owner', 'persona-pmo-governance-expert', 'persona-project-analyst-coordinator', 'persona-image-production-expert', 'persona-video-production-director', 'persona-video-post-production-expert', 'persona-media-quality-rights-reviewer', 'persona-generative-ai-workflow-engineer', 'persona-generative-ai-platform-operator'];
 const core = read(pluginPath('hooks/persona_core.md'));
 const marker = read(pluginPath('hooks/persona_marker.txt'));
 for (const d of DOMAINS) {
@@ -185,7 +185,7 @@ if (koH2Count !== enH2Count)
   err('한영 README 주요 목차 수 불일치: KO ' + koH2Count + ' ≠ EN ' + enH2Count);
 
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
-const EXPECTED_PLUGIN_VERSION = '1.9.0';
+const EXPECTED_PLUGIN_VERSION = '1.10.0';
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
 const manifestPaths = [
   pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
@@ -295,6 +295,24 @@ for (const [f, phrases] of MEDIA_PRODUCTION_CHECKS) {
   if (!existsSync(P(f))) { err(`미디어 검사 대상 파일 없음: ${f}`); continue; }
   const text = read(f);
   for (const phrase of phrases) if (!text.includes(phrase)) err(`미디어 안전장치 누락 (${f}): "${phrase}"`);
+}
+
+// ── 7-4) 생성형 AI 로컬 도구·외부 플랫폼 경계·보존·최신성 검사 ──
+const GENERATIVE_AI_TOOL_CHECKS = [
+  [pluginPath('skills/persona-generative-ai-workflow-engineer/SKILL.md'), ['ComfyUI 설치', '기존 워크플로우', '모델 파일 존재와 로더 인식', '서버가 켜졌거나 큐가 성공했다는 이유만으로']],
+  [pluginPath('skills/persona-generative-ai-platform-operator/SKILL.md'), ['Midjourney 사용', 'Higgsfield 사용', '공식 자료 또는 실제 계정 화면', '유료 플랜 보유만으로']],
+  [pluginPath('skills/persona-triggers/SKILL.md'), ['## AP.', '## AQ.', '생성형 AI 도구·플랫폼 안전선', 'ComfyUI 좋아']],
+  [pluginPath('hooks/persona_core.md'), ['생성형 AI 로컬 워크플로우 엔지니어 (#36)', '생성형 AI 플랫폼 운영 전문가 (#37)', '설치됨·도달 가능·로드 성공·큐 성공·파일 존재·실제 결과 검수·권리 확인']],
+  [pluginPath('reference/generative_ai_tools_collaboration.md'), ['제품 자체를 15년간 사용했다는 의미가 아니다', '로컬 환경 보존과 복구', 'API 키·세션·쿠키·결제 정보', '유료 계정 또는 크레딧 구매']],
+  [pluginPath('reference/media_production_collaboration.md'), ['생성형 AI 로컬 워크플로우', '생성형 AI 플랫폼 운영']],
+  ['README.md', ['생성형 AI 도구·플랫폼 작업을 처음 요청하는 방법', '생성형 AI 도구·플랫폼 작업의 권장 흐름', '유료 요금제를 쓰면']],
+  ['README.en.md', ['How to request generative-AI tool or platform work for the first time', 'Recommended workflow for generative-AI tools and platforms', 'Does a paid plan automatically']],
+  [pluginPath('reference/test_scenarios.md'), ['v1.10 생성형 AI 도구·플랫폼 회귀 시나리오', '서버 HTTP 응답만 성공']],
+];
+for (const [f, phrases] of GENERATIVE_AI_TOOL_CHECKS) {
+  if (!existsSync(P(f))) { err(`생성형 AI 도구 검사 대상 파일 없음: ${f}`); continue; }
+  const text = read(f);
+  for (const phrase of phrases) if (!text.includes(phrase)) err(`생성형 AI 도구 안전장치 누락 (${f}): "${phrase}"`);
 }
 
 // ── 8) HTML 4개 동기화 경고 (소프트 — exit code에 영향 없음, 2026-07-26 추가) ──
@@ -502,6 +520,8 @@ const DOMAIN_CORE_HEADINGS = [
   ['AM', '영상 제작·연출 전문가'],
   ['AN', '영상 편집·후반작업 전문가'],
   ['AO', '미디어 품질·권리 검수 전문가'],
+  ['AP', '생성형 AI 로컬 워크플로우 엔지니어'],
+  ['AQ', '생성형 AI 플랫폼 운영 전문가'],
 ];
 function extractSection(text, marker, endRe) {
   const start = text.indexOf(marker);

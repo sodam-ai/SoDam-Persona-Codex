@@ -4,9 +4,9 @@
 
 This document is written so that even someone who has never used a computer, a smartphone, a messenger app, or AI before can follow it from installation to actual use. Whenever an unfamiliar term appears for the first time, it is explained in `plain words (technical term)` form. Example: repository (an online storage place that holds code and documents together).
 
-The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 29 conditional expert knowledge modules (**skills**) that load only when relevant.
+The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 31 conditional expert knowledge modules (**skills**) that load only when relevant.
 
-> **Current version**: `1.9.0` · **Perspectives**: 35 · **Trigger patterns**: 41 patterns (A-AO) · **Skills**: 29 · **Hooks**: 2 · **License**: Apache License 2.0
+> **Current version**: `1.10.0` · **Perspectives**: 37 · **Trigger patterns**: 43 patterns (A-AQ) · **Skills**: 31 · **Hooks**: 2 · **License**: Apache License 2.0
 
 ---
 
@@ -279,6 +279,20 @@ Image and video work has separate ideation, production, editing, and review stag
 
 Provide the purpose, platform, aspect ratio, image size or video duration/FPS, source files, protected elements, software and version, proficiency in that specific software, deadline, and rights status when known. Architectural/interior 3D experience does not imply expert proficiency in every image or video tool. Successful generation/export and actual visual/audio review remain separate states.
 
+### How to request generative-AI tool or platform work for the first time
+
+Local tools such as ComfyUI and hosted services such as Midjourney, Higgsfield, and Runway have different inputs and risks. A product name alone triggers one clarification. State the action and expected result to route directly.
+
+| Work | Example request | Routing and checks |
+|---|---|---|
+| Install or repair a local tool | “Help me diagnose this ComfyUI CUDA error without changing unrelated workflows.” | #36 checks the exact install, Python, GPU, CUDA, VRAM, logs, and rollback path |
+| Build or edit a workflow | “Create a new ComfyUI workflow for this image while preserving the current graph.” | #36 inventories nodes, models, versions, inputs, outputs, and recovery points before editing |
+| Operate a hosted platform | “Tell me how to create and download this shot in Higgsfield, including the credit cost.” | #37 verifies the current interface, plan, credits, upload/download path, and policy evidence |
+| Compare tools or platforms | “Compare ComfyUI, Midjourney, Higgsfield, and Runway for this deliverable.” | #36 and #37 compare control, hardware, privacy, cost, rights, reproducibility, and export limits using current evidence |
+| Produce and review media | “Generate the image, inspect the real output, and check whether it is safe to deliver.” | #32 or #33 leads the creative output; #35 reviews the actual file and evidence; #36 or #37 operates the environment |
+
+State the operating system, GPU and VRAM if relevant, tool or platform, version or plan, current state, exact error, input files, expected output, budget or credit limit, rights status, and your proficiency with that specific tool. Fifteen years of digital-content, CG, or automation experience does not mean fifteen years with a newer individual product.
+
 ### Checking which skills are available
 
 In Codex CLI and the IDE extension, type `/skills`, or just type `$`, to see the list of skills currently available.
@@ -338,7 +352,9 @@ Mixing certain words into your request automatically changes how deep the respon
 | `$persona-video-production-director <text>` | Video concept, storyboard, shots, camera movement, and generation perspective (#33) |
 | `$persona-video-post-production-expert <text>` | Editing, captions, audio, grading, and encoding perspective (#34) |
 | `$persona-media-quality-rights-reviewer <text>` | Image/video quality, provenance, consent, and license-review perspective (#35) |
-| `$persona-create` | Add a domain persona through an interview. Under the current numbering, the next perspective starts at #36 |
+| `$persona-generative-ai-workflow-engineer <text>` | Local ComfyUI-style tools, workflows, nodes, models, CUDA/VRAM, APIs, and recovery (#36) |
+| `$persona-generative-ai-platform-operator <text>` | Hosted Midjourney/Higgsfield/Runway-style features, accounts, credits, uploads, and outputs (#37) |
+| `$persona-create` | Add a domain persona through an interview. Under the current numbering, the next perspective starts at #38 |
 | `$persona-edit` | Interview-style add/edit/remove of trigger words for an existing persona |
 
 ### Commands for documentation/code editors (run from the repository root)
@@ -363,7 +379,7 @@ Every request is classified into one of the 4 levels below, which determines how
 | **L0** | Greetings/small talk, 1-2 word requests, simple status checks ("what did you do?") | 1-3 lines, free tone |
 | **L1** | Concept explanations, opinions/advice requests | Core point + rationale + a light check, a firm recommendation plus stated limitations |
 | **L2** | General work: code changes, debugging, implementation | The `persona-format` skill activates, following a 7-step procedure |
-| **L3** | Major work involving security, money, deployment, or irreversible actions | `persona-format` + `persona-triggers` + `persona-safety` all activate, plus a full review by all 35 perspectives |
+| **L3** | Major work involving security, money, deployment, or irreversible actions | `persona-format` + `persona-triggers` + `persona-safety` all activate, plus a full review by all 37 perspectives |
 
 ### Trigger words — how a single word shifts intensity and perspective
 
@@ -372,15 +388,15 @@ When specific words (triggers) are detected in what you say, the following 6 eff
 1. **Raise intensity** — "in depth", "thoroughly", "make sure" → from L1 up to L2/L3
 2. **Lower intensity** — "briefly", "in short", "in one line" → always takes priority over every other effect
 3. **Load an additional skill** — `persona-triggers` / `persona-format` / `persona-safety`
-4. **Activate a domain expert** — legal → #11, investing → #13, accounting/tax → #14, marketing → #15, architecture/interiors/construction/cost/design/3D/rendering → #16-#24, source search/verification → #25, research/analysis → #26, ideation/concept strategy → #27, project delivery → #28, product value/backlog → #29, PMO/governance → #30, and project analysis/operations → #31, image production/editing → #32, video production/direction → #33, video editing/post-production → #34, and media quality/rights review → #35
+4. **Activate a domain expert** — legal → #11, investing → #13, accounting/tax → #14, marketing → #15, architecture/interiors/construction/cost/design/3D/rendering → #16-#24, source search/verification → #25, research/analysis → #26, ideation/concept strategy → #27, project delivery → #28, product value/backlog → #29, PMO/governance → #30, and project analysis/operations → #31, image production/editing → #32, video production/direction → #33, video editing/post-production → #34, and media quality/rights review → #35, local generative-AI workflows → #36, and hosted generative-AI platforms → #37
 5. **Fully activate a single perspective** — "security" alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone → #4, "AI"/"agent"/"MCP" alone → #6
 6. **Evidence mode** (intensity stays the same) — "evidence", "source", "example", "fact" etc. → present real evidence and clearly separate speculation from confirmed fact
 
-These trigger words are organized into 41 patterns (A-AO), and the full word lists plus the priority order for conflicts all live in the `persona-triggers` skill. Priority summary: **length constraints (e.g. "briefly") > intensity (e.g. "in depth") > domain expert > single perspective > additional skill.**
+These trigger words are organized into 43 patterns (A-AQ), and the full word lists plus the priority order for conflicts all live in the `persona-triggers` skill. Priority summary: **length constraints (e.g. "briefly") > intensity (e.g. "in depth") > domain expert > single perspective > additional skill.**
 
-### 35 perspectives — the expert checklist reviewed before every answer
+### 37 perspectives — the expert checklist reviewed before every answer
 
-For every response at L1 or above, 3-5 of the 35 perspectives below that are relevant to the task are briefly reviewed internally before answering — automatically, even without a trigger word. This does not apply to L0 small talk or "briefly"-style requests.
+For every response at L1 or above, 3-5 of the 37 perspectives below that are relevant to the task are briefly reviewed internally before answering — automatically, even without a trigger word. This does not apply to L0 small talk or "briefly"-style requests.
 
 | # | Perspective | Especially important when |
 |---|---|---|
@@ -419,10 +435,12 @@ For every response at L1 or above, 3-5 of the 35 perspectives below that are rel
 | 33 | Video production and direction specialist (15+ years) | Video concept, storyboard, shots, cameras, capture, AI generation, and continuity |
 | 34 | Video editing and post-production specialist (15+ years) | Cuts, captions, audio, grading, compositing, encoding, and deliverables |
 | 35 | Media quality and rights reviewer (15+ years) | Technical quality, AI errors, continuity, provenance, consent, and licensing |
+| 36 | Generative-AI local workflow engineer (15+ year foundation) | ComfyUI-style installation, nodes, models, CUDA/VRAM, APIs, preservation, and recovery |
+| 37 | Generative-AI platform operator (15+ year foundation) | Hosted Midjourney/Higgsfield/Runway-style features, accounts, credits, uploads, and outputs |
 
-### 24 domain experts — conditionally going deep
+### 26 domain experts — conditionally going deep
 
-Among the 35 perspectives above, #11 and #13 through #35 each have their own dedicated skill, which loads much deeper knowledge when a related trigger is detected.
+Among the 37 perspectives above, #11 and #13 through #37 each have their own dedicated skill, which loads much deeper knowledge when a related trigger is detected.
 
 - **Professional investor (#13, `persona-investor`)**: Always asks "if this fails, does the user lose money?" Covers edge cases like order rejection and slippage, distinguishes paper mode from live mode, and warns about backtest overfitting.
 - **Professional lawyer (#11, `persona-lawyer`)**: Covers audit-log obligations, staying clear of capital-markets-law boundaries (avoiding investment-advisory language), personal-data protection/GDPR, and disclaimer/consent standards.
@@ -448,6 +466,8 @@ Among the 35 perspectives above, #11 and #13 through #35 each have their own ded
 - **Video production and direction specialist (#33, `persona-video-production-director`)**: Designs purpose, concept, storyboard, shots, camera movement, capture or AI generation, and scene continuity.
 - **Video editing and post-production specialist (#34, `persona-video-post-production-expert`)**: Handles cuts, captions, audio, grading, compositing, encoding, master files, and platform deliverables.
 - **Media quality and rights reviewer (#35, `persona-media-quality-rights-reviewer`)**: Reviews actual file quality, AI errors, playback, sync, continuity, provenance, consent, and licenses, and hands legal interpretation to #11.
+- **Generative-AI local workflow engineer (#36, `persona-generative-ai-workflow-engineer`)**: Owns installation, servers, workflows, nodes, models, CUDA/VRAM, APIs, preservation, and recovery for ComfyUI-style local tools.
+- **Generative-AI platform operator (#37, `persona-generative-ai-platform-operator`)**: Owns current features, accounts, plans, credits, uploads, downloads, and verification dates for Midjourney/Higgsfield/Runway-style hosted services.
 
 `Drawing`, `drawing work`, `CAD`, `DWG`, floor plans, detail drawings, and shop drawings activate pattern AB, which routes the request to the appropriate lead and reviewing roles among #16 through #24.
 
@@ -498,7 +518,7 @@ The persona rules instruct Codex to check user intent and approval status before
        ▼
 6. Matching skills load conditionally
    (whichever of persona-triggers / persona-format / persona-safety /
-    whichever of the 24 domain skills apply)
+    whichever of the 26 domain skills apply)
        │
        ▼
 7. L2/L3 responses follow the 7-step response format (recap → root cause →
@@ -567,6 +587,22 @@ A deliverable from one stage is never treated automatically as the approved deli
 ```
 
 A generation or export log alone is not completion evidence. Inspect images at full and delivery size; play the video or inspect representative frames, audio, and metadata. Label anything unavailable for inspection as `unreviewed`, and any unsupported rights claim as `unverified`.
+
+### Recommended workflow for generative-AI tools and platforms
+
+```text
+1. Define the deliverable, quality target, budget, deadline, and rights constraints
+2. Confirm whether the environment is local/self-hosted (#36) or hosted (#37)
+3. Record the exact version, plan, hardware, nodes/models, source files, and protected elements
+4. Back up or use Save As before changing an existing workflow or project
+5. Verify availability, compatibility, privacy, current features, credits, and policy evidence
+6. Run the smallest reversible test and capture logs, queue state, settings, and costs
+7. Generate the intended result; do not equate installation, loading, or queue success with generation
+8. Inspect the actual image/video and delivery metadata (#35), then correct quality or rights issues
+9. Report confirmed facts, assumptions, unverified items, changed assets, cost, and rollback steps
+```
+
+Report these states separately: tool/access confirmed, model/node/workflow prepared, service reachable, content loaded, job queued or generated, output file present, actual result inspected, and rights/security/cost approval confirmed. Never paste API keys, session cookies, access tokens, billing details, or private source files into prompts or public workflow JSON.
 
 ### The flow for adding a new domain persona (`$persona-create`)
 
@@ -647,7 +683,7 @@ This project originally started as a plugin for Claude Code (a different AI codi
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 response format
     │   ├── persona-safety/SKILL.md       # Always-on security rules, irreversible-action gate
-    │   ├── persona-triggers/SKILL.md     # Full A-AO trigger-word detail and the 35-perspective mapping table
+    │   ├── persona-triggers/SKILL.md     # Full A-AQ trigger-word detail and the 37-perspective mapping table
     │   ├── persona-investor/SKILL.md     # #13 professional investor domain
     │   ├── persona-lawyer/SKILL.md       # #11 professional lawyer domain
     │   ├── persona-accountant/SKILL.md   # #14 accounting/tax specialist domain
@@ -672,6 +708,8 @@ This project originally started as a plugin for Claude Code (a different AI codi
     │   ├── persona-video-production-director/SKILL.md # #33 video planning and direction domain
     │   ├── persona-video-post-production-expert/SKILL.md # #34 video post-production domain
     │   ├── persona-media-quality-rights-reviewer/SKILL.md # #35 media quality and rights review domain
+    │   ├── persona-generative-ai-workflow-engineer/SKILL.md # #36 local generative-AI workflow domain
+    │   ├── persona-generative-ai-platform-operator/SKILL.md # #37 hosted generative-AI platform domain
     │   ├── persona-create/SKILL.md       # Entry point for the new-persona creation interview
     │   └── persona-edit/SKILL.md         # Entry point for the trigger-editing interview
     ├── commands/
@@ -681,6 +719,7 @@ This project originally started as a plugin for Claude Code (a different AI codi
         ├── persona_full_core.md          # The full persona definition (for full L3 activation / session recovery)
         ├── built_environment_collaboration.md
         ├── media_production_collaboration.md # Shared inputs, handoffs, and conflict rules
+        ├── generative_ai_tools_collaboration.md # Local/hosted generative-AI state, safety, cost, and handoffs
         └── test_scenarios.md             # A set of sample utterances for verifying trigger behavior
 ```
 
@@ -693,12 +732,12 @@ This checker mechanically prevents number drift when adding perspectives or chan
 | # | What it checks |
 |---|---|
 | 1 | Perspective numbers are continuous from 1 through the last entry |
-| 2 | Labels such as "35 people" and "35 perspectives" match the actual count in every core file, skill, and README |
-| 3 | The documented A-AO trigger-pattern count matches the actual section count |
+| 2 | Labels such as "35 people" and "37 perspectives" match the actual count in every core file, skill, and README |
+| 3 | The documented A-AQ trigger-pattern count matches the actual section count |
 | 4 | The skill-folder count, README intro, and file map agree, and every skill frontmatter `name` matches its folder (including English README cross-checks) |
-| 5 | All 24 domain personas are wired into the core and marker, while both READMEs agree on domain counts, explicit invocations, and major-section structure |
+| 5 | All 26 domain personas are wired into the core and marker, while both READMEs agree on domain counts, explicit invocations, and major-section structure |
 | 6 | The Agent Plugins 1.0, Codex fallback, and legacy manifests plus both marketplace JSON files have valid names, versions, and source paths |
-| 7 | Required disclaimers, qualified-review boundaries, and non-final estimate wording exist for all 24 domains |
+| 7 | Required disclaimers, qualified-review boundaries, and non-final estimate wording exist for all 26 domains |
 | 8 | Warning only: generated HTML appears out of sync with current counts |
 | 9 | Backtick-wrapped repository file references point to files that exist |
 | 10 | No personal absolute path containing a developer account name leaked into distributed files |
@@ -778,9 +817,9 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 | Hook events and command definitions | `plugins/sodam-persona/hooks/hooks.json` |
 | SessionStart script / core text | `plugins/sodam-persona/hooks/inject-core.js`, `persona_core.md` |
 | UserPromptSubmit script / compact marker | `plugins/sodam-persona/hooks/inject-marker.js`, `persona_marker.txt` |
-| All 29 skills | `plugins/sodam-persona/skills/persona-*/SKILL.md` |
+| All 31 skills | `plugins/sodam-persona/skills/persona-*/SKILL.md` |
 | The full trigger-word list and perspective mapping table | `plugins/sodam-persona/skills/persona-triggers/SKILL.md` |
-| Details for all 24 domain experts | The 24 domain-specific `persona-*` folders under `plugins/sodam-persona/skills/` |
+| Details for all 26 domain experts | The 26 domain-specific `persona-*` folders under `plugins/sodam-persona/skills/` |
 | The original procedure text for creating/editing personas | `plugins/sodam-persona/commands/create.md`, `edit.md` |
 | The consistency-check script | Repository root, `validate.mjs` |
 | The HTML-regeneration script | Repository root, `build-docs.mjs`, `doc-theme.html` |
@@ -797,6 +836,15 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 ## Changelog Summary
 
 Listed with the most recent entries at the top. Click (or tap) an item to expand its details.
+
+<details>
+<summary><strong>2026-09-16 — Added generative-AI tool and platform personas (v1.10.0)</strong></summary>
+
+- Added a local/self-hosted generative-AI workflow engineer (#36) and a hosted generative-AI platform operator (#37).
+- Separated local runtime, node, model, CUDA/VRAM, API, queue, and recovery work from hosted feature, account, plan, credit, upload/download, and policy work.
+- Added regression checks against bare product-name activation, inflated years of product experience, secret exposure, current-feature guessing, and treating install/queue success as inspected media.
+
+</details>
 
 <details>
 <summary><strong>2026-09-16 — Split image and video production responsibilities (v1.9.0)</strong></summary>
@@ -979,6 +1027,9 @@ This project was later ported to be Codex-only, becoming today's `SoDam Persona 
 | An interior mood-board request is handled only as technical or general design | The installed copy is old, or the prompt did not identify interior atmosphere, materials, or color | In a new task, ask for “interior mood and material palette,” or explicitly invoke $persona-interior-design-expert |
 | #25-#27 do not appear for a search, research, or ideation request | The installation cache predates v1.7.0, or the task intent is too vague | Reinstall the latest version, start a new task, and state the purpose as “verify official primary sources,” “compare and analyze cases,” or “propose evidence-based alternatives,” or invoke the relevant skill directly |
 | Image/video work only activates general design or rendering roles | The install cache predates v1.9.0, or the prompt only says image/video without an action | Reinstall and ask for image compositing, walkthrough storyboards, video editing, or quality/license review, or invoke #32-#35 |
+| ComfyUI or another local generative-AI tool is installed, but #36 does not appear | The install cache predates v1.10.0, or the request only names a product without an action | Reinstall the latest plugin and ask for installation, workflow editing, node/model diagnosis, CUDA/VRAM repair, API/queue work, or explicitly invoke `$persona-generative-ai-workflow-engineer` |
+| Midjourney, Higgsfield, or Runway advice is outdated or #37 does not appear | The feature, plan, credits, or policy changed, or the request only names a platform | Ask for current official verification and provide the observed screen or URL when available; invoke `$persona-generative-ai-platform-operator` if needed |
+| A server responds or a job is queued, but there is no verified output | Reachability, loading, queueing, generation, file existence, and actual inspection were collapsed into one state | Report each state separately, open the actual output, and run #35 quality/rights review before completion |
 | Generation/export succeeds, but the output is broken or will not play | A completion message was mistaken for actual visual/audio review | View the image and play the video through while checking sync, captions, and loudness before marking it complete |
 | A project-management request only uses #9, or #28-#31 do not appear | The installation cache predates v1.8.0, or the request only used an ambiguous abbreviation | Reinstall the latest version and state the accountability as “manage project schedule and risk,” “prioritize the product backlog,” “design PMO approvals,” or “track action items,” or invoke the relevant skill directly |
 | PM, PO, or PA is interpreted as the wrong role | These abbreviations vary by organization and industry and are excluded from automatic activation | Write the full role, such as Project Manager, Product Owner, Project Analyst, or Project Architect, plus the expected result |
@@ -1021,6 +1072,12 @@ A. #32 creates and finishes still images. #33 designs the message, storyboard, s
 **Q. Is an image or video complete as soon as a file is generated?**
 A. No. Inspect the actual image and play the video. Anything not inspected is unreviewed. If provenance, consent, music, font, or model licensing is unclear, public, advertising, sales, or client-delivery use cannot be confirmed.
 
+**Q. What is the difference between #36 and #37?**
+A. #36 owns local or self-hosted runtimes such as ComfyUI: installation, Python, GPU/CUDA/VRAM, models, nodes, workflow JSON, APIs, queues, logs, preservation, and recovery. #37 owns hosted platforms such as Midjourney, Higgsfield, and Runway: current features, accounts, plans, credits, uploads, downloads, cost, and policy evidence. #32-#35 still own creative production, editing, actual quality, provenance, consent, and license review.
+
+**Q. Does a paid plan automatically allow commercial use of generated output?**
+A. No. A paid plan alone does not prove commercial permission. Check the current service terms, plan-specific rights, input-asset licenses, model or checkpoint license, third-party music/font rights, consent and publicity rights, trademarks, and client contract. Record the source and verification date instead of guessing.
+
 **Q. What is the difference among the project manager (#28), product owner (#29), PMO (#30), and project analysis/operations (#31)?**
 A. #28 integrates schedule, budget, resources, and risks to deliver the project. #29 decides user value and product-backlog priorities. #30 governs standards, approvals, and the portfolio across projects. #31 keeps meetings, decisions, actions, requirements, and status data traceable. Using the full role name and expected output is safer than a bare abbreviation.
 
@@ -1046,7 +1103,7 @@ A. Call `$persona-edit` (to edit an existing perspective) or `$persona-create` (
 A. Mixing in words like "briefly", "in short", or "just the key point" switches it to a short format immediately. This rule has the highest priority of all.
 
 **Q. I actually want it to go deeper and more thorough.**
-A. Using expressions like "objectively", "in depth", "thoroughly", or "full persona version" brings all 35 perspectives into the review.
+A. Using expressions like "objectively", "in depth", "thoroughly", or "full persona version" brings all 37 perspectives into the review.
 
 **Q. I found a bug or something misbehaving. Where do I report it?**
 A. Please report it through the repository's GitHub Issues feature. Including a reproducible example of what you typed speeds up diagnosis a lot.

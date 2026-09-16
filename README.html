@@ -280,11 +280,11 @@ plugin — 원래 프로그램에 기능을 더해주는 작은 추가 프로그
 능력 위에 "이렇게 판단하고 이렇게 답하라"는 규칙 문서를 자동으로
 얹어주는 설정 모음입니다. 항상 켜지는 핵심 규칙(hook, 후크 — 특정 시점에
 자동으로 실행되는 작은 프로그램) 2개와, 상황에 맞을 때만 불러오는 전문
-지식 모음(skill, 스킬) 29개로 이루어져 있습니다.</p>
+지식 모음(skill, 스킬) 31개로 이루어져 있습니다.</p>
 <blockquote>
-<p><strong>지금 버전</strong>: <code>1.9.0</code> · <strong>관점
-수</strong>: 35명 · <strong>트리거 패턴</strong>: 41개(A~AO) ·
-<strong>스킬 수</strong>: 29개 · <strong>hook 수</strong>: 2개 ·
+<p><strong>지금 버전</strong>: <code>1.10.0</code> · <strong>관점
+수</strong>: 37명 · <strong>트리거 패턴</strong>: 43개(A~AQ) ·
+<strong>스킬 수</strong>: 31개 · <strong>hook 수</strong>: 2개 ·
 <strong>라이선스</strong>: Apache License 2.0</p>
 </blockquote>
 <hr />
@@ -755,6 +755,59 @@ Cinema 4D, D5, Twinmotion, Unreal, Unity 등</li>
 알려주세요. 3D 시각화 경력만으로 이미지·영상 프로그램 전체를 전문가
 수준으로 가정하지 않습니다. 생성·내보내기 성공과 실제 화면·소리 검수도
 구분합니다.</p>
+<h3 id="생성형-ai-도구플랫폼-작업을-처음-요청하는-방법">생성형 AI
+도구·플랫폼 작업을 처음 요청하는 방법</h3>
+<p>로컬에서 실행되는 ComfyUI와 인터넷 서비스인
+Midjourney·Higgsfield·Runway는 필요한 정보와 위험이 다릅니다. 제품명만
+말하면 작업 목적을 확인하며, 아래처럼 요청하면 알맞은 역할이 바로
+작동합니다.</p>
+<table>
+<thead>
+<tr>
+<th>하고 싶은 작업</th>
+<th>자연어 요청 예시</th>
+<th>주도 역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ComfyUI 설치·실행·오류·워크플로우</td>
+<td>“기존 워크플로우는 보존하고 ComfyUI CUDA 오류를 로그부터
+진단해줘”</td>
+<td>#36</td>
+</tr>
+<tr>
+<td>노드·체크포인트·LoRA·VAE·API·VRAM</td>
+<td>“이 워크플로우의 누락 노드와 모델 경로를 확인하고 VRAM 사용을
+줄여줘”</td>
+<td>#36</td>
+</tr>
+<tr>
+<td>Midjourney·Higgsfield·Runway 기능·비용 비교</td>
+<td>“공식 자료 기준으로 영상 기능·플랜·크레딧을 날짜와 함께
+비교해줘”</td>
+<td>#37, 비용은 #12 협업</td>
+</tr>
+<tr>
+<td>외부 플랫폼 업로드·권리·보안 확인</td>
+<td>“고객 이미지를 올리기 전에 데이터 처리와 상업 이용 조건을
+검토해줘”</td>
+<td>#37+#2+#35, 법률 판단은 #11</td>
+</tr>
+<tr>
+<td>실제 이미지·영상 생성과 검수</td>
+<td>“ComfyUI에서 이미지를 생성하고 실제 출력까지 확대 검수해줘”</td>
+<td>#36+#32+#35</td>
+</tr>
+</tbody>
+</table>
+<p>로컬 도구는 운영체제·GPU·VRAM·프로그램·Python·CUDA·PyTorch·노드·모델
+버전을, 외부 플랫폼은 계정·플랜·잔여 크레딧·업로드 허용 자료·공식 확인
+날짜를 가능한 만큼 알려주세요. 설치됨·서버 도달·워크플로우 로드·생성
+성공·파일 존재·실제 결과 검수·권리 확인은 서로 다른 상태입니다.</p>
+<p>두 페르소나의 <code>15년+</code>는 디지털 콘텐츠·CG·자동화 경험을
+포함한 전문 판단의 깊이입니다. ComfyUI·Midjourney·Higgsfield 같은 개별
+제품을 15년 사용했다는 의미로 표현하지 않습니다.</p>
 <h3 id="사용-가능한-skill-목록-확인">사용 가능한 skill 목록 확인</h3>
 <p>Codex CLI와 IDE 확장에서는 <code>/skills</code>라고 입력하거나,
 <code>$</code>만 입력하면 지금 쓸 수 있는 skill 목록이 화면에
@@ -942,9 +995,19 @@ Cinema 4D, D5, Twinmotion, Unreal, Unity 등</li>
 <td>이미지·영상 품질·출처·동의·라이선스 검수 관점(#35)</td>
 </tr>
 <tr>
+<td><code>$persona-generative-ai-workflow-engineer &lt;내용&gt;</code></td>
+<td>ComfyUI형 로컬 도구·워크플로우·노드·모델·CUDA·VRAM·API·복구
+관점(#36)</td>
+</tr>
+<tr>
+<td><code>$persona-generative-ai-platform-operator &lt;내용&gt;</code></td>
+<td>Midjourney·Higgsfield·Runway형 외부 플랫폼
+기능·계정·크레딧·업로드·출력 관점(#37)</td>
+</tr>
+<tr>
 <td><code>$persona-create</code></td>
 <td>인터뷰 방식으로 새 도메인 페르소나를 추가. 현재 번호 체계에서는 다음
-관점이 #36부터 시작</td>
+관점이 #38부터 시작</td>
 </tr>
 <tr>
 <td><code>$persona-edit</code></td>
@@ -1010,7 +1073,7 @@ Cinema 4D, D5, Twinmotion, Unreal, Unity 등</li>
 <td><strong>L3</strong></td>
 <td>보안·금전·배포·되돌릴 수 없는 작업이 섞인 중대 작업</td>
 <td><code>persona-format</code> + <code>persona-triggers</code> +
-<code>persona-safety</code> 전부 활성화 + 35명 관점 전원 검토</td>
+<code>persona-safety</code> 전부 활성화 + 37명 관점 전원 검토</td>
 </tr>
 </tbody>
 </table>
@@ -1031,7 +1094,8 @@ L2·L3로</li>
 → #16~#24, 자료 검색·출처 검증 → #25, 리서치·분석 → #26, 아이디어·콘셉트
 → #27, 프로젝트 실행관리 → #28, 제품 가치·백로그 → #29, PMO·거버넌스 →
 #30, 프로젝트 분석·운영 → #31, 이미지 제작·편집 → #32, 영상 제작·연출 →
-#33, 영상 편집·후반작업 → #34, 미디어 품질·권리 검수 → #35</li>
+#33, 영상 편집·후반작업 → #34, 미디어 품질·권리 검수 → #35, 생성형 AI
+로컬 워크플로우 → #36, 생성형 AI 플랫폼 운영 → #37</li>
 <li><strong>단일 관점 전면 활성화</strong> — "보안" 단독 → #2,
 "디자인"/"UI" 단독 → #7, "UX" 단독 → #8, "테스트" 단독 → #4,
 "AI"/"에이전트"/"MCP" 단독 → #6</li>
@@ -1039,15 +1103,15 @@ L2·L3로</li>
 "출처", "사례", "팩트" 등 → 실제 근거를 제시하고 추측과 사실을 구분해서
 표기</li>
 </ol>
-<p>이 트리거 단어들은 41개의 패턴 그룹(A~AO)으로 정리되어 있으며, 자세한
+<p>이 트리거 단어들은 43개의 패턴 그룹(A~AQ)으로 정리되어 있으며, 자세한
 단어 목록과 충돌 시 우선순위는 <code>persona-triggers</code> skill에
 전부 정리되어 있습니다. 우선순위 요약: <strong>분량 제약(간단히 등) &gt;
 강도(깊게 등) &gt; 도메인 전문가 &gt; 단일 관점 &gt; 추가
 skill.</strong></p>
 <h3
-id="35명의-관점--매-응답-전-자동으로-검토되는-전문가-체크리스트">35명의
+id="37명의-관점--매-응답-전-자동으로-검토되는-전문가-체크리스트">37명의
 관점 — 매 응답 전 자동으로 검토되는 전문가 체크리스트</h3>
-<p>L1 이상의 모든 응답에서, 아래 35개 관점 중 그 작업과 관련 있는
+<p>L1 이상의 모든 응답에서, 아래 37개 관점 중 그 작업과 관련 있는
 3~5개를 짧게라도 내부적으로 검토한 뒤 답합니다(트리거 단어가 없어도 자동
 적용됩니다). L0 잡담이나 "간단히"류 요청에는 적용되지 않습니다.</p>
 <table>
@@ -1235,11 +1299,22 @@ id="35명의-관점--매-응답-전-자동으로-검토되는-전문가-체크�
 <td>미디어 품질·권리 검수 전문가(15년+)</td>
 <td>기술 품질·AI 오류·연속성·출처·동의·라이선스 검수</td>
 </tr>
+<tr>
+<td>36</td>
+<td>생성형 AI 로컬 워크플로우 엔지니어(15년+ 기반)</td>
+<td>ComfyUI형 로컬 도구의 설치·노드·모델·CUDA·VRAM·API·복구</td>
+</tr>
+<tr>
+<td>37</td>
+<td>생성형 AI 플랫폼 운영 전문가(15년+ 기반)</td>
+<td>Midjourney·Higgsfield·Runway형 외부 플랫폼의
+기능·계정·크레딧·업로드·출력</td>
+</tr>
 </tbody>
 </table>
-<h3 id="도메인-전문가-24종--조건부로-깊게-들어가는-전문-지식">도메인
-전문가 24종 — 조건부로 깊게 들어가는 전문 지식</h3>
-<p>위 35개 관점 중 #11·#13~#35은 전용 skill을 따로 갖고 있어, 관련
+<h3 id="도메인-전문가-26종--조건부로-깊게-들어가는-전문-지식">도메인
+전문가 26종 — 조건부로 깊게 들어가는 전문 지식</h3>
+<p>위 37개 관점 중 #11·#13~#37은 전용 skill을 따로 갖고 있어, 관련
 트리거가 감지되면 훨씬 깊은 지식이 추가로 로드됩니다.</p>
 <ul>
 <li><strong>전문 투자자(#13, <code>persona-investor</code>)</strong>:
@@ -1329,6 +1404,15 @@ D5·Twinmotion·Unreal·Unity 등에서 재질·조명·카메라·렌더 품질
 <code>persona-media-quality-rights-reviewer</code>)</strong>: 실제 파일
 품질, AI 오류, 재생·싱크·연속성, 출처·인물 동의·라이선스 상태를 검수하고
 법률 판단은 #11로 넘깁니다.</li>
+<li><strong>생성형 AI 로컬 워크플로우 엔지니어(#36,
+<code>persona-generative-ai-workflow-engineer</code>)</strong>:
+ComfyUI형 로컬 도구의
+설치·서버·워크플로우·노드·모델·CUDA·VRAM·API·보존·복구를
+담당합니다.</li>
+<li><strong>생성형 AI 플랫폼 운영 전문가(#37,
+<code>persona-generative-ai-platform-operator</code>)</strong>:
+Midjourney·Higgsfield·Runway형 외부 플랫폼의 최신
+기능·계정·플랜·크레딧·업로드·다운로드와 확인 날짜를 담당합니다.</li>
 </ul>
 <p><code>도면</code>, <code>도면 작업</code>, <code>CAD</code>,
 <code>DWG</code>, <code>평면도</code>, <code>상세도</code>,
@@ -1389,7 +1473,7 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
        │
        ▼
 6. 조건에 맞는 skill 조건부 로드
-   (persona-triggers / persona-format / persona-safety / 도메인 24종 중 해당하는 것)
+   (persona-triggers / persona-format / persona-safety / 도메인 26종 중 해당하는 것)
        │
        ▼
 7. L2·L3는 7단계 응답 형식(복기 → 근본 원인 → 추천 방향 → 실행 순서 →
@@ -1448,6 +1532,22 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
 프레임·오디오·메타데이터를 확인합니다. 확인하지 못한 항목은
 <code>미검수</code>, 권리 근거가 없는 항목은 <code>미확인</code>으로
 표시합니다.</p>
+<h3 id="생성형-ai-도구플랫폼-작업의-권장-흐름">생성형 AI 도구·플랫폼
+작업의 권장 흐름</h3>
+<pre class="text"><code>1. 목적·이미지/영상·완료 기준·공개/납품 위치 확인
+   → 2. 로컬 도구(#36) 또는 외부 플랫폼(#37) 선택
+   → 3. 환경·버전·계정·플랜·크레딧·업로드 허용 범위 확인
+   → 4. 모델·노드·워크플로우 또는 플랫폼 모델·설정 준비
+   → 5. 짧고 저비용인 대표 생성으로 먼저 검증
+   → 6. 생성 실행·출력 파일·사양을 확인
+   → 7. #32/#33/#34가 창작·편집 기준을 확인
+   → 8. #35가 실제 화면·재생·출처·동의·라이선스를 검수
+   → 9. 버전·설정·비용·출처·승인·복구 정보를 기록</code></pre>
+<p>ComfyUI 업데이트는 기존 워크플로우·모델·커스텀 노드와 복구 경로를
+기록한 뒤 복사본에서 시험합니다. 외부 플랫폼은 기능·요금·정책을 공식
+자료나 실제 계정 화면으로 확인하고 날짜를 기록합니다. API
+키·세션·쿠키·결제 정보는 문서·프롬프트·워크플로우·스크린샷·저장소에 넣지
+않습니다.</p>
 <h3 id="새-도메인-페르소나를-추가하는-흐름-persona-create">새 도메인
 페르소나를 추가하는 흐름 (<code>$persona-create</code>)</h3>
 <pre class="text"><code>1. $persona-create 호출
@@ -1533,7 +1633,7 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 응답 형식
     │   ├── persona-safety/SKILL.md       # 보안 always-on, 비가역 작업 게이트
-    │   ├── persona-triggers/SKILL.md     # 트리거 단어 A~AO 상세, 35개 관점 매핑표
+    │   ├── persona-triggers/SKILL.md     # 트리거 단어 A~AQ 상세, 37개 관점 매핑표
     │   ├── persona-investor/SKILL.md     # #13 전문 투자자 도메인
     │   ├── persona-lawyer/SKILL.md       # #11 전문 변호사 도메인
     │   ├── persona-accountant/SKILL.md   # #14 회계·세무 전문가 도메인
@@ -1558,6 +1658,8 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
     │   ├── persona-video-production-director/SKILL.md # #33 영상 기획·연출 도메인
     │   ├── persona-video-post-production-expert/SKILL.md # #34 영상 후반 제작 도메인
     │   ├── persona-media-quality-rights-reviewer/SKILL.md # #35 미디어 품질·권리 검수 도메인
+    │   ├── persona-generative-ai-workflow-engineer/SKILL.md # #36 생성형 AI 로컬 워크플로우 도메인
+    │   ├── persona-generative-ai-platform-operator/SKILL.md # #37 생성형 AI 플랫폼 운영 도메인
     │   ├── persona-create/SKILL.md       # 새 페르소나 생성 인터뷰 진입점
     │   └── persona-edit/SKILL.md         # 트리거 편집 인터뷰 진입점
     ├── commands/
@@ -1566,7 +1668,8 @@ href="#보안과-데이터-흐름">보안과 데이터 흐름</a>을 보세요.<
     └── reference/
         ├── persona_full_core.md          # 페르소나 풀 정의(L3 전면 활성/세션 복구용)
         ├── built_environment_collaboration.md
-        ├── media_production_collaboration.md # 건축·인테리어 공통 입력·인계·충돌 규칙
+        ├── media_production_collaboration.md
+        ├── generative_ai_tools_collaboration.md # 건축·인테리어 공통 입력·인계·충돌 규칙
         └── test_scenarios.md             # 트리거 동작 검증용 발화 시나리오 모음</code></pre>
 <p><code>commands/</code> 폴더는 Claude Code 시절 workflow 원문을 보존한
 내부 참조입니다. Codex에서는 이를 직접 slash 명령으로 실행하지 않고,
@@ -1591,12 +1694,12 @@ Node.js 내장 기능만 사용합니다.</p>
 </tr>
 <tr>
 <td>2</td>
-<td>"35명"·"35관점" 같은 표기가 모든 핵심 파일(코어·마커·skill·README
+<td>"37명"·"37관점" 같은 표기가 모든 핵심 파일(코어·마커·skill·README
 등)에서 실제 관점 수와 일치하는가</td>
 </tr>
 <tr>
 <td>3</td>
-<td>트리거 패턴 ID(A~AO) 개수 표기가 실제 섹션 수와 일치하는가</td>
+<td>트리거 패턴 ID(A~AQ) 개수 표기가 실제 섹션 수와 일치하는가</td>
 </tr>
 <tr>
 <td>4</td>
@@ -1798,7 +1901,7 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 <code>persona_marker.txt</code></td>
 </tr>
 <tr>
-<td>29개 skill 전체</td>
+<td>31개 skill 전체</td>
 <td><code>plugins/sodam-persona/skills/persona-*/SKILL.md</code></td>
 </tr>
 <tr>
@@ -1806,8 +1909,8 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 <td><code>plugins/sodam-persona/skills/persona-triggers/SKILL.md</code></td>
 </tr>
 <tr>
-<td>도메인 전문가 24종 상세</td>
-<td><code>plugins/sodam-persona/skills/</code> 아래 24개 도메인
+<td>도메인 전문가 26종 상세</td>
+<td><code>plugins/sodam-persona/skills/</code> 아래 26개 도메인
 <code>persona-*</code> 폴더</td>
 </tr>
 <tr>
@@ -1857,6 +1960,21 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 <h2 id="업데이트-내용-요약">업데이트 내용 요약</h2>
 <p>날짜가 최신인 항목이 위에 오도록 정리했습니다. 항목을 클릭(또는
 탭)하면 세부 내용이 펼쳐집니다.</p>
+<details>
+<summary><strong>2026-09-16 — 생성형 AI 도구·플랫폼 역할 분리 (v1.10.0)</strong></summary>
+
+<ul>
+<li>ComfyUI형 로컬 실행환경·워크플로우·노드·모델·CUDA·VRAM·API·복구를
+담당하는 #36을 추가했습니다.</li>
+<li>Midjourney·Higgsfield·Runway형 외부 플랫폼의
+기능·계정·플랜·크레딧·업로드·다운로드를 담당하는 #37을
+추가했습니다.</li>
+<li>제품명 단독 오작동, 허위 15년 제품 경력, 설치·큐 성공을 실제 품질
+완료로 오인, 업데이트에 의한 기존 환경 파손, 외부 업로드·API
+키·비용·권리 위험을 회귀 검사로 보호합니다.</li>
+</ul>
+</details>
+
 <details>
 <summary><strong>2026-09-16 — 이미지·영상 제작 역할 분리 (v1.9.0)</strong></summary>
 
@@ -2183,10 +2301,33 @@ $persona-interior-design-expert를 직접 호출</td>
 </tr>
 <tr>
 <td>이미지·영상 요청이 일반 디자인이나 렌더링 역할로만 처리됨</td>
-<td>설치 캐시가 v1.9.0 이전이거나 “이미지·영상”만 입력해 목적이
-불명확함</td>
-<td>최신 버전을 다시 설치하고 이미지 합성·워크스루 스토리보드·영상
-편집·품질/라이선스 검수처럼 작업을 적거나 #32~#35를 직접 호출</td>
+<td>설치 캐시가 v1.9.0 이전이거나 이미지·영상이라는 명사만 있고 작업
+의도가 없음</td>
+<td>최신 버전을 재설치하고 이미지 합성·워크스루 연출·영상 편집·품질 및
+권리 검수처럼 목적을 적거나 #32~#35를 직접 호출</td>
+</tr>
+<tr>
+<td>ComfyUI 같은 로컬 생성형 AI 도구를 설치했는데 #36이 보이지 않음</td>
+<td>설치 캐시가 v1.10.0 이전이거나 제품명만 말하고 작업 의도를 적지
+않음</td>
+<td>최신 플러그인을 재설치하고 설치·워크플로우 편집·노드/모델
+진단·CUDA/VRAM 복구·API/큐 작업을 요청하거나
+<code>$persona-generative-ai-workflow-engineer</code>를 직접 호출</td>
+</tr>
+<tr>
+<td>Midjourney·Higgsfield·Runway 안내가 현재 화면과 다르거나 #37이
+보이지 않음</td>
+<td>기능·요금제·크레딧·정책이 바뀌었거나 플랫폼 이름만 입력함</td>
+<td>공식 최신 정보 확인을 요청하고 가능하면 현재 화면이나 URL을 제공.
+필요하면 <code>$persona-generative-ai-platform-operator</code>를 직접
+호출</td>
+</tr>
+<tr>
+<td>서버가 응답하거나 작업이 큐에 들어갔지만 검증된 결과가 없음</td>
+<td>도달 가능·로드·큐 등록·생성·파일 존재·실제 검수를 한 상태로
+합침</td>
+<td>상태를 각각 보고하고 실제 결과를 열어 본 뒤 #35 품질·권리 검수를
+거쳐 완료 판단</td>
 </tr>
 <tr>
 <td>생성·내보내기 성공 뒤 결과가 깨지거나 재생되지 않음</td>
@@ -2317,6 +2458,18 @@ Codex/OpenAI 계정·구독·사용량 요금과 인터넷 비용은 별개일 �
 아닙니다. 실제 이미지와 영상 재생을 확인해야 합니다. 확인하지 못한
 결과는 미검수이며, 권리 근거가 불명확하면 공개·광고·판매·납품 가능하다고
 판단할 수 없습니다.</p>
+<p><strong>Q. 생성형 AI 도구 전문가(#36)와 플랫폼 운영 전문가(#37)는
+무엇이 다른가요?</strong> A. #36은 ComfyUI 같은 로컬·자체 호스팅 환경의
+설치, Python, GPU/CUDA/VRAM, 모델, 노드, 워크플로우 JSON, API, 큐, 로그,
+보존과 복구를 맡습니다. #37은 Midjourney·Higgsfield·Runway 같은 외부
+플랫폼의 최신 기능, 계정, 요금제, 크레딧, 업로드·다운로드, 비용과 정책
+근거를 맡습니다. 창작·편집·실제 품질·출처·동의·라이선스 검수는 계속
+#32~#35가 담당합니다.</p>
+<p><strong>Q. 유료 요금제를 쓰면 생성 결과물을 자동으로 상업적으로
+사용할 수 있나요?</strong> A. 아닙니다. 유료 결제만으로 상업 이용 권리가
+증명되지는 않습니다. 최신 서비스 약관, 요금제별 권리, 입력 자료
+라이선스, 모델·체크포인트 라이선스, 음악·폰트 권리, 초상·퍼블리시티권,
+상표, 고객 계약을 각각 확인하고 출처와 확인일을 기록해야 합니다.</p>
 <p><strong>Q. 프로젝트 매니저(#28), 프로덕트 오너(#29), PMO(#30),
 프로젝트 분석·운영(#31)은 어떻게 다른가요?</strong> A. #28은 프로젝트
 납품을 위해 일정·예산·자원·위험을 통합하고, #29는 사용자 가치와 제품
@@ -2362,7 +2515,7 @@ href="#워크플로우">워크플로우</a> 참고.</p>
 전환됩니다. 이 규칙은 다른 모든 규칙보다 우선순위가 가장 높습니다.</p>
 <p><strong>Q. 반대로 훨씬 더 깊고 꼼꼼하게 봐주면 좋겠어요.</strong> A.
 "객관적으로", "깊게", "철저히", "페르소나 풀버전" 같은 표현을 사용하면
-35명 관점 전원이 검토에 들어갑니다.</p>
+37명 관점 전원이 검토에 들어갑니다.</p>
 <p><strong>Q. 오작동이나 버그를 발견했어요. 어디에 알리면
 되나요?</strong> A. 저장소의 GitHub Issue 기능으로 신고해 주세요. 재현
 가능한 발화 예시를 함께 적어주시면 원인 파악이 빨라집니다.</p>

@@ -284,7 +284,7 @@ documents together).</p>
 this way, answer this way" rule documents on top of the conversational
 ability Codex already has. It consists of 2 always-on core rules
 (<strong>hooks</strong> — small programs that run automatically at a
-specific moment) and 16 conditional expert knowledge modules
+specific moment) and 18 conditional expert knowledge modules
 (<strong>skills</strong>) that load only when relevant.</p>
 <blockquote>
 <p><strong>Current version</strong>: <code>1.6.0</code> ·
@@ -374,12 +374,13 @@ use the same <code>codex</code>, <code>node</code>, and <code>git</code>
 commands in that system's Terminal; plugin availability and UI labels
 can vary by Codex version, account, and organization policy.</p>
 <p><strong>Current verification baseline (2026-09-16)</strong>: Verified
-on Windows with Codex CLI install/remove, Node.js 20 CI-compatible
-execution, normal/error/large hook inputs, and Chrome
-desktop/tablet/mobile documentation. macOS/Linux devices and every Codex
-app/IDE combination were not part of the automated run, so verify
-through <a href="#verify-the-installation">Verify the installation</a>
-on those environments.</p>
+install/remove command syntax against Codex CLI <code>0.154.0</code> on
+Windows, plus Node.js 20 CI-compatible execution, normal/error/large
+hook inputs, and Chrome desktop/tablet/mobile documentation. macOS/Linux
+devices and every Codex app/IDE combination were not part of the
+automated run, so verify through <a
+href="#verify-the-installation">Verify the installation</a> on those
+environments.</p>
 <p><strong>Account and permissions</strong>: Your OpenAI account and
 permission to use Codex must be arranged separately. Organization
 accounts may restrict plugin installation. This plugin does not create
@@ -634,6 +635,121 @@ $persona-accountant Review whether this cost can be treated as a deductible busi
 $persona-marketer Improve this landing-page copy
 $persona-create Add a new medical-domain persona
 $persona-edit Add &quot;rebalancing&quot; to the investor triggers</code></pre>
+<h3
+id="how-to-request-architectural-or-interior-work-for-the-first-time">How
+to request architectural or interior work for the first time</h3>
+<p>In architecture and interiors, “technical design,” “concept design,”
+“modeling,” “rendering,” and “construction” produce different
+deliverables. Copy the closest starter sentence from the table
+below.</p>
+<blockquote>
+<p>“15+ years” in this document describes the expert viewpoint assigned
+to the AI persona. It does not claim that the user has 15 years of
+experience, and the plugin never assumes expert knowledge of design,
+construction, estimating, Revit, Rhino, or any other application.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>What you want to do</th>
+<th>Starter sentence</th>
+<th>Lead role and verification boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Site planning, code, permits, design documents</td>
+<td>“Explain the possible building layout and code checks for this site
+in beginner-friendly terms.”</td>
+<td>#16 architectural planning leads. A qualified local professional
+must confirm actual code, structure, fire safety, and permits</td>
+</tr>
+<tr>
+<td>Interior circulation, finishes, ceilings, furniture details</td>
+<td>“Review the interior circulation and finish plan in this floor
+plan.”</td>
+<td>#17 interior technical design leads. Site conditions and qualified
+professionals confirm dimensions, performance, services, and
+construction details</td>
+</tr>
+<tr>
+<td>Methods, sequence, quality, defects</td>
+<td>“In what order should this interior be built, and what must be
+inspected?”</td>
+<td>#18 construction leads. Site measurement, safety planning, and
+specialist-trade approvals are required</td>
+</tr>
+<tr>
+<td>Quantities, unit rates, cost, value engineering</td>
+<td>“What quantity and unit-rate information is needed to estimate this
+drawing?”</td>
+<td>#19 estimating leads. It does not state a final price without
+location, date, brand, tax, transport, and disposal assumptions</td>
+</tr>
+<tr>
+<td>Integrate the whole architectural and interior direction</td>
+<td>“Unify the exterior and interior design language and material
+rules.”</td>
+<td>#20 design direction leads, with #23 and #24 reviewing</td>
+</tr>
+<tr>
+<td>Revit, Rhino, BIM, or 3D geometry</td>
+<td>“Check units, coordinates, and geometry loss when moving this Revit
+model to Rhino.”</td>
+<td>#21 3D modeling leads. It first checks software versions and the
+user’s proficiency in each application</td>
+</tr>
+<tr>
+<td>Materials, lighting, cameras, render quality</td>
+<td>“How should I set materials, lighting, and cameras for this interior
+scene in D5?”</td>
+<td>#22 rendering/visualization leads. A render is not an approval
+drawing or construction standard</td>
+</tr>
+<tr>
+<td>Architectural concept, massing, facade</td>
+<td>“Propose three massing and facade options suited to this site.”</td>
+<td>#23 architectural concept design leads; #16 reviews code and permit
+effects</td>
+</tr>
+<tr>
+<td>Interior atmosphere, materials, color, furniture</td>
+<td>“Propose three mood and material-palette options for this cafe
+interior.”</td>
+<td>#24 interior concept design leads; #17 reviews detail, performance,
+and building-services effects</td>
+</tr>
+<tr>
+<td>You do not yet know the drawing type</td>
+<td>“Tell me what can be checked from the attached drawing and what
+drawing is needed next.”</td>
+<td>Drawing router AB identifies the type and purpose, then chooses one
+lead and reviewers among #16-#24</td>
+</tr>
+</tbody>
+</table>
+<p>Provide as many of these items as you can in the first request.</p>
+<ol type="1">
+<li>Project type and use: home, cafe, office, exhibition, and so on</li>
+<li>Current stage: idea, schematic design, detailed design, estimating,
+construction, or closeout</li>
+<li>Location: country, city, and regulatory jurisdiction</li>
+<li>Source material: site data, dimensions, photos, drawings, models,
+title block, latest file version</li>
+<li>Desired deliverable: explanation, checklist, options, drawing
+review, modeling sequence, render settings, and so on</li>
+<li>Software and version: Revit, Rhino, 3ds Max, Blender, SketchUp,
+Cinema 4D, D5, Twinmotion, Unreal, Unity, and so on</li>
+<li>Your proficiency in each application: first use, beginner,
+intermediate, or production use</li>
+<li>Budget, schedule, site constraints, and conditions that remain
+unknown</li>
+</ol>
+<p>When information is missing, the persona should separate confirmed
+facts from assumptions and ask for the missing inputs first. Images, 3D
+models, and renders support decisions; they do not replace permit
+documents, structural calculations, fire-safety design, fabrication/shop
+drawings, construction drawings, or a final estimate.</p>
 <h3 id="checking-which-skills-are-available">Checking which skills are
 available</h3>
 <p>In Codex CLI and the IDE extension, type <code>/skills</code>, or
@@ -747,9 +863,52 @@ unavailable, verify installation with
 (#15)</td>
 </tr>
 <tr>
+<td><code>$persona-architectural-designer &lt;text&gt;</code></td>
+<td>Architectural planning, code, permits, and drawings (#16)</td>
+</tr>
+<tr>
+<td><code>$persona-interior-designer &lt;text&gt;</code></td>
+<td>Interior circulation, finishes, lighting, and details (#17)</td>
+</tr>
+<tr>
+<td><code>$persona-construction-expert &lt;text&gt;</code></td>
+<td>Construction methods, schedule, quality, safety, and defects
+(#18)</td>
+</tr>
+<tr>
+<td><code>$persona-cost-estimator &lt;text&gt;</code></td>
+<td>Quantities, unit rates, construction cost, and value engineering
+(#19)</td>
+</tr>
+<tr>
+<td><code>$persona-design-director &lt;text&gt;</code></td>
+<td>Architecture/interior integration, consistency, and approval
+criteria (#20)</td>
+</tr>
+<tr>
+<td><code>$persona-spatial-3d-modeling-expert &lt;text&gt;</code></td>
+<td>Revit, Rhino, BIM, geometry, coordinates, and file conversion
+(#21)</td>
+</tr>
+<tr>
+<td><code>$persona-rendering-visualization-expert &lt;text&gt;</code></td>
+<td>Materials, lighting, cameras, D5, Twinmotion, Unreal, and Unity
+(#22)</td>
+</tr>
+<tr>
+<td><code>$persona-architectural-design-expert &lt;text&gt;</code></td>
+<td>Architectural concepts, massing, form, facades, and exterior
+materials (#23)</td>
+</tr>
+<tr>
+<td><code>$persona-interior-design-expert &lt;text&gt;</code></td>
+<td>Interior atmosphere, color, materials, lighting, and furniture
+composition (#24)</td>
+</tr>
+<tr>
 <td><code>$persona-create</code></td>
-<td>Interview-style creation of a new domain persona (the 16th and
-beyond)</td>
+<td>Add a domain persona through an interview. Under the current
+numbering, the next perspective starts at #25</td>
 </tr>
 <tr>
 <td><code>$persona-edit</code></td>
@@ -843,8 +1002,10 @@ line" → always takes priority over every other effect</li>
 <li><strong>Load an additional skill</strong> —
 <code>persona-triggers</code> / <code>persona-format</code> /
 <code>persona-safety</code></li>
-<li><strong>Activate a domain expert</strong> — investing/money → #13,
-legal/contracts → #11, accounting/tax → #14, marketing/sales → #15</li>
+<li><strong>Activate a domain expert</strong> — legal → #11, investing →
+#13, accounting/tax → #14, marketing → #15, and
+architecture/interiors/construction/cost/design/3D/rendering →
+#16-#24</li>
 <li><strong>Fully activate a single perspective</strong> — "security"
 alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone →
 #4, "AI"/"agent"/"MCP" alone → #6</li>
@@ -975,7 +1136,8 @@ required)</td>
 <tr>
 <td>20</td>
 <td>Building/interior design director (15+ years)</td>
-<td>Spatial concept, materials, design coherence</td>
+<td>Cross-discipline integration, design consistency, approval
+criteria</td>
 </tr>
 <tr>
 <td>21</td>
@@ -1119,7 +1281,7 @@ an ordinary conversation (every session)</h3>
        ▼
 6. Matching skills load conditionally
    (whichever of persona-triggers / persona-format / persona-safety /
-    the 4 domain skills apply)
+    whichever of the 13 domain skills apply)
        │
        ▼
 7. L2/L3 responses follow the 7-step response format (recap → root cause →
@@ -1129,6 +1291,54 @@ an ordinary conversation (every session)</h3>
        ▼
 8. The response is checked against a self-verification checklist before
    being sent</code></pre>
+<h3
+id="recommended-workflow-for-architectural-and-interior-work">Recommended
+workflow for architectural and interior work</h3>
+<pre class="text"><code>1. Check inputs
+   Confirm use, location, stage, dimensions, source files, latest version,
+   budget, schedule, and software
+       │
+       ▼
+2. Choose one lead
+   Technical design #16/#17 · construction #18 · estimating #19
+   integration #20 · 3D #21 · rendering #22
+   architectural concept #23 · interior concept #24
+       │
+       ▼
+3. Develop options and decision criteria
+   Concept work normally provides 2-3 options, pros/cons, selection criteria,
+   and limits
+       │
+       ▼
+4. Cross-check technical effects
+   Separate code, structure, egress, fire safety, accessibility, services,
+   material performance, buildability, and budget effects
+       │
+       ▼
+5. Validate through modeling and visualization
+   Check units, coordinates, geometry, materials, lighting, cameras, and
+   outputs for distortion of the design intent
+       │
+       ▼
+6. Hand off to construction and estimating
+   Record drawings, specifications, quantities, rates, schedule, inspections,
+   changes, and unresolved assumptions
+       │
+       ▼
+7. Obtain final professional approval
+   Qualified professionals and accountable project leads approve permits,
+   structure, fire safety, electrical/mechanical services, safety, contracts,
+   and final construction cost</code></pre>
+<p>The default is one lead persona and no more than two reviewing
+personas per request. Additional professionals may be included when code
+or safety requires them. If “design” alone does not identify
+architecture, interiors, or cross-discipline integration, the persona
+asks once; when the field is clear, #23 or #24 leads immediately.</p>
+<p>A deliverable from one stage is never treated automatically as the
+approved deliverable for the next. Each handoff must re-check the
+required dimensions, performance, attributes, approvals, and price
+basis: mood board to finish schedule, render to construction drawing, 3D
+model to BIM deliverable, or preliminary estimate to contract price.</p>
 <h3 id="the-flow-for-adding-a-new-domain-persona-persona-create">The
 flow for adding a new domain persona (<code>$persona-create</code>)</h3>
 <pre class="text"><code>1. Call $persona-create
@@ -1142,10 +1352,10 @@ flow for adding a new domain persona (<code>$persona-create</code>)</h3>
 3. 15-30 trigger words are auto-generated → the user confirms them
        │
        ▼
-4. Once confirmed, up to 8 files are edited in sync
+4. Once confirmed, every affected file is edited in sync
    (persona-triggers/SKILL.md, persona_core.md, persona_marker.txt,
     a new skill folder, persona-format/SKILL.md, 2 reference docs,
-    README.md/README.en.md, validate.mjs)
+    README.md/README.en.md, validate.mjs — the exact file count depends on the change)
        │
        ▼
 5. Run node validate.mjs → repeat fixes until it prints ✅ PASS
@@ -1158,9 +1368,11 @@ flow for adding a new domain persona (<code>$persona-create</code>)</h3>
 7. Only the changed files are precisely staged with git add, then a
    conventional commit is made
    (actual push/PR/merge is never done without explicit user approval)</code></pre>
-<p><code>$persona-edit</code> differs in scope (a single table row for a
-base perspective, versus up to 4-5 locations for a domain persona), but
-the verify (step 4) → guidance (step 5) flow afterward is the same.</p>
+<p><code>$persona-edit</code> changes only the required scope: one row
+for a base perspective, or the trigger/core/marker/dedicated
+skill/docs/validator locations affected by a domain persona. It then
+runs the same consistency check and explains how to refresh the
+installed cache.</p>
 <hr />
 <h2 id="architecture">Architecture</h2>
 <h3 id="understanding-the-plugin-concept">Understanding the plugin
@@ -1277,14 +1489,15 @@ count</td>
 </tr>
 <tr>
 <td>4</td>
-<td>The skill-folder count matches the docs and every skill frontmatter
-<code>name</code> matches its folder (including English README
-cross-checks)</td>
+<td>The skill-folder count, README intro, and file map agree, and every
+skill frontmatter <code>name</code> matches its folder (including
+English README cross-checks)</td>
 </tr>
 <tr>
 <td>5</td>
-<td>All 11 domain personas are wired into both the core and marker
-files</td>
+<td>All 13 domain personas are wired into the core and marker, while
+both READMEs agree on domain counts, explicit invocations, and
+major-section structure</td>
 </tr>
 <tr>
 <td>6</td>
@@ -1295,7 +1508,7 @@ paths</td>
 <tr>
 <td>7</td>
 <td>Required disclaimers, qualified-review boundaries, and non-final
-estimate wording exist for all 11 domains</td>
+estimate wording exist for all 13 domains</td>
 </tr>
 <tr>
 <td>8</td>
@@ -1329,9 +1542,9 @@ scripts, and pair context-limit settings with the project cap</td>
 </tr>
 <tr>
 <td>14</td>
-<td>Core triggers match the canonical lists, and all seven
-built-environment skills share the collaboration protocol without broad
-single-word triggers</td>
+<td>Core triggers match the canonical lists, and all nine
+built-environment skills share the collaboration protocol while avoiding
+broad single-word triggers and overlapping design roles</td>
 </tr>
 <tr>
 <td>15</td>
@@ -1488,7 +1701,7 @@ that passes this check.</p>
 <code>persona_marker.txt</code></td>
 </tr>
 <tr>
-<td>All 9 skills</td>
+<td>All 18 skills</td>
 <td><code>plugins/sodam-persona/skills/persona-*/SKILL.md</code></td>
 </tr>
 <tr>
@@ -1496,8 +1709,9 @@ that passes this check.</p>
 <td><code>plugins/sodam-persona/skills/persona-triggers/SKILL.md</code></td>
 </tr>
 <tr>
-<td>Detail on the 4 domain experts</td>
-<td>`plugins/sodam-persona/skills/persona-investor</td>
+<td>Details for all 13 domain experts</td>
+<td>The 13 domain-specific <code>persona-*</code> folders under
+<code>plugins/sodam-persona/skills/</code></td>
 </tr>
 <tr>
 <td>The original procedure text for creating/editing personas</td>
@@ -1558,6 +1772,9 @@ triggers into AC and AD.</li>
 <li>Synchronized the boundaries among technical design (#16/#17),
 concept design (#23/#24), direction (#20), modeling, and rendering
 (#21/#22), including proficiency calibration and regression checks.</li>
+<li>Expanded beginner examples, the production handoff workflow, all 13
+domain commands, troubleshooting, and FAQ to match the v1.6.0
+structure.</li>
 </ul>
 </details>
 
@@ -1835,6 +2052,40 @@ changed</td>
 new task</td>
 </tr>
 <tr>
+<td>You asked for architectural concept design, but only #20 appears or
+the new persona is missing</td>
+<td>An install cache older than v1.6.0 is active, or the word “design”
+did not identify a field</td>
+<td>Reinstall in the order above and start a new task; say
+“architectural massing and facade design” or explicitly invoke
+$persona-architectural-design-expert</td>
+</tr>
+<tr>
+<td>An interior mood-board request is handled only as technical or
+general design</td>
+<td>The installed copy is old, or the prompt did not identify interior
+atmosphere, materials, or color</td>
+<td>In a new task, ask for “interior mood and material palette,” or
+explicitly invoke $persona-interior-design-expert</td>
+</tr>
+<tr>
+<td>“Review this drawing” does not produce the review you expected</td>
+<td>Drawing type, project stage, purpose, or source format is missing,
+so router AB cannot choose a lead</td>
+<td>Provide the type (plan/detail/shop drawing), purpose (technical
+design/concept/construction/estimate/BIM), format (DWG/PDF/RVT), and
+latest version</td>
+</tr>
+<tr>
+<td>Revit, Rhino, D5, or another application is not controlled
+automatically</td>
+<td>The persona provides judgment, procedures, and review criteria; it
+is not itself a remote-control integration for those applications</td>
+<td>Ask for steps, settings, export formats, or a QA checklist. Actual
+control requires the user or a separate tool integration with
+permission</td>
+</tr>
+<tr>
 <td>Typing <code>node</code> in the terminal gives a "command not
 recognized" error</td>
 <td>Node.js isn't installed, or the terminal wasn't reopened after
@@ -1928,6 +2179,33 @@ guaranteed.</p>
 The plugin is designed to be self-contained, so it behaves identically
 on a brand-new computer with nothing more than a fresh install — no
 separate personal config files or memory needed.</p>
+<p><strong>Q. Does experience in 3D visualization make me an expert in
+design, construction, and estimating?</strong> A. No.
+Visualization-industry experience is used only as background for
+discussing form, materials, light, and camera intent. Technical design,
+construction, and estimating are explained from beginner level, and
+proficiency is checked separately for Revit, Rhino, 3ds Max, Blender,
+SketchUp, and every other application.</p>
+<p><strong>Q. What is the difference between architectural technical
+design (#16) and architectural concept design (#23)?</strong> A. #16
+handles site planning, code, permits, areas, egress, and design
+documents. #23 handles concepts, massing, form, facades, and exterior
+materials. They review each other on a real project, but one role leads
+each request. The same distinction applies to interiors: #17 leads
+technical design, while #24 leads atmosphere, materials, color, and
+furniture composition.</p>
+<p><strong>Q. Can I use a render or mood board directly as a
+construction standard?</strong> A. No. Renders and mood boards
+communicate intent and atmosphere. Construction also needs dimensions,
+exact material/product identification, performance, joints and fixings,
+building-services coordination, specifications, approved drawings, and
+site verification.</p>
+<p><strong>Q. Must I be an expert in Revit, Rhino, 3ds Max, Blender,
+SketchUp, Cinema 4D, D5, Twinmotion, Unreal, and Unity?</strong> A. No.
+The plugin never infers user proficiency from an application name. For a
+first-time application, ask for installation, screen location, and
+click-by-click steps. For a familiar application, ask for coordinates,
+units, attributes, conversion, and quality checks.</p>
 <p><strong>Q. I want to add or change trigger words myself.</strong> A.
 Call <code>$persona-edit</code> (to edit an existing perspective) or
 <code>$persona-create</code> (to add a completely new field of

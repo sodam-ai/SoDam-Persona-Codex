@@ -140,6 +140,50 @@ for (const d of DOMAINS) {
   if (!marker.includes(d)) err(`persona_marker.txt 파일맵에 ${d} 누락`);
 }
 
+// ── 5-1) README 현행 수치·한영 구조·도메인 명령 회귀 검사 ─────────────
+const domainCount = DOMAINS.length;
+const README_CURRENT_COUNT_CHECKS = [
+  ['README.md', /전문 지식 모음[(]skill, 스킬[)][ ]*([0-9]+)개/g, nSkills, '첫 설명 스킬 수'],
+  ['README.md', /([0-9]+)개 skill 전체/g, nSkills, '파일표 스킬 수'],
+  ['README.md', /도메인 전문가[ ]*([0-9]+)종/g, domainCount, '도메인 전문가 수'],
+  ['README.md', /도메인[ ]*([0-9]+)종 중/g, domainCount, '워크플로우 도메인 수'],
+  ['README.en.md', /([0-9]+) conditional expert knowledge modules/g, nSkills, 'intro skill count'],
+  ['README.en.md', /All[ ]*([0-9]+) skills/g, nSkills, 'file-map skill count'],
+  ['README.en.md', /([0-9]+) domain experts/g, domainCount, 'domain expert count'],
+  ['README.en.md', /([0-9]+) domain skills/g, domainCount, 'workflow domain count'],
+];
+for (const [file, pattern, expected, label] of README_CURRENT_COUNT_CHECKS) {
+  const text = read(file);
+  const matches = [...text.matchAll(pattern)];
+  if (matches.length === 0) err(file + '에서 현행 ' + label + ' 표기를 찾지 못함');
+  for (const match of matches) {
+    if (+match[1] !== expected)
+      err(file + ' ' + label + '(' + match[1] + ') ≠ 실제(' + expected + ')');
+  }
+}
+
+const koReadme = read('README.md');
+const enReadme = read('README.en.md');
+for (const domain of DOMAINS) {
+  for (const [label, text] of [['README.md', koReadme], ['README.en.md', enReadme]]) {
+    if (!text.includes('$' + domain))
+      err(label + ' 명시 호출 명령 누락: $' + domain);
+  }
+}
+const REQUIRED_BEGINNER_DOCS = [
+  [koReadme, '건축·인테리어 작업을 처음 요청하는 방법', 'README.md 초보자 요청 섹션'],
+  [koReadme, '건축·인테리어 작업의 권장 흐름', 'README.md 실무 워크플로우'],
+  [enReadme, 'How to request architectural or interior work for the first time', 'README.en.md beginner request section'],
+  [enReadme, 'Recommended workflow for architectural and interior work', 'README.en.md production workflow'],
+];
+for (const [text, phrase, label] of REQUIRED_BEGINNER_DOCS) {
+  if (!text.includes(phrase)) err(label + ' 누락');
+}
+const koH2Count = [...koReadme.matchAll(/^## /gm)].length;
+const enH2Count = [...enReadme.matchAll(/^## /gm)].length;
+if (koH2Count !== enH2Count)
+  err('한영 README 주요 목차 수 불일치: KO ' + koH2Count + ' ≠ EN ' + enH2Count);
+
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
 const EXPECTED_PLUGIN_VERSION = '1.6.0';
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';

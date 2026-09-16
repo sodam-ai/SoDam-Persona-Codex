@@ -4,7 +4,7 @@
 
 This document is written so that even someone who has never used a computer, a smartphone, a messenger app, or AI before can follow it from installation to actual use. Whenever an unfamiliar term appears for the first time, it is explained in `plain words (technical term)` form. Example: repository (an online storage place that holds code and documents together).
 
-The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 16 conditional expert knowledge modules (**skills**) that load only when relevant.
+The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 18 conditional expert knowledge modules (**skills**) that load only when relevant.
 
 > **Current version**: `1.6.0` · **Perspectives**: 24 · **Trigger patterns**: 30 patterns (A-AD) · **Skills (18)** · **Hooks**: 2 · **License**: Apache License 2.0
 
@@ -45,7 +45,7 @@ Before you start, make sure the 4 items below are in place. If anything is missi
 
 **Supported scope**: The target is any Windows, macOS, or Linux environment where Codex plugins and Node.js 18 or newer are available. Commands are shown for Windows PowerShell. On macOS/Linux, use the same `codex`, `node`, and `git` commands in that system's Terminal; plugin availability and UI labels can vary by Codex version, account, and organization policy.
 
-**Current verification baseline (2026-09-16)**: Verified on Windows with Codex CLI install/remove, Node.js 20 CI-compatible execution, normal/error/large hook inputs, and Chrome desktop/tablet/mobile documentation. macOS/Linux devices and every Codex app/IDE combination were not part of the automated run, so verify through [Verify the installation](#verify-the-installation) on those environments.
+**Current verification baseline (2026-09-16)**: Verified install/remove command syntax against Codex CLI `0.154.0` on Windows, plus Node.js 20 CI-compatible execution, normal/error/large hook inputs, and Chrome desktop/tablet/mobile documentation. macOS/Linux devices and every Codex app/IDE combination were not part of the automated run, so verify through [Verify the installation](#verify-the-installation) on those environments.
 
 **Account and permissions**: Your OpenAI account and permission to use Codex must be arranged separately. Organization accounts may restrict plugin installation. This plugin does not create accounts or handle sign-in, billing, or organization permissions.
 
@@ -234,6 +234,38 @@ $persona-create Add a new medical-domain persona
 $persona-edit Add "rebalancing" to the investor triggers
 ```
 
+### How to request architectural or interior work for the first time
+
+In architecture and interiors, “technical design,” “concept design,” “modeling,” “rendering,” and “construction” produce different deliverables. Copy the closest starter sentence from the table below.
+
+> “15+ years” in this document describes the expert viewpoint assigned to the AI persona. It does not claim that the user has 15 years of experience, and the plugin never assumes expert knowledge of design, construction, estimating, Revit, Rhino, or any other application.
+
+| What you want to do | Starter sentence | Lead role and verification boundary |
+|---|---|---|
+| Site planning, code, permits, design documents | “Explain the possible building layout and code checks for this site in beginner-friendly terms.” | #16 architectural planning leads. A qualified local professional must confirm actual code, structure, fire safety, and permits |
+| Interior circulation, finishes, ceilings, furniture details | “Review the interior circulation and finish plan in this floor plan.” | #17 interior technical design leads. Site conditions and qualified professionals confirm dimensions, performance, services, and construction details |
+| Methods, sequence, quality, defects | “In what order should this interior be built, and what must be inspected?” | #18 construction leads. Site measurement, safety planning, and specialist-trade approvals are required |
+| Quantities, unit rates, cost, value engineering | “What quantity and unit-rate information is needed to estimate this drawing?” | #19 estimating leads. It does not state a final price without location, date, brand, tax, transport, and disposal assumptions |
+| Integrate the whole architectural and interior direction | “Unify the exterior and interior design language and material rules.” | #20 design direction leads, with #23 and #24 reviewing |
+| Revit, Rhino, BIM, or 3D geometry | “Check units, coordinates, and geometry loss when moving this Revit model to Rhino.” | #21 3D modeling leads. It first checks software versions and the user’s proficiency in each application |
+| Materials, lighting, cameras, render quality | “How should I set materials, lighting, and cameras for this interior scene in D5?” | #22 rendering/visualization leads. A render is not an approval drawing or construction standard |
+| Architectural concept, massing, facade | “Propose three massing and facade options suited to this site.” | #23 architectural concept design leads; #16 reviews code and permit effects |
+| Interior atmosphere, materials, color, furniture | “Propose three mood and material-palette options for this cafe interior.” | #24 interior concept design leads; #17 reviews detail, performance, and building-services effects |
+| You do not yet know the drawing type | “Tell me what can be checked from the attached drawing and what drawing is needed next.” | Drawing router AB identifies the type and purpose, then chooses one lead and reviewers among #16-#24 |
+
+Provide as many of these items as you can in the first request.
+
+1. Project type and use: home, cafe, office, exhibition, and so on
+2. Current stage: idea, schematic design, detailed design, estimating, construction, or closeout
+3. Location: country, city, and regulatory jurisdiction
+4. Source material: site data, dimensions, photos, drawings, models, title block, latest file version
+5. Desired deliverable: explanation, checklist, options, drawing review, modeling sequence, render settings, and so on
+6. Software and version: Revit, Rhino, 3ds Max, Blender, SketchUp, Cinema 4D, D5, Twinmotion, Unreal, Unity, and so on
+7. Your proficiency in each application: first use, beginner, intermediate, or production use
+8. Budget, schedule, site constraints, and conditions that remain unknown
+
+When information is missing, the persona should separate confirmed facts from assumptions and ask for the missing inputs first. Images, 3D models, and renders support decisions; they do not replace permit documents, structural calculations, fire-safety design, fabrication/shop drawings, construction drawings, or a final estimate.
+
 ### Checking which skills are available
 
 In Codex CLI and the IDE extension, type `/skills`, or just type `$`, to see the list of skills currently available.
@@ -273,7 +305,16 @@ Mixing certain words into your request automatically changes how deep the respon
 | `$persona-lawyer <text>` | Explicitly invoke the professional lawyer perspective (#11) |
 | `$persona-accountant <text>` | Explicitly invoke the accounting/tax specialist perspective (#14) |
 | `$persona-marketer <text>` | Explicitly invoke the marketing/sales specialist perspective (#15) |
-| `$persona-create` | Interview-style creation of a new domain persona (the 16th and beyond) |
+| `$persona-architectural-designer <text>` | Architectural planning, code, permits, and drawings (#16) |
+| `$persona-interior-designer <text>` | Interior circulation, finishes, lighting, and details (#17) |
+| `$persona-construction-expert <text>` | Construction methods, schedule, quality, safety, and defects (#18) |
+| `$persona-cost-estimator <text>` | Quantities, unit rates, construction cost, and value engineering (#19) |
+| `$persona-design-director <text>` | Architecture/interior integration, consistency, and approval criteria (#20) |
+| `$persona-spatial-3d-modeling-expert <text>` | Revit, Rhino, BIM, geometry, coordinates, and file conversion (#21) |
+| `$persona-rendering-visualization-expert <text>` | Materials, lighting, cameras, D5, Twinmotion, Unreal, and Unity (#22) |
+| `$persona-architectural-design-expert <text>` | Architectural concepts, massing, form, facades, and exterior materials (#23) |
+| `$persona-interior-design-expert <text>` | Interior atmosphere, color, materials, lighting, and furniture composition (#24) |
+| `$persona-create` | Add a domain persona through an interview. Under the current numbering, the next perspective starts at #25 |
 | `$persona-edit` | Interview-style add/edit/remove of trigger words for an existing persona |
 
 ### Commands for documentation/code editors (run from the repository root)
@@ -307,7 +348,7 @@ When specific words (triggers) are detected in what you say, the following 6 eff
 1. **Raise intensity** — "in depth", "thoroughly", "make sure" → from L1 up to L2/L3
 2. **Lower intensity** — "briefly", "in short", "in one line" → always takes priority over every other effect
 3. **Load an additional skill** — `persona-triggers` / `persona-format` / `persona-safety`
-4. **Activate a domain expert** — investing/money → #13, legal/contracts → #11, accounting/tax → #14, marketing/sales → #15
+4. **Activate a domain expert** — legal → #11, investing → #13, accounting/tax → #14, marketing → #15, and architecture/interiors/construction/cost/design/3D/rendering → #16-#24
 5. **Fully activate a single perspective** — "security" alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone → #4, "AI"/"agent"/"MCP" alone → #6
 6. **Evidence mode** (intensity stays the same) — "evidence", "source", "example", "fact" etc. → present real evidence and clearly separate speculation from confirmed fact
 
@@ -338,7 +379,7 @@ For every response at L1 or above, 3-5 of the 24 perspectives below that are rel
 | 17 | Interior design specialist (15+ years) | Space, circulation, finishes, lighting, furniture |
 | 18 | Building/interior construction specialist (15+ years) | Methods, schedule, quality, safety, defects |
 | 19 | Building/interior cost estimator (15+ years) | Quantities, unit rates, construction cost, value engineering |
-| 20 | Building/interior design director (15+ years) | Spatial concept, materials, design coherence |
+| 20 | Building/interior design director (15+ years) | Cross-discipline integration, design consistency, approval criteria |
 | 21 | Building/interior 3D modeling specialist (15+ years) | BIM, geometry, coordinates, topology, file interoperability |
 | 22 | Building/interior rendering and visualization specialist (15+ years) | Materials, lighting, cameras, render output |
 | 23 | Architectural concept design specialist (15+ years) | Architectural concepts, massing, form, facades, exterior materials |
@@ -407,7 +448,7 @@ The persona rules instruct Codex to check user intent and approval status before
        ▼
 6. Matching skills load conditionally
    (whichever of persona-triggers / persona-format / persona-safety /
-    the 4 domain skills apply)
+    whichever of the 13 domain skills apply)
        │
        ▼
 7. L2/L3 responses follow the 7-step response format (recap → root cause →
@@ -418,6 +459,50 @@ The persona rules instruct Codex to check user intent and approval status before
 8. The response is checked against a self-verification checklist before
    being sent
 ```
+
+### Recommended workflow for architectural and interior work
+
+```text
+1. Check inputs
+   Confirm use, location, stage, dimensions, source files, latest version,
+   budget, schedule, and software
+       │
+       ▼
+2. Choose one lead
+   Technical design #16/#17 · construction #18 · estimating #19
+   integration #20 · 3D #21 · rendering #22
+   architectural concept #23 · interior concept #24
+       │
+       ▼
+3. Develop options and decision criteria
+   Concept work normally provides 2-3 options, pros/cons, selection criteria,
+   and limits
+       │
+       ▼
+4. Cross-check technical effects
+   Separate code, structure, egress, fire safety, accessibility, services,
+   material performance, buildability, and budget effects
+       │
+       ▼
+5. Validate through modeling and visualization
+   Check units, coordinates, geometry, materials, lighting, cameras, and
+   outputs for distortion of the design intent
+       │
+       ▼
+6. Hand off to construction and estimating
+   Record drawings, specifications, quantities, rates, schedule, inspections,
+   changes, and unresolved assumptions
+       │
+       ▼
+7. Obtain final professional approval
+   Qualified professionals and accountable project leads approve permits,
+   structure, fire safety, electrical/mechanical services, safety, contracts,
+   and final construction cost
+```
+
+The default is one lead persona and no more than two reviewing personas per request. Additional professionals may be included when code or safety requires them. If “design” alone does not identify architecture, interiors, or cross-discipline integration, the persona asks once; when the field is clear, #23 or #24 leads immediately.
+
+A deliverable from one stage is never treated automatically as the approved deliverable for the next. Each handoff must re-check the required dimensions, performance, attributes, approvals, and price basis: mood board to finish schedule, render to construction drawing, 3D model to BIM deliverable, or preliminary estimate to contract price.
 
 ### The flow for adding a new domain persona (`$persona-create`)
 
@@ -433,10 +518,10 @@ The persona rules instruct Codex to check user intent and approval status before
 3. 15-30 trigger words are auto-generated → the user confirms them
        │
        ▼
-4. Once confirmed, up to 8 files are edited in sync
+4. Once confirmed, every affected file is edited in sync
    (persona-triggers/SKILL.md, persona_core.md, persona_marker.txt,
     a new skill folder, persona-format/SKILL.md, 2 reference docs,
-    README.md/README.en.md, validate.mjs)
+    README.md/README.en.md, validate.mjs — the exact file count depends on the change)
        │
        ▼
 5. Run node validate.mjs → repeat fixes until it prints ✅ PASS
@@ -451,7 +536,7 @@ The persona rules instruct Codex to check user intent and approval status before
    (actual push/PR/merge is never done without explicit user approval)
 ```
 
-`$persona-edit` differs in scope (a single table row for a base perspective, versus up to 4-5 locations for a domain persona), but the verify (step 4) → guidance (step 5) flow afterward is the same.
+`$persona-edit` changes only the required scope: one row for a base perspective, or the trigger/core/marker/dedicated skill/docs/validator locations affected by a domain persona. It then runs the same consistency check and explains how to refresh the installed cache.
 
 ---
 
@@ -534,17 +619,17 @@ This checker mechanically prevents number drift when adding perspectives or chan
 | 1 | Perspective numbers are continuous from 1 through the last entry |
 | 2 | Labels such as "24 people" and "24 perspectives" match the actual count in every core file, skill, and README |
 | 3 | The documented A-AD trigger-pattern count matches the actual section count |
-| 4 | The skill-folder count matches the docs and every skill frontmatter `name` matches its folder (including English README cross-checks) |
-| 5 | All 11 domain personas are wired into both the core and marker files |
+| 4 | The skill-folder count, README intro, and file map agree, and every skill frontmatter `name` matches its folder (including English README cross-checks) |
+| 5 | All 13 domain personas are wired into the core and marker, while both READMEs agree on domain counts, explicit invocations, and major-section structure |
 | 6 | The Agent Plugins 1.0, Codex fallback, and legacy manifests plus both marketplace JSON files have valid names, versions, and source paths |
-| 7 | Required disclaimers, qualified-review boundaries, and non-final estimate wording exist for all 11 domains |
+| 7 | Required disclaimers, qualified-review boundaries, and non-final estimate wording exist for all 13 domains |
 | 8 | Warning only: generated HTML appears out of sync with current counts |
 | 9 | Backtick-wrapped repository file references point to files that exist |
 | 10 | No personal absolute path containing a developer account name leaked into distributed files |
 | 11 | Codex hooks use `${PLUGIN_ROOT}`, point to existing scripts, and pair context-limit settings with the project cap |
 | 12 | Domain-skill trigger lists match the canonical `persona-triggers` list |
 | 13 | The serialized hook output stays below the project's 10,000-character cap |
-| 14 | Core triggers match the canonical lists, and all seven built-environment skills share the collaboration protocol without broad single-word triggers |
+| 14 | Core triggers match the canonical lists, and all nine built-environment skills share the collaboration protocol while avoiding broad single-word triggers and overlapping design roles |
 | 15 | Every `persona-*` skill folder uses a path-safe name |
 
 See [Commands](#commands) and [Troubleshooting](#troubleshooting) for how to run the checker and read its output.
@@ -617,9 +702,9 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 | Hook events and command definitions | `plugins/sodam-persona/hooks/hooks.json` |
 | SessionStart script / core text | `plugins/sodam-persona/hooks/inject-core.js`, `persona_core.md` |
 | UserPromptSubmit script / compact marker | `plugins/sodam-persona/hooks/inject-marker.js`, `persona_marker.txt` |
-| All 9 skills | `plugins/sodam-persona/skills/persona-*/SKILL.md` |
+| All 18 skills | `plugins/sodam-persona/skills/persona-*/SKILL.md` |
 | The full trigger-word list and perspective mapping table | `plugins/sodam-persona/skills/persona-triggers/SKILL.md` |
-| Detail on the 4 domain experts | `plugins/sodam-persona/skills/persona-investor|lawyer|accountant|marketer/SKILL.md` |
+| Details for all 13 domain experts | The 13 domain-specific `persona-*` folders under `plugins/sodam-persona/skills/` |
 | The original procedure text for creating/editing personas | `plugins/sodam-persona/commands/create.md`, `edit.md` |
 | The consistency-check script | Repository root, `validate.mjs` |
 | The HTML-regeneration script | Repository root, `build-docs.mjs`, `doc-theme.html` |
@@ -643,6 +728,7 @@ Listed with the most recent entries at the top. Click (or tap) an item to expand
 - Added separate architectural concept design (#23) and interior concept design (#24) personas.
 - Narrowed #20 design director to cross-discipline integration, consistency, and approval criteria, while moving field-specific design triggers into AC and AD.
 - Synchronized the boundaries among technical design (#16/#17), concept design (#23/#24), direction (#20), modeling, and rendering (#21/#22), including proficiency calibration and regression checks.
+- Expanded beginner examples, the production handoff workflow, all 13 domain commands, troubleshooting, and FAQ to match the v1.6.0 structure.
 
 </details>
 
@@ -786,6 +872,10 @@ This project was later ported to be Codex-only, becoming today's `SoDam Persona 
 | "Marketplace not found" while updating | `remove` was run before `upgrade`, which erased the marketplace registration itself | Always follow the order **`upgrade` → `remove` → `add`**. Reversing the order reproduces this error |
 | Installed, but the persona doesn't seem active at all | The plugin is disabled, or permissions, organization policy, or the install cache prevented the hook from running | Check enabled status with `codex plugin list` → start a new task → review and allow any permission prompt. If no prompt appears and it still fails, check organization policy and the install cache |
 | You edited the plugin's code, but the change isn't reflected in conversations | The install cache does not refresh automatically just because a file changed | Reinstall in this order: `codex plugin marketplace upgrade sodam-persona` → `codex plugin remove sodam-persona@sodam-persona` → `codex plugin add sodam-persona@sodam-persona`, then start a new task |
+| You asked for architectural concept design, but only #20 appears or the new persona is missing | An install cache older than v1.6.0 is active, or the word “design” did not identify a field | Reinstall in the order above and start a new task; say “architectural massing and facade design” or explicitly invoke $persona-architectural-design-expert |
+| An interior mood-board request is handled only as technical or general design | The installed copy is old, or the prompt did not identify interior atmosphere, materials, or color | In a new task, ask for “interior mood and material palette,” or explicitly invoke $persona-interior-design-expert |
+| “Review this drawing” does not produce the review you expected | Drawing type, project stage, purpose, or source format is missing, so router AB cannot choose a lead | Provide the type (plan/detail/shop drawing), purpose (technical design/concept/construction/estimate/BIM), format (DWG/PDF/RVT), and latest version |
+| Revit, Rhino, D5, or another application is not controlled automatically | The persona provides judgment, procedures, and review criteria; it is not itself a remote-control integration for those applications | Ask for steps, settings, export formats, or a QA checklist. Actual control requires the user or a separate tool integration with permission |
 | Typing `node` in the terminal gives a "command not recognized" error | Node.js isn't installed, or the terminal wasn't reopened after installing it | Install from `nodejs.org`, then close every open terminal window and open a new one |
 | `node build-docs.mjs` says "pandoc is not installed" | Pandoc is missing | Only needed if you're editing the documentation yourself. If you're just *using* the plugin, this error is safe to ignore. To fix it, install from `pandoc.org/installing.html` |
 | `codex plugin marketplace add sodam-ai/SoDam-Persona-Codex` fails with a network error | Git isn't installed, the repository name is mistyped, or a firewall/proxy is blocking it | Check Git with `git --version`, double-check the repository name's spelling, and check proxy settings if you're on a corporate/school network |
@@ -815,6 +905,18 @@ A. Legacy compatibility files (`.claude-plugin/`) still remain in the repository
 
 **Q. Can I install it on multiple computers?**
 A. Yes. The plugin is designed to be self-contained, so it behaves identically on a brand-new computer with nothing more than a fresh install — no separate personal config files or memory needed.
+
+**Q. Does experience in 3D visualization make me an expert in design, construction, and estimating?**
+A. No. Visualization-industry experience is used only as background for discussing form, materials, light, and camera intent. Technical design, construction, and estimating are explained from beginner level, and proficiency is checked separately for Revit, Rhino, 3ds Max, Blender, SketchUp, and every other application.
+
+**Q. What is the difference between architectural technical design (#16) and architectural concept design (#23)?**
+A. #16 handles site planning, code, permits, areas, egress, and design documents. #23 handles concepts, massing, form, facades, and exterior materials. They review each other on a real project, but one role leads each request. The same distinction applies to interiors: #17 leads technical design, while #24 leads atmosphere, materials, color, and furniture composition.
+
+**Q. Can I use a render or mood board directly as a construction standard?**
+A. No. Renders and mood boards communicate intent and atmosphere. Construction also needs dimensions, exact material/product identification, performance, joints and fixings, building-services coordination, specifications, approved drawings, and site verification.
+
+**Q. Must I be an expert in Revit, Rhino, 3ds Max, Blender, SketchUp, Cinema 4D, D5, Twinmotion, Unreal, and Unity?**
+A. No. The plugin never infers user proficiency from an application name. For a first-time application, ask for installation, screen location, and click-by-click steps. For a familiar application, ask for coordinates, units, attributes, conversion, and quality checks.
 
 **Q. I want to add or change trigger words myself.**
 A. Call `$persona-edit` (to edit an existing perspective) or `$persona-create` (to add a completely new field of expertise) and follow the interview. See [How to Use](#how-to-use) and [Workflow](#workflow).

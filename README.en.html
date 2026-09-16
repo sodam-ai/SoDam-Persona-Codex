@@ -287,9 +287,9 @@ ability Codex already has. It consists of 2 always-on core rules
 specific moment) and 16 conditional expert knowledge modules
 (<strong>skills</strong>) that load only when relevant.</p>
 <blockquote>
-<p><strong>Current version</strong>: <code>1.5.2</code> ·
-<strong>Perspectives</strong>: 22 · <strong>Trigger patterns</strong>:
-28 patterns (A-AB) · <strong>Skills (16)</strong> ·
+<p><strong>Current version</strong>: <code>1.6.0</code> ·
+<strong>Perspectives</strong>: 24 · <strong>Trigger patterns</strong>:
+30 patterns (A-AD) · <strong>Skills (18)</strong> ·
 <strong>Hooks</strong>: 2 · <strong>License</strong>: Apache License
 2.0</p>
 </blockquote>
@@ -824,7 +824,7 @@ procedure</td>
 <td>Major work involving security, money, deployment, or irreversible
 actions</td>
 <td><code>persona-format</code> + <code>persona-triggers</code> +
-<code>persona-safety</code> all activate, plus a full review by all 22
+<code>persona-safety</code> all activate, plus a full review by all 24
 perspectives</td>
 </tr>
 </tbody>
@@ -852,16 +852,16 @@ alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone →
 "evidence", "source", "example", "fact" etc. → present real evidence and
 clearly separate speculation from confirmed fact</li>
 </ol>
-<p>These trigger words are organized into 28 patterns (A-AB), and the
+<p>These trigger words are organized into 30 patterns (A-AD), and the
 full word lists plus the priority order for conflicts all live in the
 <code>persona-triggers</code> skill. Priority summary: <strong>length
 constraints (e.g. "briefly") &gt; intensity (e.g. "in depth") &gt;
 domain expert &gt; single perspective &gt; additional
 skill.</strong></p>
 <h3
-id="22-perspectives--the-expert-checklist-reviewed-before-every-answer">22
+id="24-perspectives--the-expert-checklist-reviewed-before-every-answer">24
 perspectives — the expert checklist reviewed before every answer</h3>
-<p>For every response at L1 or above, 3-5 of the 22 perspectives below
+<p>For every response at L1 or above, 3-5 of the 24 perspectives below
 that are relevant to the task are briefly reviewed internally before
 answering — automatically, even without a trigger word. This does not
 apply to L0 small talk or "briefly"-style requests.</p>
@@ -988,13 +988,25 @@ required)</td>
 years)</td>
 <td>Materials, lighting, cameras, render output</td>
 </tr>
+<tr>
+<td>23</td>
+<td>Architectural concept design specialist (15+ years)</td>
+<td>Architectural concepts, massing, form, facades, exterior
+materials</td>
+</tr>
+<tr>
+<td>24</td>
+<td>Interior concept design specialist (15+ years)</td>
+<td>Interior concepts, atmosphere, color, materials, lighting, furniture
+composition</td>
+</tr>
 </tbody>
 </table>
-<h3 id="11-domain-experts--conditionally-going-deep">11 domain experts —
+<h3 id="13-domain-experts--conditionally-going-deep">13 domain experts —
 conditionally going deep</h3>
-<p>Among the 22 perspectives above, #11, #13, #14, #15, #16, #17, #18,
-#19, #20, #21, and #22 each have their own dedicated skill, which loads
-much deeper knowledge when a related trigger is detected.</p>
+<p>Among the 24 perspectives above, #11 and #13 through #24 each have
+their own dedicated skill, which loads much deeper knowledge when a
+related trigger is detected.</p>
 <ul>
 <li><strong>Professional investor (#13,
 <code>persona-investor</code>)</strong>: Always asks "if this fails,
@@ -1031,8 +1043,17 @@ schedule, quality, safety, defects, and site conditions.</li>
 rates, construction cost, value engineering, changes, and estimate
 assumptions.</li>
 <li><strong>Design director (#20,
-<code>persona-design-director</code>)</strong>: Covers concept, form,
-color, materials, and coherence between architecture and interiors.</li>
+<code>persona-design-director</code>)</strong>: Integrates the design
+language, consistency, and approval criteria across architecture and
+interiors.</li>
+<li><strong>Architectural concept design specialist (#23,
+<code>persona-architectural-design-expert</code>)</strong>: Covers site
+context, massing, form, facades, elevations, exterior materials, and 3D
+validation criteria.</li>
+<li><strong>Interior concept design specialist (#24,
+<code>persona-interior-design-expert</code>)</strong>: Covers interior
+concepts, atmosphere, color, materials, lighting, furniture composition,
+and 3D validation criteria.</li>
 <li><strong>3D modeling specialist (#21,
 <code>persona-spatial-3d-modeling-expert</code>)</strong>: Covers BIM,
 NURBS and mesh modeling, coordinates, units, conversion, and
@@ -1045,7 +1066,7 @@ tools such as D5, Twinmotion, Unreal, and Unity.</li>
 <p><code>Drawing</code>, <code>drawing work</code>, <code>CAD</code>,
 <code>DWG</code>, floor plans, detail drawings, and shop drawings
 activate pattern AB, which routes the request to the appropriate lead
-and reviewing roles among #16 through #21.</p>
+and reviewing roles among #16 through #24.</p>
 <p>When multiple domains apply at once (e.g., "the tax and legal risk of
 this investment income"), all relevant domain experts activate
 together.</p>
@@ -1196,7 +1217,7 @@ Codex versions.</p>
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 response format
     │   ├── persona-safety/SKILL.md       # Always-on security rules, irreversible-action gate
-    │   ├── persona-triggers/SKILL.md     # Full A-AB trigger-word detail and the 22-perspective mapping table
+    │   ├── persona-triggers/SKILL.md     # Full A-AD trigger-word detail and the 24-perspective mapping table
     │   ├── persona-investor/SKILL.md     # #13 professional investor domain
     │   ├── persona-lawyer/SKILL.md       # #11 professional lawyer domain
     │   ├── persona-accountant/SKILL.md   # #14 accounting/tax specialist domain
@@ -1208,6 +1229,8 @@ Codex versions.</p>
     │   ├── persona-design-director/SKILL.md        # #20 design direction domain
     │   ├── persona-spatial-3d-modeling-expert/SKILL.md # #21 3D modeling/BIM domain
     │   ├── persona-rendering-visualization-expert/SKILL.md # #22 rendering/visualization domain
+    │   ├── persona-architectural-design-expert/SKILL.md # #23 architectural concept design domain
+    │   ├── persona-interior-design-expert/SKILL.md # #24 interior concept design domain
     │   ├── persona-create/SKILL.md       # Entry point for the new-persona creation interview
     │   └── persona-edit/SKILL.md         # Entry point for the trigger-editing interview
     ├── commands/
@@ -1244,12 +1267,12 @@ entry</td>
 </tr>
 <tr>
 <td>2</td>
-<td>Labels such as "22 people" and "22 perspectives" match the actual
+<td>Labels such as "24 people" and "24 perspectives" match the actual
 count in every core file, skill, and README</td>
 </tr>
 <tr>
 <td>3</td>
-<td>The documented A-AB trigger-pattern count matches the actual section
+<td>The documented A-AD trigger-pattern count matches the actual section
 count</td>
 </tr>
 <tr>
@@ -1524,6 +1547,21 @@ downloads this plugin, so this document does not cover it.</p>
 <p>Listed with the most recent entries at the top. Click (or tap) an
 item to expand its details.</p>
 <details>
+<summary><strong>2026-09-16 — Split architectural and interior design personas (v1.6.0)</strong></summary>
+
+<ul>
+<li>Added separate architectural concept design (#23) and interior
+concept design (#24) personas.</li>
+<li>Narrowed #20 design director to cross-discipline integration,
+consistency, and approval criteria, while moving field-specific design
+triggers into AC and AD.</li>
+<li>Synchronized the boundaries among technical design (#16/#17),
+concept design (#23/#24), direction (#20), modeling, and rendering
+(#21/#22), including proficiency calibration and regression checks.</li>
+</ul>
+</details>
+
+<details>
 <summary><strong>2026-09-16 — Added built-environment user proficiency calibration (v1.5.2)</strong></summary>
 
 <ul>
@@ -1548,7 +1586,7 @@ elevations, sections, details, and shop drawings.</li>
 <li>Routes by purpose across architectural design, interior design,
 construction, estimating, and 3D modeling while separating non-building
 drawings and regulated work.</li>
-<li>Synchronized 22 perspectives, 28 patterns, 16 skills, hooks,
+<li>Synchronized all perspectives, 28 patterns, 16 skills, hooks,
 documentation, and validation.</li>
 </ul>
 </details>
@@ -1562,7 +1600,7 @@ Revit and Rhino) and architectural/interior rendering and visualization
 (#22).</li>
 <li>Recognizes Korean and English modeling/rendering variants while
 preventing false activation for data modeling and web rendering.</li>
-<li>Synchronized multi-letter pattern IDs (Z then AA), 22 perspectives,
+<li>Synchronized multi-letter pattern IDs (Z then AA), all perspectives,
 27 patterns, 16 skills, tool-state verification, and
 model-to-render-to-construction/cost handoffs.</li>
 </ul>
@@ -1901,7 +1939,7 @@ switches it to a short format immediately. This rule has the highest
 priority of all.</p>
 <p><strong>Q. I actually want it to go deeper and more
 thorough.</strong> A. Using expressions like "objectively", "in depth",
-"thoroughly", or "full persona version" brings all 22 perspectives into
+"thoroughly", or "full persona version" brings all 24 perspectives into
 the review.</p>
 <p><strong>Q. I found a bug or something misbehaving. Where do I report
 it?</strong> A. Please report it through the repository's GitHub Issues

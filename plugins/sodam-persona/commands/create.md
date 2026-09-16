@@ -9,7 +9,7 @@ description: "인터뷰 방식으로 새 도메인 페르소나(16번째~)를 �
 ## 0단계. 사전 확인
 
 - `plugins/sodam-persona/skills/persona-triggers/SKILL.md`를 읽어 `## B.` 섹션 표에서 현재 마지막 관점 번호(N)를 확인한다.
-- 같은 파일에서 `## ([A-Z]+)\. ` 형태의 마지막 패턴 ID를 확인한다(현재 A~AB).
+- 같은 파일에서 `## ([A-Z]+)\. ` 형태의 마지막 패턴 ID를 확인한다(현재 A~AD).
 - 새 관점 번호 = N+1, 새 패턴 ID는 Excel 열 표기처럼 증가한다(Z 다음은 AA, AA 다음은 AB). 단순 문자 코드 증가를 사용하지 않는다.
 
 ## 1단계. 인터뷰 (한 번에 하나씩)
@@ -29,12 +29,12 @@ description: "인터뷰 방식으로 새 도메인 페르소나(16번째~)를 �
 1. **`plugins/sodam-persona/skills/persona-triggers/SKILL.md`**
    - `## B.` 표에 새 행 추가: `| N+1 | <도메인명> (15년+) | <트리거 표현들> |`
    - 새 알파벳 섹션(예: `## U. "<도메인>" 도메인 패턴 → #N+1 <도메인> 페르소나 활성`) 추가 — J/K/S/T 섹션과 동일 구조(트리거 단어군 / 책임 영역 / PR 체크리스트 / 다른 관점과의 경계)
-   - frontmatter `description`과 본문의 현재 `A~AB 28패턴` 표기를 `A~<새글자> <새패턴수>패턴`으로 갱신
+   - frontmatter `description`과 본문의 현재 `A~AD 30패턴` 표기를 `A~<새글자> <새패턴수>패턴`으로 갱신
    - "매칭 예시" 표에 새 도메인 예시 1줄 추가
 2. **`plugins/sodam-persona/hooks/persona_core.md`**
    - "도메인 트리거 (조건부 활성)" 섹션에 새 도메인 소단원 추가 (트리거 단어·책임 영역, 기존 4개와 동일 형식)
    - 면책 필요 시 "[면책 강제]" 섹션에 새 도메인 추가
-   - "22명 다관점 균형 검토"의 "22개 도메인 관점" 목록에 새 관점 이름 추가, 숫자를 N+1로 갱신
+   - "24명 다관점 균형 검토"의 "22개 도메인 관점" 목록에 새 관점 이름 추가, 숫자를 N+1로 갱신
    - "파일 맵" 표의 도메인 스킬 목록에 `persona-<슬러그>` 추가
 3. **`plugins/sodam-persona/hooks/persona_marker.txt`**
    - "도메인 (조건부)" 한 줄 문구에 새 도메인 트리거·활성 문구 추가 (persona_core.md와 동일 내용)
@@ -47,8 +47,8 @@ description: "인터뷰 방식으로 새 도메인 페르소나(16번째~)를 �
 6. **`plugins/sodam-persona/reference/persona_full_core.md`**, **`plugins/sodam-persona/reference/test_scenarios.md`**
    - 관점 수 숫자 표기 갱신 (validate.mjs가 이 두 파일도 검사 대상에 포함함)
 7. **`README.md` / `README.en.md`** (2개 전부. 2026-07-27부로 GUIDE.md/GUIDE.en.md는 폐지되어 README에 통합됨)
-   - "22명"/"22개 관점"/"22 perspectives" 등 전부 새 숫자로
-   - "28개 트리거 패턴(A~AB)" → 새 글자·새 개수로
+   - "24명"/"24개 관점"/"24 perspectives" 등 전부 새 숫자로
+   - "30개 트리거 패턴(A~AD)" → 새 글자·새 개수로
    - "스킬 7개"/"Skills (7)" → 새 개수로
    - 관점 목록·업데이트 내용 요약에 새 도메인 한 줄 추가
 8. **`validate.mjs`**

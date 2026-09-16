@@ -6,7 +6,7 @@ This document is written so that even someone who has never used a computer, a s
 
 The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 16 conditional expert knowledge modules (**skills**) that load only when relevant.
 
-> **Current version**: `1.5.2` · **Perspectives**: 22 · **Trigger patterns**: 28 patterns (A-AB) · **Skills (16)** · **Hooks**: 2 · **License**: Apache License 2.0
+> **Current version**: `1.6.0` · **Perspectives**: 24 · **Trigger patterns**: 30 patterns (A-AD) · **Skills (18)** · **Hooks**: 2 · **License**: Apache License 2.0
 
 ---
 
@@ -298,7 +298,7 @@ Every request is classified into one of the 4 levels below, which determines how
 | **L0** | Greetings/small talk, 1-2 word requests, simple status checks ("what did you do?") | 1-3 lines, free tone |
 | **L1** | Concept explanations, opinions/advice requests | Core point + rationale + a light check, a firm recommendation plus stated limitations |
 | **L2** | General work: code changes, debugging, implementation | The `persona-format` skill activates, following a 7-step procedure |
-| **L3** | Major work involving security, money, deployment, or irreversible actions | `persona-format` + `persona-triggers` + `persona-safety` all activate, plus a full review by all 22 perspectives |
+| **L3** | Major work involving security, money, deployment, or irreversible actions | `persona-format` + `persona-triggers` + `persona-safety` all activate, plus a full review by all 24 perspectives |
 
 ### Trigger words — how a single word shifts intensity and perspective
 
@@ -311,11 +311,11 @@ When specific words (triggers) are detected in what you say, the following 6 eff
 5. **Fully activate a single perspective** — "security" alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone → #4, "AI"/"agent"/"MCP" alone → #6
 6. **Evidence mode** (intensity stays the same) — "evidence", "source", "example", "fact" etc. → present real evidence and clearly separate speculation from confirmed fact
 
-These trigger words are organized into 28 patterns (A-AB), and the full word lists plus the priority order for conflicts all live in the `persona-triggers` skill. Priority summary: **length constraints (e.g. "briefly") > intensity (e.g. "in depth") > domain expert > single perspective > additional skill.**
+These trigger words are organized into 30 patterns (A-AD), and the full word lists plus the priority order for conflicts all live in the `persona-triggers` skill. Priority summary: **length constraints (e.g. "briefly") > intensity (e.g. "in depth") > domain expert > single perspective > additional skill.**
 
-### 22 perspectives — the expert checklist reviewed before every answer
+### 24 perspectives — the expert checklist reviewed before every answer
 
-For every response at L1 or above, 3-5 of the 22 perspectives below that are relevant to the task are briefly reviewed internally before answering — automatically, even without a trigger word. This does not apply to L0 small talk or "briefly"-style requests.
+For every response at L1 or above, 3-5 of the 24 perspectives below that are relevant to the task are briefly reviewed internally before answering — automatically, even without a trigger word. This does not apply to L0 small talk or "briefly"-style requests.
 
 | # | Perspective | Especially important when |
 |---|---|---|
@@ -341,10 +341,12 @@ For every response at L1 or above, 3-5 of the 22 perspectives below that are rel
 | 20 | Building/interior design director (15+ years) | Spatial concept, materials, design coherence |
 | 21 | Building/interior 3D modeling specialist (15+ years) | BIM, geometry, coordinates, topology, file interoperability |
 | 22 | Building/interior rendering and visualization specialist (15+ years) | Materials, lighting, cameras, render output |
+| 23 | Architectural concept design specialist (15+ years) | Architectural concepts, massing, form, facades, exterior materials |
+| 24 | Interior concept design specialist (15+ years) | Interior concepts, atmosphere, color, materials, lighting, furniture composition |
 
-### 11 domain experts — conditionally going deep
+### 13 domain experts — conditionally going deep
 
-Among the 22 perspectives above, #11, #13, #14, #15, #16, #17, #18, #19, #20, #21, and #22 each have their own dedicated skill, which loads much deeper knowledge when a related trigger is detected.
+Among the 24 perspectives above, #11 and #13 through #24 each have their own dedicated skill, which loads much deeper knowledge when a related trigger is detected.
 
 - **Professional investor (#13, `persona-investor`)**: Always asks "if this fails, does the user lose money?" Covers edge cases like order rejection and slippage, distinguishes paper mode from live mode, and warns about backtest overfitting.
 - **Professional lawyer (#11, `persona-lawyer`)**: Covers audit-log obligations, staying clear of capital-markets-law boundaries (avoiding investment-advisory language), personal-data protection/GDPR, and disclaimer/consent standards.
@@ -354,11 +356,13 @@ Among the 22 perspectives above, #11, #13, #14, #15, #16, #17, #18, #19, #20, #2
 - **Interior design specialist (#17, `persona-interior-designer`)**: Covers space, circulation, finishes, lighting, furniture, and interior details.
 - **Construction specialist (#18, `persona-construction-expert`)**: Covers methods, schedule, quality, safety, defects, and site conditions.
 - **Cost estimator (#19, `persona-cost-estimator`)**: Covers quantities, unit rates, construction cost, value engineering, changes, and estimate assumptions.
-- **Design director (#20, `persona-design-director`)**: Covers concept, form, color, materials, and coherence between architecture and interiors.
+- **Design director (#20, `persona-design-director`)**: Integrates the design language, consistency, and approval criteria across architecture and interiors.
+- **Architectural concept design specialist (#23, `persona-architectural-design-expert`)**: Covers site context, massing, form, facades, elevations, exterior materials, and 3D validation criteria.
+- **Interior concept design specialist (#24, `persona-interior-design-expert`)**: Covers interior concepts, atmosphere, color, materials, lighting, furniture composition, and 3D validation criteria.
 - **3D modeling specialist (#21, `persona-spatial-3d-modeling-expert`)**: Covers BIM, NURBS and mesh modeling, coordinates, units, conversion, and interoperability, including Revit and Rhino.
 - **Rendering and visualization specialist (#22, `persona-rendering-visualization-expert`)**: Covers materials, lighting, cameras, render quality, and output verification in tools such as D5, Twinmotion, Unreal, and Unity.
 
-`Drawing`, `drawing work`, `CAD`, `DWG`, floor plans, detail drawings, and shop drawings activate pattern AB, which routes the request to the appropriate lead and reviewing roles among #16 through #21.
+`Drawing`, `drawing work`, `CAD`, `DWG`, floor plans, detail drawings, and shop drawings activate pattern AB, which routes the request to the appropriate lead and reviewing roles among #16 through #24.
 
 When multiple domains apply at once (e.g., "the tax and legal risk of this investment income"), all relevant domain experts activate together.
 
@@ -494,7 +498,7 @@ This project originally started as a plugin for Claude Code (a different AI codi
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 response format
     │   ├── persona-safety/SKILL.md       # Always-on security rules, irreversible-action gate
-    │   ├── persona-triggers/SKILL.md     # Full A-AB trigger-word detail and the 22-perspective mapping table
+    │   ├── persona-triggers/SKILL.md     # Full A-AD trigger-word detail and the 24-perspective mapping table
     │   ├── persona-investor/SKILL.md     # #13 professional investor domain
     │   ├── persona-lawyer/SKILL.md       # #11 professional lawyer domain
     │   ├── persona-accountant/SKILL.md   # #14 accounting/tax specialist domain
@@ -506,6 +510,8 @@ This project originally started as a plugin for Claude Code (a different AI codi
     │   ├── persona-design-director/SKILL.md        # #20 design direction domain
     │   ├── persona-spatial-3d-modeling-expert/SKILL.md # #21 3D modeling/BIM domain
     │   ├── persona-rendering-visualization-expert/SKILL.md # #22 rendering/visualization domain
+    │   ├── persona-architectural-design-expert/SKILL.md # #23 architectural concept design domain
+    │   ├── persona-interior-design-expert/SKILL.md # #24 interior concept design domain
     │   ├── persona-create/SKILL.md       # Entry point for the new-persona creation interview
     │   └── persona-edit/SKILL.md         # Entry point for the trigger-editing interview
     ├── commands/
@@ -526,8 +532,8 @@ This checker mechanically prevents number drift when adding perspectives or chan
 | # | What it checks |
 |---|---|
 | 1 | Perspective numbers are continuous from 1 through the last entry |
-| 2 | Labels such as "22 people" and "22 perspectives" match the actual count in every core file, skill, and README |
-| 3 | The documented A-AB trigger-pattern count matches the actual section count |
+| 2 | Labels such as "24 people" and "24 perspectives" match the actual count in every core file, skill, and README |
+| 3 | The documented A-AD trigger-pattern count matches the actual section count |
 | 4 | The skill-folder count matches the docs and every skill frontmatter `name` matches its folder (including English README cross-checks) |
 | 5 | All 11 domain personas are wired into both the core and marker files |
 | 6 | The Agent Plugins 1.0, Codex fallback, and legacy manifests plus both marketplace JSON files have valid names, versions, and source paths |
@@ -632,6 +638,15 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 Listed with the most recent entries at the top. Click (or tap) an item to expand its details.
 
 <details>
+<summary><strong>2026-09-16 — Split architectural and interior design personas (v1.6.0)</strong></summary>
+
+- Added separate architectural concept design (#23) and interior concept design (#24) personas.
+- Narrowed #20 design director to cross-discipline integration, consistency, and approval criteria, while moving field-specific design triggers into AC and AD.
+- Synchronized the boundaries among technical design (#16/#17), concept design (#23/#24), direction (#20), modeling, and rendering (#21/#22), including proficiency calibration and regression checks.
+
+</details>
+
+<details>
 <summary><strong>2026-09-16 — Added built-environment user proficiency calibration (v1.5.2)</strong></summary>
 
 - Clarified that `15+ years` describes each persona's review depth, not the user's proficiency.
@@ -645,7 +660,7 @@ Listed with the most recent entries at the top. Click (or tap) an item to expand
 
 - Added pattern AB for drawing-related work, CAD/DWG, plans, elevations, sections, details, and shop drawings.
 - Routes by purpose across architectural design, interior design, construction, estimating, and 3D modeling while separating non-building drawings and regulated work.
-- Synchronized 22 perspectives, 28 patterns, 16 skills, hooks, documentation, and validation.
+- Synchronized all perspectives, 28 patterns, 16 skills, hooks, documentation, and validation.
 
 </details>
 
@@ -654,7 +669,7 @@ Listed with the most recent entries at the top. Click (or tap) an item to expand
 
 - Added separate 15+ year perspectives for 3D modeling (#21, including Revit and Rhino) and architectural/interior rendering and visualization (#22).
 - Recognizes Korean and English modeling/rendering variants while preventing false activation for data modeling and web rendering.
-- Synchronized multi-letter pattern IDs (Z then AA), 22 perspectives, 27 patterns, 16 skills, tool-state verification, and model-to-render-to-construction/cost handoffs.
+- Synchronized multi-letter pattern IDs (Z then AA), all perspectives, 27 patterns, 16 skills, tool-state verification, and model-to-render-to-construction/cost handoffs.
 
 </details>
 
@@ -808,7 +823,7 @@ A. Call `$persona-edit` (to edit an existing perspective) or `$persona-create` (
 A. Mixing in words like "briefly", "in short", or "just the key point" switches it to a short format immediately. This rule has the highest priority of all.
 
 **Q. I actually want it to go deeper and more thorough.**
-A. Using expressions like "objectively", "in depth", "thoroughly", or "full persona version" brings all 22 perspectives into the review.
+A. Using expressions like "objectively", "in depth", "thoroughly", or "full persona version" brings all 24 perspectives into the review.
 
 **Q. I found a bug or something misbehaving. Where do I report it?**
 A. Please report it through the repository's GitHub Issues feature. Including a reproducible example of what you typed speeds up diagnosis a lot.

@@ -2,7 +2,7 @@
 /**
  * SoDam-Persona 정합성 검사기 (자기완결 — Node 내장만 사용, 의존성 0)
  *
- * 목적: 관점 수(20→22 같은) 드리프트·스킬 수 불일치·도메인 배선 누락·
+ * 목적: 관점 수(22→24 같은) 드리프트·스킬 수 불일치·도메인 배선 누락·
  *       JSON 오류를 push 전에 기계적으로 잡는다. (AGENTS.md 하네스 원칙: 골든 룰을 규칙으로 인코딩)
  *
  * 사용: node validate.mjs   (저장소 루트에서. 종료코드 0=통과, 1=실패)
@@ -131,7 +131,7 @@ for (const f of ['README.md']) {
 }
 
 // ── 5) 도메인 페르소나 배선 (core 파일맵 · marker 파일맵에 모두 존재) ────
-const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director', 'persona-spatial-3d-modeling-expert', 'persona-rendering-visualization-expert'];
+const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director', 'persona-spatial-3d-modeling-expert', 'persona-rendering-visualization-expert', 'persona-architectural-design-expert', 'persona-interior-design-expert'];
 const core = read(pluginPath('hooks/persona_core.md'));
 const marker = read(pluginPath('hooks/persona_marker.txt'));
 for (const d of DOMAINS) {
@@ -141,7 +141,7 @@ for (const d of DOMAINS) {
 }
 
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
-const EXPECTED_PLUGIN_VERSION = '1.5.2';
+const EXPECTED_PLUGIN_VERSION = '1.6.0';
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
 const manifestPaths = [
   pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
@@ -196,6 +196,8 @@ const DISCLAIMER_CHECKS = [
   [pluginPath('skills/persona-construction-expert/SKILL.md'), '최종 확인'],
   [pluginPath('skills/persona-cost-estimator/SKILL.md'), '확정 금액'],
   [pluginPath('skills/persona-design-director/SKILL.md'), '자격자 확인'],
+  [pluginPath('skills/persona-architectural-design-expert/SKILL.md'), '자격자 확인'],
+  [pluginPath('skills/persona-interior-design-expert/SKILL.md'), '자격자 확인'],
   [pluginPath('skills/persona-spatial-3d-modeling-expert/SKILL.md'), '확정하지 않는다'],
   [pluginPath('skills/persona-rendering-visualization-expert/SKILL.md'), '법정 설계도서'],
 ];
@@ -440,6 +442,8 @@ const BUILT_ENVIRONMENT_DOMAINS = [
   ['Y', 'persona-design-director'],
   ['Z', 'persona-spatial-3d-modeling-expert'],
   ['AA', 'persona-rendering-visualization-expert'],
+  ['AC', 'persona-architectural-design-expert'],
+  ['AD', 'persona-interior-design-expert'],
 ];
 const BUILT_COLLAB_REF = 'reference/built_environment_collaboration.md';
 const OVERBROAD_BUILT_TRIGGERS = new Set(['건축', '인테리어', '설계', '시공', '견적', '디자인', '공간', '공사']);
@@ -473,6 +477,33 @@ for (const [label, target] of [['core', core], ['marker', marker]]) {
     if (!target.includes(phrase)) err(`사용자 역량 보정이 ${label}에 불완전함: ${phrase}`);
   }
 }
+const designDirectorSkill = read(pluginPath('skills/persona-design-director/SKILL.md'));
+const architecturalDesignSkill = read(pluginPath('skills/persona-architectural-design-expert/SKILL.md'));
+const interiorDesignSkill = read(pluginPath('skills/persona-interior-design-expert/SKILL.md'));
+for (const phrase of ['건축디자인', '인테리어디자인', '무드보드']) {
+  if (designDirectorSkill.includes(phrase)) err(`디자인 디렉터에 분야별 트리거 잔존: ${phrase}`);
+}
+for (const phrase of ['건축 디자인', '건축디자인', '매스 디자인', '파사드 디자인']) {
+  if (!architecturalDesignSkill.includes(phrase)) err(`건축 디자인 필수 트리거 누락: ${phrase}`);
+}
+for (const phrase of ['인테리어 디자인', '인테리어디자인', '공간 분위기', '무드보드']) {
+  if (!interiorDesignSkill.includes(phrase)) err(`인테리어 디자인 필수 트리거 누락: ${phrase}`);
+}
+const ySection = extractSection(triggers, '## Y. ', /\n## [A-Z]+\. /);
+for (const phrase of ['건축디자인', '인테리어디자인', '무드보드']) {
+  if (ySection?.includes(phrase)) err(`Y 디자인 디렉터 패턴에 분야별 트리거 잔존: ${phrase}`);
+}
+
+for (const [label, target] of [['core', core], ['marker', marker]]) {
+  for (const phrase of ['디자인 의도', '#23', '#24']) {
+    if (!target.includes(phrase)) err('도면 디자인 라우팅이 ' + label + '에 불완전함: ' + phrase);
+  }
+}
+const builtCollaboration = read(pluginPath('reference/built_environment_collaboration.md'));
+if (builtCollaboration.includes('결과물: 렌더링·시각화 + 디자인 디렉터')) {
+  err('렌더 결과물이 #20 디자인 디렉터에 무조건 라우팅됨');
+}
+
 const modelingSkill = read(pluginPath('skills/persona-spatial-3d-modeling-expert/SKILL.md'));
 const renderingSkill = read(pluginPath('skills/persona-rendering-visualization-expert/SKILL.md'));
 for (const phrase of ['데이터 모델링', 'DB 모델링', 'AI 모델']) {

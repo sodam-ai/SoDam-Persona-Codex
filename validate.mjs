@@ -131,7 +131,7 @@ for (const f of ['README.md']) {
 }
 
 // ── 5) 도메인 페르소나 배선 (core 파일맵 · marker 파일맵에 모두 존재) ────
-const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director', 'persona-spatial-3d-modeling-expert', 'persona-rendering-visualization-expert', 'persona-architectural-design-expert', 'persona-interior-design-expert', 'persona-source-verification-expert', 'persona-research-analyst', 'persona-ideation-strategist'];
+const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director', 'persona-spatial-3d-modeling-expert', 'persona-rendering-visualization-expert', 'persona-architectural-design-expert', 'persona-interior-design-expert', 'persona-source-verification-expert', 'persona-research-analyst', 'persona-ideation-strategist', 'persona-project-manager', 'persona-product-owner', 'persona-pmo-governance-expert', 'persona-project-analyst-coordinator'];
 const core = read(pluginPath('hooks/persona_core.md'));
 const marker = read(pluginPath('hooks/persona_marker.txt'));
 for (const d of DOMAINS) {
@@ -185,7 +185,7 @@ if (koH2Count !== enH2Count)
   err('한영 README 주요 목차 수 불일치: KO ' + koH2Count + ' ≠ EN ' + enH2Count);
 
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
-const EXPECTED_PLUGIN_VERSION = '1.7.0';
+const EXPECTED_PLUGIN_VERSION = '1.8.0';
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
 const manifestPaths = [
   pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
@@ -263,6 +263,22 @@ for (const [f, phrases] of KNOWLEDGE_WORK_CHECKS) {
   const text = read(f);
   for (const phrase of phrases) if (!text.includes(phrase)) err(`지식작업 안전장치 누락 (${f}): "${phrase}"`);
 }
+
+// ── 7-2) 프로젝트 관리 역할 경계·데이터 무결성·약어 오발동 검사 ──────
+const PROJECT_MANAGEMENT_CHECKS = [
+  [pluginPath('skills/persona-project-manager/SKILL.md'), ['계획, 기준선, 실제 실적, 예측, 미확인', '완료율', '`PM` 단독']],
+  [pluginPath('skills/persona-product-owner/SKILL.md'), ['사용자 가치', '수용 기준', '`PM`·`PO` 단독']],
+  [pluginPath('skills/persona-pmo-governance-expert/SKILL.md'), ['단계 승인', '보고 왜곡', '`PMO` 약어 단독']],
+  [pluginPath('skills/persona-project-analyst-coordinator/SKILL.md'), ['원문 기록', '추적 가능한 연결', '`PA` 단독', 'Project Architect']],
+  [pluginPath('skills/persona-triggers/SKILL.md'), ['## AH.', '## AI.', '## AJ.', '## AK.', '오후 3 PM', '건축 PA', '약어 단독']],
+  [pluginPath('hooks/persona_core.md'), ['PM·PO·PMO·PA 약어 단독은 제외', '계획·실적·예측·미확인']],
+];
+for (const [f, phrases] of PROJECT_MANAGEMENT_CHECKS) {
+  if (!existsSync(P(f))) { err(`프로젝트관리 검사 대상 파일 없음: ${f}`); continue; }
+  const text = read(f);
+  for (const phrase of phrases) if (!text.includes(phrase)) err(`프로젝트관리 안전장치 누락 (${f}): "${phrase}"`);
+}
+if (!triggers.includes('| 9 | 시니어 기획·요구사항 라우터 |')) err('#9가 기획·요구사항 라우터로 축소되지 않음');
 
 // ── 8) HTML 4개 동기화 경고 (소프트 — exit code에 영향 없음, 2026-07-26 추가) ──
 // 근거: HTML은 build-docs.mjs(pandoc)로 md에서 재생성되는 산출물이라 정본이 아님.
@@ -366,7 +382,7 @@ checkPersonalPaths(validatorComments, 'validate.mjs (comments)');
 
 // ── 11) Codex hooks.json 변수·스크립트·컨텍스트 한도 검사 (2026-09-16 조정) ──
 // Codex 플러그인 hook은 ${PLUGIN_ROOT}를 사용한다. additionalContextLimit=0은
-// 내장 잘라내기를 끄므로, 아래 #13의 저장소 자체 12,000자 상한 검사와 반드시 함께 유지한다.
+// 내장 잘라내기를 끄므로, 아래 #13의 저장소 자체 15,000자 상한 검사와 반드시 함께 유지한다.
 try {
   const hooksConfig = JSON.parse(read(pluginPath('hooks/hooks.json')));
   const commandHandlers = [];
@@ -413,9 +429,9 @@ for (const d of DOMAINS) {
 // ── 13) Codex hook 출력 프로젝트 상한 검사 (2026-09-16 조정) ──────────
 // hooks.json의 additionalContextLimit=0은 Codex 내장 잘라내기를 끈다. 페르소나 코어가
 // 중간에서 잘리지 않게 하면서도 출력이 무제한으로 커지지 않도록, 실제 JSON 직렬화 결과에
-// 저장소 자체 12,000자 상한을 적용한다. 정적 파일을 그대로 내보내는 hook이라 빌드 시 검증으로 충분하다.
-const HOOK_OUTPUT_PROJECT_CAP = 12000;
-const HOOK_OUTPUT_WARN_AT = 10800;
+// 저장소 자체 15,000자 상한을 적용한다. 정적 파일을 그대로 내보내는 hook이라 빌드 시 검증으로 충분하다.
+const HOOK_OUTPUT_PROJECT_CAP = 15000;
+const HOOK_OUTPUT_WARN_AT = 13500;
 const serializedHookLength = (eventName, text) => JSON.stringify({
   continue: true,
   hookSpecificOutput: { hookEventName: eventName, additionalContext: text },
@@ -461,6 +477,10 @@ const DOMAIN_CORE_HEADINGS = [
   ['AE', '자료 검색·출처 검증 전문가'],
   ['AF', '리서치·분석 전문가'],
   ['AG', '아이디어·콘셉트 전략 전문가'],
+  ['AH', '프로젝트 매니저'],
+  ['AI', '프로덕트 매니저·프로덕트 오너'],
+  ['AJ', 'PMO·프로젝트 거버넌스 전문가'],
+  ['AK', '프로젝트 분석·운영 코디네이터'],
 ];
 function extractSection(text, marker, endRe) {
   const start = text.indexOf(marker);

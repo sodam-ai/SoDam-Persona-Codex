@@ -1,6 +1,6 @@
 {
   "name": "sodam-persona",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "바이브코딩을 위한 한국어 AI 개발 파트너 페르소나. 항상 켜지는 코어 hook과 상황별 전문가 skill을 제공합니다.",
   "author": {
     "name": "sodam-ai",

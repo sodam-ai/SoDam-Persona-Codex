@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 1,
+  "pluginVersion": "1.10.1",
+  "hookSerializedCap": 12000,
+  "perspectives": [
+    {
+      "id": 1,
+      "name": "시니어 개발자"
+    },
+    {
+      "id": 2,
+      "name": "시니어 보안 전문가"
+    },
+    {
+      "id": 3,
+      "name": "비개발자/왕초보/무경험자"
+    },
+    {
+      "id": 4,
+      "name": "QA/테스트 엔지니어"
+    },
+    {
+      "id": 5,
+      "name": "DevOps/배포·운영/SRE"
+    },
+    {
+      "id": 6,
+      "name": "데이터/AI 엔지니어"
+    },
+    {
+      "id": 7,
+      "name": "시니어 디자이너"
+    },
+    {
+      "id": 8,
+      "name": "UX 리서처"
+    },
+    {
+      "id": 9,
+      "name": "시니어 기획·요구사항 라우터"
+    },
+    {
+      "id": 10,
+      "name": "C-레벨 경영진/비즈니스 (25년+)"
+    },
+    {
+      "id": 11,
+      "name": "**법무/컴플라이언스 (15년+ 경력 전문 변호사)**"
+    },
+    {
+      "id": 12,
+      "name": "비용 최적화/사업 운영 (15년+)"
+    },
+    {
+      "id": 13,
+      "name": "**전문 투자자 (15년+ 경력)**"
+    },
+    {
+      "id": 14,
+      "name": "**회계·세무 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 15,
+      "name": "**마케팅·세일즈 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 16,
+      "name": "**건축 설계 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 17,
+      "name": "**인테리어 설계 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 18,
+      "name": "**건축·인테리어 시공 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 19,
+      "name": "**건축·인테리어 견적 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 20,
+      "name": "**건축·인테리어 디자인 디렉터 (15년+ 경력)**"
+    },
+    {
+      "id": 21,
+      "name": "**건축·인테리어 3D 모델링 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 22,
+      "name": "**건축·인테리어 렌더링·시각화 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 23,
+      "name": "**건축 디자인 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 24,
+      "name": "**인테리어 디자인 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 25,
+      "name": "**자료 검색·출처 검증 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 26,
+      "name": "**리서치·분석 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 27,
+      "name": "**아이디어·콘셉트 전략 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 28,
+      "name": "**프로젝트 매니저 (15년+ 경력)**"
+    },
+    {
+      "id": 29,
+      "name": "**프로덕트 매니저·프로덕트 오너 (15년+ 경력)**"
+    },
+    {
+      "id": 30,
+      "name": "**PMO·프로젝트 거버넌스 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 31,
+      "name": "**프로젝트 분석·운영 코디네이터 (15년+ 경력)**"
+    },
+    {
+      "id": 32,
+      "name": "**이미지 제작·편집 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 33,
+      "name": "**영상 제작·연출 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 34,
+      "name": "**영상 편집·후반작업 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 35,
+      "name": "**미디어 품질·권리 검수 전문가 (15년+ 경력)**"
+    },
+    {
+      "id": 36,
+      "name": "**생성형 AI 로컬 워크플로우 엔지니어 (15년+ 기반 경력)**"
+    },
+    {
+      "id": 37,
+      "name": "**생성형 AI 플랫폼 운영 전문가 (15년+ 기반 경력)**"
+    }
+  ],
+  "triggerPatterns": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    "AA",
+    "AB",
+    "AC",
+    "AD",
+    "AE",
+    "AF",
+    "AG",
+    "AH",
+    "AI",
+    "AJ",
+    "AK",
+    "AL",
+    "AM",
+    "AN",
+    "AO",
+    "AP",
+    "AQ"
+  ],
+  "domainSkills": [
+    "persona-investor",
+    "persona-lawyer",
+    "persona-accountant",
+    "persona-marketer",
+    "persona-architectural-designer",
+    "persona-interior-designer",
+    "persona-construction-expert",
+    "persona-cost-estimator",
+    "persona-design-director",
+    "persona-spatial-3d-modeling-expert",
+    "persona-rendering-visualization-expert",
+    "persona-architectural-design-expert",
+    "persona-interior-design-expert",
+    "persona-source-verification-expert",
+    "persona-research-analyst",
+    "persona-ideation-strategist",
+    "persona-project-manager",
+    "persona-product-owner",
+    "persona-pmo-governance-expert",
+    "persona-project-analyst-coordinator",
+    "persona-image-production-expert",
+    "persona-video-production-director",
+    "persona-video-post-production-expert",
+    "persona-media-quality-rights-reviewer",
+    "persona-generative-ai-workflow-engineer",
+    "persona-generative-ai-platform-operator"
+  ]
+}

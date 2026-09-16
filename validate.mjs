@@ -22,17 +22,34 @@ const read = (rel) => readFileSync(P(rel), 'utf8');
 
 const errors = [];
 const err = (m) => errors.push(m);
-
-// ── 1) 관점 수 N = B 테이블 행 수 (source of truth) ───────────────────────
 const PLUGIN_ROOT = 'plugins/sodam-persona';
 const pluginPath = (...parts) => [PLUGIN_ROOT, ...parts].join('/');
+let REGISTRY;
+try { REGISTRY = JSON.parse(read(pluginPath('persona-registry.json'))); }
+catch (error) { console.error(`❌ persona-registry.json 파싱 실패: ${error.message}`); process.exit(1); }
+if (REGISTRY.schemaVersion !== 1) err(`등록부 schemaVersion(${REGISTRY.schemaVersion}) ≠ 1`);
+if (!/^\d+\.\d+\.\d+$/.test(REGISTRY.pluginVersion ?? '')) err(`등록부 pluginVersion 형식 오류: ${REGISTRY.pluginVersion}`);
+if (REGISTRY.hookSerializedCap !== 12000) err(`등록부 hookSerializedCap(${REGISTRY.hookSerializedCap}) ≠ 12000`);
+for (const key of ['perspectives', 'triggerPatterns', 'domainSkills']) {
+  if (!Array.isArray(REGISTRY[key])) err(`등록부 ${key}는 배열이어야 함`);
+}
+
+// ── 1) 관점 수 N = B 테이블 행 수 (source of truth) ───────────────────────
 const triggers = read(pluginPath('skills/persona-triggers/SKILL.md'));
 const bSection = triggers.slice(
   triggers.indexOf('## B.'),
   triggers.indexOf('복수 관점 명시')
 );
-const rows = [...bSection.matchAll(/^\|\s*(\d+)\s*\|/gm)].map((m) => +m[1]);
+const perspectiveRows = [...bSection.matchAll(/^\|\s*(\d+)\s*\|\s*([^|]+?)\s*\|/gm)].map((m) => ({ id: +m[1], name: m[2].trim() }));
+const rows = perspectiveRows.map(({ id }) => id);
 const N = rows.length;
+if (REGISTRY.perspectives?.length !== N) err(`등록부 관점 수(${REGISTRY.perspectives?.length}) ≠ 실제(${N})`);
+for (let i = 0; i < Math.min(N, REGISTRY.perspectives?.length ?? 0); i++) {
+  const actual = perspectiveRows[i];
+  const registered = REGISTRY.perspectives[i];
+  if (actual.id !== registered.id || actual.name !== registered.name)
+    err(`등록부 관점 불일치 #${i + 1}: ${JSON.stringify(registered)} ≠ ${JSON.stringify(actual)}`);
+}
 // 연속성: 1..N 이어야 함
 for (let i = 0; i < N; i++) {
   if (rows[i] !== i + 1) err(`B테이블 관점 번호 불연속: ${i + 1}번 위치에 ${rows[i]}`);
@@ -77,6 +94,8 @@ for (const f of KEY_FILES) {
 const patternIds = [...triggers.matchAll(/^## ([A-Z]+)\. /gm)].map((m) => m[1]);
 const patternOrdinal = (id) => [...id].reduce((n, ch) => n * 26 + ch.charCodeAt(0) - 64, 0);
 const uniqLetters = [...new Set(patternIds)].sort((a, b) => patternOrdinal(a) - patternOrdinal(b));
+if (JSON.stringify(REGISTRY.triggerPatterns) !== JSON.stringify(uniqLetters))
+  err(`등록부 패턴 ID 불일치: ${REGISTRY.triggerPatterns?.join(', ')} ≠ ${uniqLetters.join(', ')}`);
 if (uniqLetters.some((id, index) => patternOrdinal(id) !== index + 1))
   err(`pattern IDs are not contiguous from A: ${uniqLetters.join(', ')}`);
 const descMatch = triggers.match(/A~([A-Z]+)\s*(\d+)패턴/);
@@ -131,7 +150,7 @@ for (const f of ['README.md']) {
 }
 
 // ── 5) 도메인 페르소나 배선 (core 파일맵 · marker 파일맵에 모두 존재) ────
-const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director', 'persona-spatial-3d-modeling-expert', 'persona-rendering-visualization-expert', 'persona-architectural-design-expert', 'persona-interior-design-expert', 'persona-source-verification-expert', 'persona-research-analyst', 'persona-ideation-strategist', 'persona-project-manager', 'persona-product-owner', 'persona-pmo-governance-expert', 'persona-project-analyst-coordinator', 'persona-image-production-expert', 'persona-video-production-director', 'persona-video-post-production-expert', 'persona-media-quality-rights-reviewer', 'persona-generative-ai-workflow-engineer', 'persona-generative-ai-platform-operator'];
+const DOMAINS = REGISTRY.domainSkills ?? [];
 const core = read(pluginPath('hooks/persona_core.md'));
 const marker = read(pluginPath('hooks/persona_marker.txt'));
 for (const d of DOMAINS) {
@@ -185,7 +204,7 @@ if (koH2Count !== enH2Count)
   err('한영 README 주요 목차 수 불일치: KO ' + koH2Count + ' ≠ EN ' + enH2Count);
 
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
-const EXPECTED_PLUGIN_VERSION = '1.10.0';
+const EXPECTED_PLUGIN_VERSION = REGISTRY.pluginVersion;
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
 const manifestPaths = [
   pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
@@ -348,7 +367,8 @@ if (warnings.length) {
 const REPO_KNOWN_BASENAMES = new Set([
   'persona_core.md', 'persona_marker.txt', 'hooks.json', 'plugin.json',
   'marketplace.json', 'README.md', 'README.en.md', 'LICENSE', 'NOTICE',
-  'validate.mjs', 'build-docs.mjs', 'doc-theme.html', 'GUIDE.md', 'GUIDE.en.md',
+  'validate.mjs', 'diagnose.mjs', 'test-hooks.mjs', 'test-validator.mjs', 'persona-registry.json',
+  'build-docs.mjs', 'doc-theme.html', 'GUIDE.md', 'GUIDE.en.md',
 ]);
 const isCheckableRepoRef = (ref) => {
   if (!/^[A-Za-z0-9_./-]+\.(md|mjs|js|json|html|txt)$/.test(ref)) return false;
@@ -418,7 +438,7 @@ checkPersonalPaths(validatorComments, 'validate.mjs (comments)');
 
 // ── 11) Codex hooks.json 변수·스크립트·컨텍스트 한도 검사 (2026-09-16 조정) ──
 // Codex 플러그인 hook은 ${PLUGIN_ROOT}를 사용한다. additionalContextLimit=0은
-// 내장 잘라내기를 끄므로, 아래 #13의 저장소 자체 15,000자 상한 검사와 반드시 함께 유지한다.
+// 내장 잘라내기를 끄므로, 아래 #13의 저장소 자체 12,000자 상한 검사와 반드시 함께 유지한다.
 try {
   const hooksConfig = JSON.parse(read(pluginPath('hooks/hooks.json')));
   const commandHandlers = [];
@@ -465,9 +485,9 @@ for (const d of DOMAINS) {
 // ── 13) Codex hook 출력 프로젝트 상한 검사 (2026-09-16 조정) ──────────
 // hooks.json의 additionalContextLimit=0은 Codex 내장 잘라내기를 끈다. 페르소나 코어가
 // 중간에서 잘리지 않게 하면서도 출력이 무제한으로 커지지 않도록, 실제 JSON 직렬화 결과에
-// 저장소 자체 15,000자 상한을 적용한다. 정적 파일을 그대로 내보내는 hook이라 빌드 시 검증으로 충분하다.
-const HOOK_OUTPUT_PROJECT_CAP = 15000;
-const HOOK_OUTPUT_WARN_AT = 13500;
+// 저장소 자체 12,000자 상한을 적용한다. 정적 파일을 그대로 내보내는 hook이라 빌드 시 검증으로 충분하다.
+const HOOK_OUTPUT_PROJECT_CAP = REGISTRY.hookSerializedCap ?? 0;
+const HOOK_OUTPUT_WARN_AT = 11400;
 const serializedHookLength = (eventName, text) => JSON.stringify({
   continue: true,
   hookSpecificOutput: { hookEventName: eventName, additionalContext: text },
@@ -481,7 +501,7 @@ for (const [label, length] of HOOK_OUTPUTS) {
   if (length >= HOOK_OUTPUT_PROJECT_CAP)
     err(`hook 직렬화 출력 프로젝트 상한 초과 (${label}): ${length}자 ≥ ${HOOK_OUTPUT_PROJECT_CAP}자`);
   else if (length >= HOOK_OUTPUT_WARN_AT)
-    hookSizeWarnings.push(`${label}: ${length}자 — 프로젝트 상한(${HOOK_OUTPUT_PROJECT_CAP}자)의 90% 이상, 여유 ${HOOK_OUTPUT_PROJECT_CAP - length}자`);
+    hookSizeWarnings.push(`${label}: ${length}자 — 프로젝트 상한(${HOOK_OUTPUT_PROJECT_CAP}자)의 95% 이상, 여유 ${HOOK_OUTPUT_PROJECT_CAP - length}자`);
 }
 if (hookSizeWarnings.length) {
   console.log(`⚠️  hook 출력 프로젝트 상한 근접 경고 ${hookSizeWarnings.length}건 (실패 아님, 여유 있을 때 내용 정리 권장):`);
@@ -535,7 +555,7 @@ function extractSection(text, marker, endRe) {
 function wordsFromList(line) {
   return line
     .replace(/\([^)]*\)/g, '') // 괄호 각주 제거 (※ ... 같은 예외 설명)
-    .split(',')
+    .split(/[,;]/)
     .map((w) => w.trim().replace(/[.]+$/, '')) // 문장 끝 마침표 제거(단어 자체엔 마침표 없음)
     .filter(Boolean);
 }

@@ -1,5 +1,5 @@
 ---
-description: "인터뷰 방식으로 새 도메인 페르소나(현재 다음 번호 #32부터)를 생성 — 추천 트리거 단어 자동 제안, 관련 파일 전부 동기화, validate.mjs로 자동 검증"
+description: "인터뷰 방식으로 새 도메인 페르소나(현재 다음 번호 #38부터)를 생성 — 추천 트리거 단어 자동 제안, 관련 파일 전부 동기화, validate.mjs로 자동 검증"
 ---
 
 # $persona-create — 새 페르소나 생성 (인터뷰 방식)
@@ -34,7 +34,7 @@ description: "인터뷰 방식으로 새 도메인 페르소나(현재 다음 �
 2. **`plugins/sodam-persona/hooks/persona_core.md`**
    - "도메인 트리거 (조건부 활성)" 섹션에 새 도메인 소단원 추가 (트리거 단어·책임 영역, 기존 4개와 동일 형식)
    - 면책 필요 시 "[면책 강제]" 섹션에 새 도메인 추가
-   - "37명 다관점 균형 검토"의 관점 목록 목록에 새 관점 이름 추가, 숫자를 N+1로 갱신
+   - "현재 N명 다관점 균형 검토"의 관점 목록 목록에 새 관점 이름 추가, 숫자를 N+1로 갱신
    - "파일 맵" 표의 도메인 스킬 목록에 `persona-<슬러그>` 추가
 3. **`plugins/sodam-persona/hooks/persona_marker.txt`**
    - "도메인 (조건부)" 한 줄 문구에 새 도메인 트리거·활성 문구 추가 (persona_core.md와 동일 내용)
@@ -49,10 +49,10 @@ description: "인터뷰 방식으로 새 도메인 페르소나(현재 다음 �
 7. **`README.md` / `README.en.md`** (2개 전부. 2026-07-27부로 GUIDE.md/GUIDE.en.md는 폐지되어 README에 통합됨)
    - 현행 관점 수 표기 등 전부 새 숫자로
    - 현행 트리거 패턴 수와 마지막 ID를 새 값으로
-   - "스킬 7개"/"Skills (7)" → 새 개수로
+   - 한·영 README의 스킬 수를 실제 새 개수로 갱신
    - 관점 목록·업데이트 내용 요약에 새 도메인 한 줄 추가
-8. **`validate.mjs`**
-   - `DOMAINS` 배열(현재 24개 도메인)에 `persona-<슬러그>` 추가 (이래야 5번 검사가 새 도메인도 배선 확인함)
+8. **`plugins/sodam-persona/persona-registry.json`**
+   - `perspectives`, `triggerPatterns`, `domainSkills`에 새 관점·패턴·스킬을 추가한다. `validate.mjs`가 이 등록부를 기준으로 전체 배선을 검사한다.
 
 ## 3-1단계. 검증 전 마지막 훑기 (2026-07-27 실측 반영)
 
@@ -68,6 +68,6 @@ grep -rn "옛N명\|옛N관점\|옛N개 관점\|옛N개 도메인 관점\|A~옛�
 
 ## 5단계. 마무리 안내
 
-- 설치된 캐시에는 자동 반영되지 않는다는 점을 안내: `codex plugin marketplace upgrade sodam-persona` → `codex plugin remove sodam-persona` → `codex plugin add sodam-persona@sodam-persona` → 새 task 시작
+- 설치된 캐시에는 자동 반영되지 않는다는 점을 안내: `codex plugin marketplace upgrade sodam-persona` → `codex plugin remove sodam-persona@sodam-persona` → `codex plugin add sodam-persona@sodam-persona` → 새 task 시작
 - git 커밋은 바뀐 파일만 정확히 이름 지정해 add (`git add -A` 금지, 이 저장소 README.md §8의 기존 규칙), conventional commit 형식으로 작성
 - 실제 push·PR 생성·merge는 사용자의 명시적 승인 없이는 실행하지 않는다

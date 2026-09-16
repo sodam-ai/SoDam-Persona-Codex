@@ -131,7 +131,7 @@ for (const f of ['README.md']) {
 }
 
 // ── 5) 도메인 페르소나 배선 (core 파일맵 · marker 파일맵에 모두 존재) ────
-const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director', 'persona-spatial-3d-modeling-expert', 'persona-rendering-visualization-expert', 'persona-architectural-design-expert', 'persona-interior-design-expert'];
+const DOMAINS = ['persona-investor', 'persona-lawyer', 'persona-accountant', 'persona-marketer', 'persona-architectural-designer', 'persona-interior-designer', 'persona-construction-expert', 'persona-cost-estimator', 'persona-design-director', 'persona-spatial-3d-modeling-expert', 'persona-rendering-visualization-expert', 'persona-architectural-design-expert', 'persona-interior-design-expert', 'persona-source-verification-expert', 'persona-research-analyst', 'persona-ideation-strategist'];
 const core = read(pluginPath('hooks/persona_core.md'));
 const marker = read(pluginPath('hooks/persona_marker.txt'));
 for (const d of DOMAINS) {
@@ -185,7 +185,7 @@ if (koH2Count !== enH2Count)
   err('한영 README 주요 목차 수 불일치: KO ' + koH2Count + ' ≠ EN ' + enH2Count);
 
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
-const EXPECTED_PLUGIN_VERSION = '1.6.0';
+const EXPECTED_PLUGIN_VERSION = '1.7.0';
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
 const manifestPaths = [
   pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
@@ -248,6 +248,20 @@ const DISCLAIMER_CHECKS = [
 for (const [f, kw] of DISCLAIMER_CHECKS) {
   if (!existsSync(P(f))) { err(`면책 검사 대상 파일 없음: ${f}`); continue; }
   if (!read(f).includes(kw)) err(`면책 강제 누락 (${f}): "${kw}" 문자열 없음`);
+}
+
+// ── 7-1) 검색·리서치·아이디어 신뢰성·오발동 경계 검사 ──────────────
+const KNOWLEDGE_WORK_CHECKS = [
+  [pluginPath('skills/persona-source-verification-expert/SKILL.md'), ['없는 출처', '확인 날짜', '파일 검색', '미확인']],
+  [pluginPath('skills/persona-research-analyst/SKILL.md'), ['사실', '해석', '가설', '정보 공백']],
+  [pluginPath('skills/persona-ideation-strategist/SKILL.md'), ['평가 기준', '검증 방법', 'IDE', '중단 기준']],
+  [pluginPath('skills/persona-triggers/SKILL.md'), ['## AE.', '## AF.', '## AG.', '코드에서 문자열 검색해줘', '좋은 아이디어네요']],
+  [pluginPath('hooks/persona_core.md'), ['없는 출처 생성 금지', '사실·해석·가설', '감탄·IDE 언급은 제외']],
+];
+for (const [f, phrases] of KNOWLEDGE_WORK_CHECKS) {
+  if (!existsSync(P(f))) { err(`지식작업 검사 대상 파일 없음: ${f}`); continue; }
+  const text = read(f);
+  for (const phrase of phrases) if (!text.includes(phrase)) err(`지식작업 안전장치 누락 (${f}): "${phrase}"`);
 }
 
 // ── 8) HTML 4개 동기화 경고 (소프트 — exit code에 영향 없음, 2026-07-26 추가) ──
@@ -352,7 +366,7 @@ checkPersonalPaths(validatorComments, 'validate.mjs (comments)');
 
 // ── 11) Codex hooks.json 변수·스크립트·컨텍스트 한도 검사 (2026-09-16 조정) ──
 // Codex 플러그인 hook은 ${PLUGIN_ROOT}를 사용한다. additionalContextLimit=0은
-// 내장 잘라내기를 끄므로, 아래 #13의 저장소 자체 10,000자 상한 검사와 반드시 함께 유지한다.
+// 내장 잘라내기를 끄므로, 아래 #13의 저장소 자체 12,000자 상한 검사와 반드시 함께 유지한다.
 try {
   const hooksConfig = JSON.parse(read(pluginPath('hooks/hooks.json')));
   const commandHandlers = [];
@@ -399,9 +413,9 @@ for (const d of DOMAINS) {
 // ── 13) Codex hook 출력 프로젝트 상한 검사 (2026-09-16 조정) ──────────
 // hooks.json의 additionalContextLimit=0은 Codex 내장 잘라내기를 끈다. 페르소나 코어가
 // 중간에서 잘리지 않게 하면서도 출력이 무제한으로 커지지 않도록, 실제 JSON 직렬화 결과에
-// 저장소 자체 10,000자 상한을 적용한다. 정적 파일을 그대로 내보내는 hook이라 빌드 시 검증으로 충분하다.
-const HOOK_OUTPUT_PROJECT_CAP = 10000;
-const HOOK_OUTPUT_WARN_AT = 9000;
+// 저장소 자체 12,000자 상한을 적용한다. 정적 파일을 그대로 내보내는 hook이라 빌드 시 검증으로 충분하다.
+const HOOK_OUTPUT_PROJECT_CAP = 12000;
+const HOOK_OUTPUT_WARN_AT = 10800;
 const serializedHookLength = (eventName, text) => JSON.stringify({
   continue: true,
   hookSpecificOutput: { hookEventName: eventName, additionalContext: text },
@@ -442,6 +456,11 @@ const DOMAIN_CORE_HEADINGS = [
   ['Y', '건축·인테리어 디자인 디렉터 페르소나'],
   ['Z', '건축·인테리어 3D 모델링 전문가 페르소나'],
   ['AA', '건축·인테리어 렌더링·시각화 전문가 페르소나'],
+  ['AC', '건축 디자인 전문가 페르소나'],
+  ['AD', '인테리어 디자인 전문가 페르소나'],
+  ['AE', '자료 검색·출처 검증 전문가'],
+  ['AF', '리서치·분석 전문가'],
+  ['AG', '아이디어·콘셉트 전략 전문가'],
 ];
 function extractSection(text, marker, endRe) {
   const start = text.indexOf(marker);

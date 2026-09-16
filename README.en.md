@@ -4,9 +4,9 @@
 
 This document is written so that even someone who has never used a computer, a smartphone, a messenger app, or AI before can follow it from installation to actual use. Whenever an unfamiliar term appears for the first time, it is explained in `plain words (technical term)` form. Example: repository (an online storage place that holds code and documents together).
 
-The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 18 conditional expert knowledge modules (**skills**) that load only when relevant.
+The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 21 conditional expert knowledge modules (**skills**) that load only when relevant.
 
-> **Current version**: `1.6.0` · **Perspectives**: 24 · **Trigger patterns**: 30 patterns (A-AD) · **Skills (18)** · **Hooks**: 2 · **License**: Apache License 2.0
+> **Current version**: `1.7.0` · **Perspectives**: 27 · **Trigger patterns**: 33 patterns (A-AG) · **Skills**: 21 · **Hooks**: 2 · **License**: Apache License 2.0
 
 ---
 
@@ -314,7 +314,10 @@ Mixing certain words into your request automatically changes how deep the respon
 | `$persona-rendering-visualization-expert <text>` | Materials, lighting, cameras, D5, Twinmotion, Unreal, and Unity (#22) |
 | `$persona-architectural-design-expert <text>` | Architectural concepts, massing, form, facades, and exterior materials (#23) |
 | `$persona-interior-design-expert <text>` | Interior atmosphere, color, materials, lighting, and furniture composition (#24) |
-| `$persona-create` | Add a domain persona through an interview. Under the current numbering, the next perspective starts at #25 |
+| `$persona-source-verification-expert <text>` | External search, primary sources, recency, and source-reliability verification (#25) |
+| `$persona-research-analyst <text>` | Research design, comparison, synthesis, and uncertainty analysis (#26) |
+| `$persona-ideation-strategist <text>` | Idea generation, evaluation, selection, and experiment design (#27) |
+| `$persona-create` | Add a domain persona through an interview. Under the current numbering, the next perspective starts at #28 |
 | `$persona-edit` | Interview-style add/edit/remove of trigger words for an existing persona |
 
 ### Commands for documentation/code editors (run from the repository root)
@@ -339,7 +342,7 @@ Every request is classified into one of the 4 levels below, which determines how
 | **L0** | Greetings/small talk, 1-2 word requests, simple status checks ("what did you do?") | 1-3 lines, free tone |
 | **L1** | Concept explanations, opinions/advice requests | Core point + rationale + a light check, a firm recommendation plus stated limitations |
 | **L2** | General work: code changes, debugging, implementation | The `persona-format` skill activates, following a 7-step procedure |
-| **L3** | Major work involving security, money, deployment, or irreversible actions | `persona-format` + `persona-triggers` + `persona-safety` all activate, plus a full review by all 24 perspectives |
+| **L3** | Major work involving security, money, deployment, or irreversible actions | `persona-format` + `persona-triggers` + `persona-safety` all activate, plus a full review by all 27 perspectives |
 
 ### Trigger words — how a single word shifts intensity and perspective
 
@@ -348,15 +351,15 @@ When specific words (triggers) are detected in what you say, the following 6 eff
 1. **Raise intensity** — "in depth", "thoroughly", "make sure" → from L1 up to L2/L3
 2. **Lower intensity** — "briefly", "in short", "in one line" → always takes priority over every other effect
 3. **Load an additional skill** — `persona-triggers` / `persona-format` / `persona-safety`
-4. **Activate a domain expert** — legal → #11, investing → #13, accounting/tax → #14, marketing → #15, and architecture/interiors/construction/cost/design/3D/rendering → #16-#24
+4. **Activate a domain expert** — legal → #11, investing → #13, accounting/tax → #14, marketing → #15, architecture/interiors/construction/cost/design/3D/rendering → #16-#24, source search/verification → #25, research/analysis → #26, and ideation/concept strategy → #27
 5. **Fully activate a single perspective** — "security" alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone → #4, "AI"/"agent"/"MCP" alone → #6
 6. **Evidence mode** (intensity stays the same) — "evidence", "source", "example", "fact" etc. → present real evidence and clearly separate speculation from confirmed fact
 
-These trigger words are organized into 30 patterns (A-AD), and the full word lists plus the priority order for conflicts all live in the `persona-triggers` skill. Priority summary: **length constraints (e.g. "briefly") > intensity (e.g. "in depth") > domain expert > single perspective > additional skill.**
+These trigger words are organized into 33 patterns (A-AG), and the full word lists plus the priority order for conflicts all live in the `persona-triggers` skill. Priority summary: **length constraints (e.g. "briefly") > intensity (e.g. "in depth") > domain expert > single perspective > additional skill.**
 
-### 24 perspectives — the expert checklist reviewed before every answer
+### 27 perspectives — the expert checklist reviewed before every answer
 
-For every response at L1 or above, 3-5 of the 24 perspectives below that are relevant to the task are briefly reviewed internally before answering — automatically, even without a trigger word. This does not apply to L0 small talk or "briefly"-style requests.
+For every response at L1 or above, 3-5 of the 27 perspectives below that are relevant to the task are briefly reviewed internally before answering — automatically, even without a trigger word. This does not apply to L0 small talk or "briefly"-style requests.
 
 | # | Perspective | Especially important when |
 |---|---|---|
@@ -384,10 +387,13 @@ For every response at L1 or above, 3-5 of the 24 perspectives below that are rel
 | 22 | Building/interior rendering and visualization specialist (15+ years) | Materials, lighting, cameras, render output |
 | 23 | Architectural concept design specialist (15+ years) | Architectural concepts, massing, form, facades, exterior materials |
 | 24 | Interior concept design specialist (15+ years) | Interior concepts, atmosphere, color, materials, lighting, furniture composition |
+| 25 | Source search and verification specialist (15+ years) | External sources, primary documents, recency, and source reliability |
+| 26 | Research and analysis specialist (15+ years) | Research questions, comparison criteria, synthesis, and uncertainty |
+| 27 | Ideation and concept strategy specialist (15+ years) | Generating alternatives, evaluating them, and designing tests |
 
-### 13 domain experts — conditionally going deep
+### 16 domain experts — conditionally going deep
 
-Among the 24 perspectives above, #11 and #13 through #24 each have their own dedicated skill, which loads much deeper knowledge when a related trigger is detected.
+Among the 27 perspectives above, #11 and #13 through #27 each have their own dedicated skill, which loads much deeper knowledge when a related trigger is detected.
 
 - **Professional investor (#13, `persona-investor`)**: Always asks "if this fails, does the user lose money?" Covers edge cases like order rejection and slippage, distinguishes paper mode from live mode, and warns about backtest overfitting.
 - **Professional lawyer (#11, `persona-lawyer`)**: Covers audit-log obligations, staying clear of capital-markets-law boundaries (avoiding investment-advisory language), personal-data protection/GDPR, and disclaimer/consent standards.
@@ -402,10 +408,15 @@ Among the 24 perspectives above, #11 and #13 through #24 each have their own ded
 - **Interior concept design specialist (#24, `persona-interior-design-expert`)**: Covers interior concepts, atmosphere, color, materials, lighting, furniture composition, and 3D validation criteria.
 - **3D modeling specialist (#21, `persona-spatial-3d-modeling-expert`)**: Covers BIM, NURBS and mesh modeling, coordinates, units, conversion, and interoperability, including Revit and Rhino.
 - **Rendering and visualization specialist (#22, `persona-rendering-visualization-expert`)**: Covers materials, lighting, cameras, render quality, and output verification in tools such as D5, Twinmotion, Unreal, and Unity.
+- **Source search and verification specialist (#25, `persona-source-verification-expert`)**: Prefers official and primary sources, checks publication date, version, conflicting evidence, and reliability, and marks unavailable material as unverified instead of inventing a citation.
+- **Research and analysis specialist (#26, `persona-research-analyst`)**: Defines the research question and scope, normalizes comparison criteria, and separates facts, source claims, interpretation, hypotheses, and information gaps.
+- **Ideation and concept strategy specialist (#27, `persona-ideation-strategist`)**: Generates alternatives, evaluates them against goals, cost, risk, and feasibility, and proposes small experiments and stop criteria.
 
 `Drawing`, `drawing work`, `CAD`, `DWG`, floor plans, detail drawings, and shop drawings activate pattern AB, which routes the request to the appropriate lead and reviewing roles among #16 through #24.
 
 When multiple domains apply at once (e.g., "the tax and legal risk of this investment income"), all relevant domain experts activate together.
+
+Search, research, and ideation combine according to the work stage. A simple external-source lookup uses #25; a comparison and synthesis request uses #25+#26; an evidence-based request that continues through actionable ideas uses #25+#26+#27. File, code, UI, database, or SEO search, a casual “good idea” remark, and merely naming an IDE do not activate these personas.
 
 ### 4 anti-patterns — discipline the persona enforces on itself
 
@@ -448,7 +459,7 @@ The persona rules instruct Codex to check user intent and approval status before
        ▼
 6. Matching skills load conditionally
    (whichever of persona-triggers / persona-format / persona-safety /
-    whichever of the 13 domain skills apply)
+    whichever of the 16 domain skills apply)
        │
        ▼
 7. L2/L3 responses follow the 7-step response format (recap → root cause →
@@ -583,7 +594,7 @@ This project originally started as a plugin for Claude Code (a different AI codi
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 response format
     │   ├── persona-safety/SKILL.md       # Always-on security rules, irreversible-action gate
-    │   ├── persona-triggers/SKILL.md     # Full A-AD trigger-word detail and the 24-perspective mapping table
+    │   ├── persona-triggers/SKILL.md     # Full A-AG trigger-word detail and the 27-perspective mapping table
     │   ├── persona-investor/SKILL.md     # #13 professional investor domain
     │   ├── persona-lawyer/SKILL.md       # #11 professional lawyer domain
     │   ├── persona-accountant/SKILL.md   # #14 accounting/tax specialist domain
@@ -597,6 +608,9 @@ This project originally started as a plugin for Claude Code (a different AI codi
     │   ├── persona-rendering-visualization-expert/SKILL.md # #22 rendering/visualization domain
     │   ├── persona-architectural-design-expert/SKILL.md # #23 architectural concept design domain
     │   ├── persona-interior-design-expert/SKILL.md # #24 interior concept design domain
+    │   ├── persona-source-verification-expert/SKILL.md # #25 source search and verification domain
+    │   ├── persona-research-analyst/SKILL.md # #26 research and analysis domain
+    │   ├── persona-ideation-strategist/SKILL.md # #27 ideation and concept strategy domain
     │   ├── persona-create/SKILL.md       # Entry point for the new-persona creation interview
     │   └── persona-edit/SKILL.md         # Entry point for the trigger-editing interview
     ├── commands/
@@ -617,18 +631,18 @@ This checker mechanically prevents number drift when adding perspectives or chan
 | # | What it checks |
 |---|---|
 | 1 | Perspective numbers are continuous from 1 through the last entry |
-| 2 | Labels such as "24 people" and "24 perspectives" match the actual count in every core file, skill, and README |
-| 3 | The documented A-AD trigger-pattern count matches the actual section count |
+| 2 | Labels such as "27 people" and "27 perspectives" match the actual count in every core file, skill, and README |
+| 3 | The documented A-AG trigger-pattern count matches the actual section count |
 | 4 | The skill-folder count, README intro, and file map agree, and every skill frontmatter `name` matches its folder (including English README cross-checks) |
-| 5 | All 13 domain personas are wired into the core and marker, while both READMEs agree on domain counts, explicit invocations, and major-section structure |
+| 5 | All 16 domain personas are wired into the core and marker, while both READMEs agree on domain counts, explicit invocations, and major-section structure |
 | 6 | The Agent Plugins 1.0, Codex fallback, and legacy manifests plus both marketplace JSON files have valid names, versions, and source paths |
-| 7 | Required disclaimers, qualified-review boundaries, and non-final estimate wording exist for all 13 domains |
+| 7 | Required disclaimers, qualified-review boundaries, and non-final estimate wording exist for all 16 domains |
 | 8 | Warning only: generated HTML appears out of sync with current counts |
 | 9 | Backtick-wrapped repository file references point to files that exist |
 | 10 | No personal absolute path containing a developer account name leaked into distributed files |
 | 11 | Codex hooks use `${PLUGIN_ROOT}`, point to existing scripts, and pair context-limit settings with the project cap |
 | 12 | Domain-skill trigger lists match the canonical `persona-triggers` list |
-| 13 | The serialized hook output stays below the project's 10,000-character cap |
+| 13 | The serialized hook output stays below the project's 12,000-character cap |
 | 14 | Core triggers match the canonical lists, and all nine built-environment skills share the collaboration protocol while avoiding broad single-word triggers and overlapping design roles |
 | 15 | Every `persona-*` skill folder uses a path-safe name |
 
@@ -702,9 +716,9 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 | Hook events and command definitions | `plugins/sodam-persona/hooks/hooks.json` |
 | SessionStart script / core text | `plugins/sodam-persona/hooks/inject-core.js`, `persona_core.md` |
 | UserPromptSubmit script / compact marker | `plugins/sodam-persona/hooks/inject-marker.js`, `persona_marker.txt` |
-| All 18 skills | `plugins/sodam-persona/skills/persona-*/SKILL.md` |
+| All 21 skills | `plugins/sodam-persona/skills/persona-*/SKILL.md` |
 | The full trigger-word list and perspective mapping table | `plugins/sodam-persona/skills/persona-triggers/SKILL.md` |
-| Details for all 13 domain experts | The 13 domain-specific `persona-*` folders under `plugins/sodam-persona/skills/` |
+| Details for all 16 domain experts | The 16 domain-specific `persona-*` folders under `plugins/sodam-persona/skills/` |
 | The original procedure text for creating/editing personas | `plugins/sodam-persona/commands/create.md`, `edit.md` |
 | The consistency-check script | Repository root, `validate.mjs` |
 | The HTML-regeneration script | Repository root, `build-docs.mjs`, `doc-theme.html` |
@@ -721,6 +735,15 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 ## Changelog Summary
 
 Listed with the most recent entries at the top. Click (or tap) an item to expand its details.
+
+<details>
+<summary><strong>2026-09-16 — Added search, research, and ideation personas (v1.7.0)</strong></summary>
+
+- Added separate source search and verification (#25), research and analysis (#26), and ideation and concept strategy (#27) personas.
+- Connected AE-AG triggers so simple search uses #25, comparison research uses #25+#26, and evidence-based ideation uses #25+#26+#27.
+- Added false-positive exclusions for file, code, UI, database, and SEO search, casual praise, and IDE mentions, plus regression checks for 27 perspectives, 33 trigger patterns, and 21 skills.
+
+</details>
 
 <details>
 <summary><strong>2026-09-16 — Split architectural and interior design personas (v1.6.0)</strong></summary>
@@ -874,6 +897,8 @@ This project was later ported to be Codex-only, becoming today's `SoDam Persona 
 | You edited the plugin's code, but the change isn't reflected in conversations | The install cache does not refresh automatically just because a file changed | Reinstall in this order: `codex plugin marketplace upgrade sodam-persona` → `codex plugin remove sodam-persona@sodam-persona` → `codex plugin add sodam-persona@sodam-persona`, then start a new task |
 | You asked for architectural concept design, but only #20 appears or the new persona is missing | An install cache older than v1.6.0 is active, or the word “design” did not identify a field | Reinstall in the order above and start a new task; say “architectural massing and facade design” or explicitly invoke $persona-architectural-design-expert |
 | An interior mood-board request is handled only as technical or general design | The installed copy is old, or the prompt did not identify interior atmosphere, materials, or color | In a new task, ask for “interior mood and material palette,” or explicitly invoke $persona-interior-design-expert |
+| #25-#27 do not appear for a search, research, or ideation request | The installation cache predates v1.7.0, or the task intent is too vague | Reinstall the latest version, start a new task, and state the purpose as “verify official primary sources,” “compare and analyze cases,” or “propose evidence-based alternatives,” or invoke the relevant skill directly |
+| Search output has no primary-source link or verification date | Internet/browser tools are unavailable, or the primary source is blocked | Require an explicit “search unavailable/source unverified” label, then provide the URL, PDF, or source yourself, or rerun in an environment with search access |
 | “Review this drawing” does not produce the review you expected | Drawing type, project stage, purpose, or source format is missing, so router AB cannot choose a lead | Provide the type (plan/detail/shop drawing), purpose (technical design/concept/construction/estimate/BIM), format (DWG/PDF/RVT), and latest version |
 | Revit, Rhino, D5, or another application is not controlled automatically | The persona provides judgment, procedures, and review criteria; it is not itself a remote-control integration for those applications | Ask for steps, settings, export formats, or a QA checklist. Actual control requires the user or a separate tool integration with permission |
 | Typing `node` in the terminal gives a "command not recognized" error | Node.js isn't installed, or the terminal wasn't reopened after installing it | Install from `nodejs.org`, then close every open terminal window and open a new one |
@@ -906,6 +931,9 @@ A. Legacy compatibility files (`.claude-plugin/`) still remain in the repository
 **Q. Can I install it on multiple computers?**
 A. Yes. The plugin is designed to be self-contained, so it behaves identically on a brand-new computer with nothing more than a fresh install — no separate personal config files or memory needed.
 
+**Q. What is the difference between search (#25), research (#26), and ideation (#27)?**
+A. #25 finds credible material and checks the primary source, date, and version. #26 defines research questions and comparison criteria, then derives conclusions and information gaps from multiple sources. #27 creates alternatives and designs evaluation and experiments. For evidence-based ideas, all three work in sequence. If search tools are unavailable, the plugin states the limitation instead of inventing sources.
+
 **Q. Does experience in 3D visualization make me an expert in design, construction, and estimating?**
 A. No. Visualization-industry experience is used only as background for discussing form, materials, light, and camera intent. Technical design, construction, and estimating are explained from beginner level, and proficiency is checked separately for Revit, Rhino, 3ds Max, Blender, SketchUp, and every other application.
 
@@ -925,7 +953,7 @@ A. Call `$persona-edit` (to edit an existing perspective) or `$persona-create` (
 A. Mixing in words like "briefly", "in short", or "just the key point" switches it to a short format immediately. This rule has the highest priority of all.
 
 **Q. I actually want it to go deeper and more thorough.**
-A. Using expressions like "objectively", "in depth", "thoroughly", or "full persona version" brings all 24 perspectives into the review.
+A. Using expressions like "objectively", "in depth", "thoroughly", or "full persona version" brings all 27 perspectives into the review.
 
 **Q. I found a bug or something misbehaving. Where do I report it?**
 A. Please report it through the repository's GitHub Issues feature. Including a reproducible example of what you typed speeds up diagnosis a lot.

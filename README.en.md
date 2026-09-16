@@ -45,7 +45,9 @@ Before you start, make sure the 4 items below are in place. If anything is missi
 
 **Supported scope**: The target is any Windows, macOS, or Linux environment where Codex plugins and Node.js 18 or newer are available. Commands are shown for Windows PowerShell. On macOS/Linux, use the same `codex`, `node`, and `git` commands in that system's Terminal; plugin availability and UI labels can vary by Codex version, account, and organization policy.
 
-**Current verification baseline (2026-09-17)**: Verified install/remove command syntax against Codex CLI `0.154.0` on Windows, plus Node.js 20 CI-compatible execution, normal/error/large hook inputs, and Chrome desktop/tablet/mobile documentation. macOS/Linux devices and every Codex app/IDE combination were not part of the automated run, so verify through [Verify the installation](#verify-the-installation) on those environments.
+**Current verification baseline (2026-09-17)**: On Windows, the consistency checker, 8 hook tests, 7 validator failure-detection tests, official plugin-structure validator, hash comparison of all 47 installed plugin files, and Korean/English HTML regeneration were actually run and passed with Codex CLI `0.154.0`, Node.js `26.7.0`, and installed plugin `1.10.1`. Hook coverage included empty input, malformed JSON, 2 MiB input, a missing source file, and a blank source file.
+
+**Scope not currently verified**: GitHub Actions is configured to test Node.js 20, but the remote CI job was not actually run during this local review. Real Chrome desktop/tablet/mobile rendering and browser-console behavior, macOS/Linux devices, and every Codex app/IDE combination also remain unverified. On those environments, follow [Verify the installation](#verify-the-installation) and [Troubleshooting](#troubleshooting) directly.
 
 **Account and permissions**: Your OpenAI account and permission to use Codex must be arranged separately. Organization accounts may restrict plugin installation. This plugin does not create accounts or handle sign-in, billing, or organization permissions.
 
@@ -851,6 +853,8 @@ Listed with the most recent entries at the top. Click (or tap) an item to expand
 - Connected `persona-registry.json` as the structured source of truth for perspectives, patterns, domains, version, and the hook cap.
 - Reduced serialized SessionStart output from 14,153 characters to below 12,000 and fixed the enforced cap at 12,000.
 - Added `node diagnose.mjs` to report source/installed version drift, enabled state, hook execution, and repository consistency in one read-only command.
+- In the final pre-release review, the committed HEAD was extracted into a separate directory and passed the full tests, documentation build, and plugin-structure validation again. The documentation was also corrected so that remote CI and browser visual checks that were not actually run are no longer described as completed.
+- Rechecked the Apache License 2.0 text, third-party wording in NOTICE, external assets, dependencies, and sensitive data, then clarified that the project license does not guarantee rights in third-party material or external AI output.
 
 </details>
 
@@ -1170,6 +1174,20 @@ And it is important to be clear about what is **not** guaranteed (a summary of t
 - The copyright holder and contributors are not liable for any damages arising from the use of this software (including loss of business, work stoppage, computer failure, and similar).
 - Assessing the suitability of using or redistributing this software, and bearing any resulting risk, is entirely the user's own responsibility.
 
+### What Apache License 2.0 actually covers
+
+**One-line beginner summary**: Even though this repository states Apache License 2.0, that license applies only to rights that SoDam AI Studio and each contributor can lawfully grant. It does not automatically clear someone else's writing, trademarks, images, customer material, or AI-service output.
+
+| Material | Current verified status | What to do before public or commercial use |
+|---|---|---|
+| Code, documentation, prompts, and rules written for this project | Apache License 2.0 is stated. The legal identity of the copyright holder, contributor transfers, and the chain of title for AI-assisted material were not independently proven | Keep `LICENSE` and relevant `NOTICE` attribution, and mark modified files prominently. Client delivery that requires a rights warranty needs **legal/professional review** |
+| Three third-party wordings remaining in `persona-triggers` | Provenance is identified, but separate permission, a license, or the applicability of a quotation exception in each jurisdiction was not verified | Before public or commercial redistribution, record a lawful basis such as permission, an applicable license, or a quotation exception. If that basis is unclear, **legal/professional review is required** |
+| Product, company, and trademark names | Only text needed to describe compatibility and provenance is present; no logo file is bundled | Do not imply affiliation, sponsorship, or official approval, and use the names only as reasonably needed to identify the products or sources |
+| Inputs and outputs from external AI services such as Codex | This project's Apache License 2.0 cannot guarantee ownership or commercial-use rights in those materials | Check rights and consent for the input, output similarity and infringement risk, and the latest terms and policies for the applicable account type |
+| Customer files, internal documents, and personal data supplied by the user | No real material of this kind is currently stored in the repository, but users may provide it after installation | Confirm authority to upload and process it, confidentiality duties, a lawful privacy basis, and customer consent first |
+
+Listing a source in `NOTICE` is **attribution**, not a new permission to use third-party material. Also, under Section 5 of Apache License 2.0, a contribution intentionally submitted for inclusion in the project may be treated as submitted under the same license unless it is clearly designated otherwise or covered by a separate agreement. Contributors must submit only material they are authorized to provide.
+
 ### Copyright and third-party attribution (summary of the `NOTICE` file)
 
 - `plugins/sodam-persona/skills/persona-triggers/SKILL.md` contains the following **short quotations or abridged/paraphrased wording**, not third-party source code.
@@ -1207,20 +1225,25 @@ This plugin is only a set of configurations that runs on top of the external pla
 
 - Codex/OpenAI's pricing plans and usage limits
 - The model-usage policy (permitted/prohibited use cases)
-- Codex/OpenAI's terms of service and privacy policy
 - Whether reselling or reusing Codex's responses in a commercial service has any separate conditions attached
+- Terms for individual services: `https://openai.com/policies/terms-of-use/`
+- Services agreement for businesses, developers, and API use: `https://openai.com/policies/services-agreement/`
+- Usage policies: `https://openai.com/policies/usage-policies/`
+- Privacy policy: `https://openai.com/policies/privacy-policy/`
 - Official plugin installation and permission guidance: `https://help.openai.com/en/articles/20001256/`
+
+These links and policies can change, so check them again at the actual time of use, distribution, or client delivery.
 
 ### Repository asset and external-dependency review
 
-Here is the result of scanning this repository's entire code and documentation (as of 2026-09-16).
+Here is the result of scanning this repository's entire code and documentation (as of 2026-09-17, based on all 64 Git-tracked files).
 
 | Check | Result |
 |---|---|
 | Dependency manifests such as package.json, package-lock.json, pnpm-lock.yaml, yarn.lock, requirements.txt, pyproject.toml, Cargo.toml, go.mod | **Zero found** repository-wide — no external package dependency bundled into the distribution was found |
 | Image/icon/font/video/audio files (png, svg, ico, woff, ttf, mp4, mp3, etc.) | **Zero found** repository-wide |
 | assets, public, static, samples, examples, fixtures folders | **Zero found** repository-wide |
-| Sample accounts, email addresses, phone numbers, user-home absolute paths, or real customer data | **Zero found** in the 35 distribution-candidate files; text test scenarios use generalized inputs |
+| Sample accounts, email addresses, phone numbers, real user-home paths, or real customer data | **Zero real-data items found** in the 64 Git-tracked files. One generalized fake Windows user-path string exists only in a negative validator test that must fail in order to pass |
 | Local work records (`.omc`, `.omx`, `.remember`, `.plugin-config`, `CHECKPOINT.md`, etc.) | Excluded from distribution by `.gitignore`; do not include them when manually creating an archive |
 | Whether the hook scripts (inject-core.js, inject-marker.js) use any external package | They use only Node.js built-in modules — **zero** external package imports/requires |
 

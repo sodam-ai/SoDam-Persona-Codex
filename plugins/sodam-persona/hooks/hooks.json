@@ -6,6 +6,8 @@
           {
             "type": "command",
             "command": "node \"${PLUGIN_ROOT}/hooks/inject-core.js\"",
+            "commandWindows": "node -e \"require(require('node:path').join(process.env.PLUGIN_ROOT,'hooks','inject-core.js'))\"",
+            "timeout": 30,
             "additionalContextLimit": 0
           }
         ]
@@ -17,6 +19,8 @@
           {
             "type": "command",
             "command": "node \"${PLUGIN_ROOT}/hooks/inject-marker.js\"",
+            "commandWindows": "node -e \"require(require('node:path').join(process.env.PLUGIN_ROOT,'hooks','inject-marker.js'))\"",
+            "timeout": 30,
             "additionalContextLimit": 0
           }
         ]

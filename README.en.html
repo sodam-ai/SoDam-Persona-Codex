@@ -287,7 +287,7 @@ ability Codex already has. It consists of 2 always-on core rules
 specific moment) and 31 conditional expert knowledge modules
 (<strong>skills</strong>) that load only when relevant.</p>
 <blockquote>
-<p><strong>Current version</strong>: <code>1.10.1</code> ·
+<p><strong>Current version</strong>: <code>1.10.2</code> ·
 <strong>Perspectives</strong>: 37 · <strong>Trigger patterns</strong>:
 43 patterns (A-AQ) · <strong>Skills</strong>: 31 ·
 <strong>Hooks</strong>: 2 · <strong>License</strong>: Apache License
@@ -373,14 +373,15 @@ available. Commands are shown for Windows PowerShell. On macOS/Linux,
 use the same <code>codex</code>, <code>node</code>, and <code>git</code>
 commands in that system's Terminal; plugin availability and UI labels
 can vary by Codex version, account, and organization policy.</p>
-<p><strong>Current verification baseline (2026-09-17)</strong>: On
-Windows, the consistency checker, 8 hook tests, 7 validator
+<p><strong>Previous release verification (2026-09-17, v1.10.1)</strong>:
+On Windows, the consistency checker, 8 hook tests, 7 validator
 failure-detection tests, official plugin-structure validator, hash
 comparison of all 47 installed plugin files, and Korean/English HTML
 regeneration were actually run and passed with Codex CLI
 <code>0.154.0</code>, Node.js <code>26.7.0</code>, and installed plugin
 <code>1.10.1</code>. Hook coverage included empty input, malformed JSON,
-2 MiB input, a missing source file, and a blank source file.</p>
+2 MiB input, a missing source file, and a blank source file. This is not
+evidence that the current version has been installed or executed.</p>
 <p><strong>Scope not currently verified</strong>: GitHub Actions is
 configured to test Node.js 20, but the remote CI job was not actually
 run during this local review. Real Chrome desktop/tablet/mobile
@@ -1774,11 +1775,12 @@ the root <code>.claude-plugin/marketplace.json</code> still exist, but
 <strong>both exist only for compatibility with the earlier host and are
 not used at all during Codex installation.</strong> Codex reads the
 marketplace definition from
-<code>.agents/plugins/marketplace.json</code>. The canonical plugin
-manifest is the Agent Plugins 1.0 file at
-<code>plugins/sodam-persona/plugin.json</code>;
-<code>.codex-plugin/plugin.json</code> remains as a fallback for earlier
-Codex versions.</p>
+<code>.agents/plugins/marketplace.json</code> and the plugin manifest
+from <code>plugins/sodam-persona/.codex-plugin/plugin.json</code>. The
+Agent Plugins 1.0 format is preserved at
+<code>plugins/sodam-persona/compat/plugin.portable.json</code>. Keeping
+another manifest at the plugin root can cause current Codex versions to
+skip default hook discovery.</p>
 <h3 id="full-repository-layout">Full repository layout</h3>
 <pre class="text"><code>.
 ├── .agents/plugins/marketplace.json      # The marketplace definition Codex actually reads (source of truth)
@@ -1797,8 +1799,8 @@ Codex versions.</p>
 ├── diagnose.mjs                           # Source/install/hook/consistency diagnosis
 ├── plugins/sodam-persona/persona-registry.json # Structured source of truth for roles, patterns, domains, version, and hook cap
 └── plugins/sodam-persona/                # The actual plugin body that gets distributed and installed
-    ├── plugin.json                       # Agent Plugins 1.0 manifest (source of truth)
-    ├── .codex-plugin/plugin.json         # Fallback manifest for earlier Codex versions
+    ├── .codex-plugin/plugin.json         # Codex manifest (source of truth)
+    ├── compat/plugin.portable.json       # Preserved Agent Plugins 1.0 format
     ├── .claude-plugin/plugin.json        # [Legacy host compatibility] Claude Code manifest
     ├── hooks/
     │   ├── hooks.json                    # Registers the SessionStart / UserPromptSubmit hooks
@@ -1896,9 +1898,9 @@ major-section structure</td>
 </tr>
 <tr>
 <td>6</td>
-<td>The Agent Plugins 1.0, Codex fallback, and legacy manifests plus
-both marketplace JSON files have valid names, versions, and source
-paths</td>
+<td>The canonical Codex, preserved Agent Plugins 1.0, and legacy
+manifests plus both marketplace JSON files have valid names, versions,
+and source paths</td>
 </tr>
 <tr>
 <td>7</td>
@@ -2127,12 +2129,13 @@ that passes this check.</p>
 <td><code>.agents/plugins/marketplace.json</code></td>
 </tr>
 <tr>
-<td>The Agent Plugins 1.0 manifest (source of truth)</td>
-<td><code>plugins/sodam-persona/plugin.json</code></td>
+<td>The Codex manifest (source of truth)</td>
+<td><code>plugins/sodam-persona/.codex-plugin/plugin.json</code></td>
 </tr>
 <tr>
-<td>Codex fallback / legacy Claude compatibility manifests</td>
-<td><code>plugins/sodam-persona/.codex-plugin/plugin.json</code>,
+<td>Preserved Agent Plugins 1.0 / legacy Claude compatibility
+manifests</td>
+<td><code>plugins/sodam-persona/compat/plugin.portable.json</code>,
 <code>.claude-plugin/plugin.json</code></td>
 </tr>
 <tr>
@@ -2156,6 +2159,18 @@ downloads this plugin, so this document does not cover it.</p>
 <p>Listed with the most recent entries at the top. Click (or tap) an
 item to expand its details.</p>
 <details open>
+<summary><strong>2026-09-23 — Codex hook discovery and Windows execution compatibility (v1.10.2)</strong></summary>
+
+<ul>
+<li>Made <code>.codex-plugin/plugin.json</code> the Codex manifest and
+preserved the Agent Plugins 1.0 file under <code>compat/</code>.</li>
+<li>Added Windows commands and a 30-second timeout to both hooks, with
+checks in the consistency validator.</li>
+<li>Installation, trust approval, and automatic injection during an
+ordinary prompt still require separate verification.</li>
+</ul>
+</details>
+<details>
 <summary><strong>2026-09-17 — Execution stability, diagnosis, and registry hardening (v1.10.1)</strong></summary>
 
 <ul>

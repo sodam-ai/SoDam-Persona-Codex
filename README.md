@@ -6,7 +6,7 @@
 
 이 플러그인 자체는 별도의 AI가 아닙니다. Codex가 이미 갖고 있는 대화 능력 위에 "이렇게 판단하고 이렇게 답하라"는 규칙 문서를 자동으로 얹어주는 설정 모음입니다. 항상 켜지는 핵심 규칙(hook, 후크 — 특정 시점에 자동으로 실행되는 작은 프로그램) 2개와, 상황에 맞을 때만 불러오는 전문 지식 모음(skill, 스킬) 31개로 이루어져 있습니다.
 
-> **지금 버전**: `1.10.1` · **관점 수**: 37명 · **트리거 패턴**: 43개(A~AQ) · **스킬 수**: 31개 · **hook 수**: 2개 · **라이선스**: Apache License 2.0
+> **지금 버전**: `1.10.2` · **관점 수**: 37명 · **트리거 패턴**: 43개(A~AQ) · **스킬 수**: 31개 · **hook 수**: 2개 · **라이선스**: Apache License 2.0
 
 ---
 
@@ -45,7 +45,7 @@
 
 **지원 범위**: Codex 플러그인 기능과 Node.js 18 이상을 사용할 수 있는 Windows·macOS·Linux 환경을 대상으로 합니다. 명령 예시는 Windows PowerShell 기준입니다. macOS/Linux에서는 해당 운영체제의 Terminal에서 같은 `codex`, `node`, `git` 명령을 사용하되, Codex 플러그인 제공 여부와 화면 이름은 설치한 Codex 버전·계정·조직 정책에 따라 다를 수 있습니다.
 
-**현재 검증 기준(2026-09-17)**: Windows에서 Codex CLI `0.154.0`, Node.js `26.7.0`, 설치·활성화된 플러그인 `1.10.1`을 기준으로 정합성 검사, hook 테스트 8건, 검증기 실패 감지 테스트 7건, 공식 플러그인 구조 검사, 설치본 47개 파일 해시 비교, 한·영 HTML 재생성을 실제 실행해 모두 통과했습니다. hook은 빈 입력·잘못된 JSON·2 MiB 입력·원문 누락·원문 공백을 포함해 검사했습니다.
+**이전 릴리스 검증 기록(2026-09-17, v1.10.1)**: Windows에서 Codex CLI `0.154.0`, Node.js `26.7.0`, 설치·활성화된 플러그인 `1.10.1`을 기준으로 정합성 검사, hook 테스트 8건, 검증기 실패 감지 테스트 7건, 공식 플러그인 구조 검사, 설치본 47개 파일 해시 비교, 한·영 HTML 재생성을 실제 실행해 모두 통과했습니다. hook은 빈 입력·잘못된 JSON·2 MiB 입력·원문 누락·원문 공백을 포함해 검사했습니다. 이는 현재 버전의 설치·실행 검증 결과가 아닙니다.
 
 **현재 확인하지 않은 범위**: GitHub Actions에는 Node.js 20 검사가 설정되어 있지만 이번 로컬 점검에서 원격 CI를 실제 실행하지는 않았습니다. Chrome 데스크톱·태블릿·모바일의 실제 화면 및 브라우저 콘솔, macOS/Linux 실기기, 모든 Codex 앱·IDE 조합도 미확인입니다. 해당 환경에서는 아래 [설치 확인](#설치-확인)과 [문제와 오류 대처 방법](#문제와-오류-대처-방법)에 따라 직접 확인하세요.
 
@@ -644,7 +644,7 @@ Codex의 "플러그인"은 다음 4가지 요소로 이루어진 하나의 묶�
 
 ### 이 저장소가 Claude Code용 파일도 함께 갖고 있는 이유
 
-이 프로젝트는 원래 Claude Code(다른 AI 코딩 도구)의 플러그인으로 시작했다가 Codex 전용으로 이식(porting)되었습니다. 그 흔적으로 `plugins/sodam-persona/.claude-plugin/plugin.json`과 루트의 `.claude-plugin/marketplace.json`이 남아 있지만, **이 둘은 이전 호스트와의 호환을 위한 것일 뿐 Codex 설치 과정에서는 전혀 사용되지 않습니다.** Codex가 실제로 읽는 마켓플레이스 정의는 `.agents/plugins/marketplace.json`이며, 플러그인 본체의 정본 매니페스트는 Agent Plugins 1.0 형식의 `plugins/sodam-persona/plugin.json`입니다. `.codex-plugin/plugin.json`은 이전 Codex 버전용 fallback으로 함께 유지합니다.
+이 프로젝트는 원래 Claude Code(다른 AI 코딩 도구)의 플러그인으로 시작했다가 Codex 전용으로 이식(porting)되었습니다. 그 흔적으로 `plugins/sodam-persona/.claude-plugin/plugin.json`과 루트의 `.claude-plugin/marketplace.json`이 남아 있지만, **이 둘은 이전 호스트와의 호환을 위한 것일 뿐 Codex 설치 과정에서는 전혀 사용되지 않습니다.** Codex가 읽는 마켓플레이스 정의는 `.agents/plugins/marketplace.json`이며, 플러그인 매니페스트는 `plugins/sodam-persona/.codex-plugin/plugin.json`입니다. Agent Plugins 1.0 형식은 `plugins/sodam-persona/compat/plugin.portable.json`에 보존합니다. 플러그인 루트에 같은 이름의 매니페스트를 두면 현재 Codex에서 기본 hook 탐색이 건너뛰어질 수 있어 분리했습니다.
 
 ### 저장소 전체 구조
 
@@ -666,8 +666,8 @@ Codex의 "플러그인"은 다음 4가지 요소로 이루어진 하나의 묶�
 ├── diagnose.mjs                           # 소스·설치본·hook·정합성 통합 진단
 ├── plugins/sodam-persona/persona-registry.json # 관점·패턴·도메인·버전·hook 상한 구조화 정본
 └── plugins/sodam-persona/                # 실제로 배포·설치되는 플러그인 본체
-    ├── plugin.json                       # Agent Plugins 1.0 매니페스트 (정본)
-    ├── .codex-plugin/plugin.json         # 이전 Codex 버전용 fallback 매니페스트
+    ├── .codex-plugin/plugin.json         # Codex 매니페스트 (정본)
+    ├── compat/plugin.portable.json       # Agent Plugins 1.0 형식 보존본
     ├── .claude-plugin/plugin.json        # [예전 호스트 호환용] Claude Code 매니페스트
     ├── hooks/
     │   ├── hooks.json                    # SessionStart / UserPromptSubmit hook 등록표
@@ -731,7 +731,7 @@ Codex의 "플러그인"은 다음 4가지 요소로 이루어진 하나의 묶�
 | 3 | 트리거 패턴 ID(A~AQ) 개수 표기가 실제 섹션 수와 일치하는가 |
 | 4 | skill 폴더 수·README 첫 설명·파일 위치 표가 일치하고, 각 skill의 frontmatter `name`이 폴더명과 같은가(영문 README 교차검사 포함) |
 | 5 | 도메인 페르소나 26종이 코어·마커 양쪽에 배선되고, 한영 README의 도메인 수·명시 호출 명령·주요 목차가 일치하는가 |
-| 6 | Agent Plugins 1.0·Codex fallback·legacy 매니페스트와 두 마켓플레이스 JSON의 이름·버전·소스 경로가 올바른가 |
+| 6 | Codex 정본·Agent Plugins 1.0 보존본·legacy 매니페스트와 두 마켓플레이스 JSON의 이름·버전·소스 경로가 올바른가 |
 | 7 | 26개 도메인의 필수 면책·자격자 확인·확정 금액 경계가 실제로 존재하는가 |
 | 8 | (경고만, 실패 아님) HTML 문서가 최신 수치와 어긋나 재생성이 필요해 보이는가 |
 | 9 | 문서 안에서 백틱으로 감싼 파일 참조가 실제로 존재하는 파일을 가리키는가(깨진 링크 방지) |
@@ -819,8 +819,8 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 | 정합성 검사 스크립트 | 저장소 루트 `validate.mjs` |
 | 문서 HTML 재생성 스크립트 | 저장소 루트 `build-docs.mjs`, `doc-theme.html` |
 | Codex 마켓플레이스 정의(정본) | `.agents/plugins/marketplace.json` |
-| Agent Plugins 1.0 매니페스트(정본) | `plugins/sodam-persona/plugin.json` |
-| Codex fallback / 이전 Claude 호환 매니페스트 | `plugins/sodam-persona/.codex-plugin/plugin.json`, `.claude-plugin/plugin.json` |
+| Codex 매니페스트(정본) | `plugins/sodam-persona/.codex-plugin/plugin.json` |
+| Agent Plugins 1.0 보존본 / 이전 Claude 호환 매니페스트 | `plugins/sodam-persona/compat/plugin.portable.json`, `.claude-plugin/plugin.json` |
 | 수동·자동 시험 시나리오 | `plugins/sodam-persona/reference/test_scenarios.md` |
 | CI(자동 검사) 설정 | `.github/workflows/validate.yml` |
 
@@ -833,6 +833,14 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 날짜가 최신인 항목이 위에 오도록 정리했습니다. 항목을 클릭(또는 탭)하면 세부 내용이 펼쳐집니다.
 
 <details open>
+<summary><strong>2026-09-23 — Codex hook 검색·Windows 실행 호환성 (v1.10.2)</strong></summary>
+
+- Codex가 사용하는 매니페스트를 `.codex-plugin/plugin.json`으로 고정하고 Agent Plugins 1.0 파일은 `compat/`에 보존했습니다.
+- 두 hook에 Windows 전용 실행 명령과 30초 제한을 추가하고 정합성 검사에 해당 조건을 넣었습니다.
+- 설치·신뢰 승인·실제 자연어 요청에서의 자동 주입은 별도로 확인해야 합니다.
+
+</details>
+<details>
 <summary><strong>2026-09-17 — 실행 안정성·진단·정본 등록부 보강 (v1.10.1)</strong></summary>
 
 - 실제 hook 실행 테스트와 검증기 실패 감지 테스트를 추가하고 CI에 연결했습니다.

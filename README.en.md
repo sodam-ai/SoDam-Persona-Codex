@@ -6,7 +6,7 @@ This document is written so that even someone who has never used a computer, a s
 
 The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 31 conditional expert knowledge modules (**skills**) that load only when relevant.
 
-> **Current version**: `1.10.1` · **Perspectives**: 37 · **Trigger patterns**: 43 patterns (A-AQ) · **Skills**: 31 · **Hooks**: 2 · **License**: Apache License 2.0
+> **Current version**: `1.10.2` · **Perspectives**: 37 · **Trigger patterns**: 43 patterns (A-AQ) · **Skills**: 31 · **Hooks**: 2 · **License**: Apache License 2.0
 
 ---
 
@@ -45,7 +45,7 @@ Before you start, make sure the 4 items below are in place. If anything is missi
 
 **Supported scope**: The target is any Windows, macOS, or Linux environment where Codex plugins and Node.js 18 or newer are available. Commands are shown for Windows PowerShell. On macOS/Linux, use the same `codex`, `node`, and `git` commands in that system's Terminal; plugin availability and UI labels can vary by Codex version, account, and organization policy.
 
-**Current verification baseline (2026-09-17)**: On Windows, the consistency checker, 8 hook tests, 7 validator failure-detection tests, official plugin-structure validator, hash comparison of all 47 installed plugin files, and Korean/English HTML regeneration were actually run and passed with Codex CLI `0.154.0`, Node.js `26.7.0`, and installed plugin `1.10.1`. Hook coverage included empty input, malformed JSON, 2 MiB input, a missing source file, and a blank source file.
+**Previous release verification (2026-09-17, v1.10.1)**: On Windows, the consistency checker, 8 hook tests, 7 validator failure-detection tests, official plugin-structure validator, hash comparison of all 47 installed plugin files, and Korean/English HTML regeneration were actually run and passed with Codex CLI `0.154.0`, Node.js `26.7.0`, and installed plugin `1.10.1`. Hook coverage included empty input, malformed JSON, 2 MiB input, a missing source file, and a blank source file. This is not evidence that the current version has been installed or executed.
 
 **Scope not currently verified**: GitHub Actions is configured to test Node.js 20, but the remote CI job was not actually run during this local review. Real Chrome desktop/tablet/mobile rendering and browser-console behavior, macOS/Linux devices, and every Codex app/IDE combination also remain unverified. On those environments, follow [Verify the installation](#verify-the-installation) and [Troubleshooting](#troubleshooting) directly.
 
@@ -658,7 +658,7 @@ A Codex "plugin" is a bundle made of these 4 pieces.
 
 ### Why this repository still has Claude Code files too
 
-This project originally started as a plugin for Claude Code (a different AI coding tool) before being ported to Codex. As a remnant of that, `plugins/sodam-persona/.claude-plugin/plugin.json` and the root `.claude-plugin/marketplace.json` still exist, but **both exist only for compatibility with the earlier host and are not used at all during Codex installation.** Codex reads the marketplace definition from `.agents/plugins/marketplace.json`. The canonical plugin manifest is the Agent Plugins 1.0 file at `plugins/sodam-persona/plugin.json`; `.codex-plugin/plugin.json` remains as a fallback for earlier Codex versions.
+This project originally started as a plugin for Claude Code (a different AI coding tool) before being ported to Codex. As a remnant of that, `plugins/sodam-persona/.claude-plugin/plugin.json` and the root `.claude-plugin/marketplace.json` still exist, but **both exist only for compatibility with the earlier host and are not used at all during Codex installation.** Codex reads the marketplace definition from `.agents/plugins/marketplace.json` and the plugin manifest from `plugins/sodam-persona/.codex-plugin/plugin.json`. The Agent Plugins 1.0 format is preserved at `plugins/sodam-persona/compat/plugin.portable.json`. Keeping another manifest at the plugin root can cause current Codex versions to skip default hook discovery.
 
 ### Full repository layout
 
@@ -680,8 +680,8 @@ This project originally started as a plugin for Claude Code (a different AI codi
 ├── diagnose.mjs                           # Source/install/hook/consistency diagnosis
 ├── plugins/sodam-persona/persona-registry.json # Structured source of truth for roles, patterns, domains, version, and hook cap
 └── plugins/sodam-persona/                # The actual plugin body that gets distributed and installed
-    ├── plugin.json                       # Agent Plugins 1.0 manifest (source of truth)
-    ├── .codex-plugin/plugin.json         # Fallback manifest for earlier Codex versions
+    ├── .codex-plugin/plugin.json         # Codex manifest (source of truth)
+    ├── compat/plugin.portable.json       # Preserved Agent Plugins 1.0 format
     ├── .claude-plugin/plugin.json        # [Legacy host compatibility] Claude Code manifest
     ├── hooks/
     │   ├── hooks.json                    # Registers the SessionStart / UserPromptSubmit hooks
@@ -745,7 +745,7 @@ This checker mechanically prevents number drift when adding perspectives or chan
 | 3 | The documented A-AQ trigger-pattern count matches the actual section count |
 | 4 | The skill-folder count, README intro, and file map agree, and every skill frontmatter `name` matches its folder (including English README cross-checks) |
 | 5 | All 26 domain personas are wired into the core and marker, while both READMEs agree on domain counts, explicit invocations, and major-section structure |
-| 6 | The Agent Plugins 1.0, Codex fallback, and legacy manifests plus both marketplace JSON files have valid names, versions, and source paths |
+| 6 | The canonical Codex, preserved Agent Plugins 1.0, and legacy manifests plus both marketplace JSON files have valid names, versions, and source paths |
 | 7 | Required disclaimers, qualified-review boundaries, and non-final estimate wording exist for all 26 domains |
 | 8 | Warning only: generated HTML appears out of sync with current counts |
 | 9 | Backtick-wrapped repository file references point to files that exist |
@@ -833,8 +833,8 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 | The consistency-check script | Repository root, `validate.mjs` |
 | The HTML-regeneration script | Repository root, `build-docs.mjs`, `doc-theme.html` |
 | The Codex marketplace definition (source of truth) | `.agents/plugins/marketplace.json` |
-| The Agent Plugins 1.0 manifest (source of truth) | `plugins/sodam-persona/plugin.json` |
-| Codex fallback / legacy Claude compatibility manifests | `plugins/sodam-persona/.codex-plugin/plugin.json`, `.claude-plugin/plugin.json` |
+| The Codex manifest (source of truth) | `plugins/sodam-persona/.codex-plugin/plugin.json` |
+| Preserved Agent Plugins 1.0 / legacy Claude compatibility manifests | `plugins/sodam-persona/compat/plugin.portable.json`, `.claude-plugin/plugin.json` |
 | Manual and automated test scenarios | `plugins/sodam-persona/reference/test_scenarios.md` |
 | The CI (automated check) configuration | `.github/workflows/validate.yml` |
 
@@ -847,6 +847,14 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 Listed with the most recent entries at the top. Click (or tap) an item to expand its details.
 
 <details open>
+<summary><strong>2026-09-23 — Codex hook discovery and Windows execution compatibility (v1.10.2)</strong></summary>
+
+- Made `.codex-plugin/plugin.json` the Codex manifest and preserved the Agent Plugins 1.0 file under `compat/`.
+- Added Windows commands and a 30-second timeout to both hooks, with checks in the consistency validator.
+- Installation, trust approval, and automatic injection during an ordinary prompt still require separate verification.
+
+</details>
+<details>
 <summary><strong>2026-09-17 — Execution stability, diagnosis, and registry hardening (v1.10.1)</strong></summary>
 
 - Added real hook-execution tests and validator failure-detection tests, then connected both to CI.

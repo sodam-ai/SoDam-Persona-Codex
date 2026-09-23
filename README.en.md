@@ -6,9 +6,9 @@ This document is written so that even someone who has never used a computer, a s
 
 The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It contains 2 **hooks** (small programs configured to run when Codex dispatches their events) and 31 conditional expert knowledge modules (**skills**) to load when relevant. Verify actual automatic execution in your installed environment; installation, permissions, and host behavior can affect it.
 
-> **Version in this working branch**: `1.10.2` · **Perspectives**: 37 · **Trigger patterns**: 43 patterns (A-AQ) · **Skills**: 31 · **Hooks**: 2 · **License**: Apache License 2.0
+> **Version of this source**: `1.10.2` · **Perspectives**: 37 · **Trigger patterns**: 43 patterns (A-AQ) · **Skills**: 31 · **Hooks**: 2 · **License**: Apache License 2.0
 
-> **Check before installing**: The default GitHub install and ZIP download fetch the default branch. As of 2026-09-23, it differs from this v1.10.2 working branch (`codex/fix-codex-global-hooks-v1.10.2`). Do not assume the default install supplies v1.10.2. Use the testing instructions below. A working branch is not an official release.
+> **Check before installing**: The default GitHub install and ZIP download fetch the current default branch. Its version may differ from that of the branch displaying this document, so verify the actual plugin version after installation. To test a separate working branch, use the testing instructions below. Updating a Git branch does not create a Release or automatically update an existing installation.
 
 ---
 
@@ -47,7 +47,7 @@ Before you start, make sure the 4 items below are in place. If anything is missi
 
 **Supported scope**: The target is any Windows, macOS, or Linux environment where Codex plugins and Node.js 18 or newer are available. Commands are shown for Windows PowerShell. On macOS/Linux, use the same `codex`, `node`, and `git` commands in that system's Terminal; plugin availability and UI labels can vary by Codex version, account, and organization policy.
 
-**v1.10.2 verification record (2026-09-23, Windows)**: In the working branch, the consistency checker, 22 hook/validator automated tests, official plugin-structure validator, installation and direct hook execution in an isolated temporary environment, Korean/English HTML regeneration, and Chrome rendering/console checks passed. This does not prove that an existing personal installation was updated or that Codex automatically invoked the hook on an ordinary prompt.
+**v1.10.2 verification record (2026-09-23, Windows)**: For the v1.10.2 source, the consistency checker, 22 hook/validator automated tests, official plugin-structure validator, installation and direct hook execution in an isolated temporary environment, Korean/English HTML regeneration, and Chrome rendering/console checks passed. This does not prove that an existing personal installation was updated or that Codex automatically invoked the hook on an ordinary prompt.
 
 **Unverified scope**: The existing personal installation was v1.10.1 at the last check. Automatic v1.10.2 hook invocation on an ordinary prompt, macOS/Linux devices, and every Codex app/IDE combination remain unverified. CI and browser checks apply only to the tested commit and environment. Run [Verify the installation](#verify-the-installation) on each environment.
 

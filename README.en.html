@@ -289,19 +289,20 @@ when relevant. Verify actual automatic execution in your installed
 environment; installation, permissions, and host behavior can affect
 it.</p>
 <blockquote>
-<p><strong>Version in this working branch</strong>: <code>1.10.2</code>
-· <strong>Perspectives</strong>: 37 · <strong>Trigger patterns</strong>:
+<p><strong>Version of this source</strong>: <code>1.10.2</code> ·
+<strong>Perspectives</strong>: 37 · <strong>Trigger patterns</strong>:
 43 patterns (A-AQ) · <strong>Skills</strong>: 31 ·
 <strong>Hooks</strong>: 2 · <strong>License</strong>: Apache License
 2.0</p>
 </blockquote>
 <blockquote>
 <p><strong>Check before installing</strong>: The default GitHub install
-and ZIP download fetch the default branch. As of 2026-09-23, it differs
-from this v1.10.2 working branch
-(<code>codex/fix-codex-global-hooks-v1.10.2</code>). Do not assume the
-default install supplies v1.10.2. Use the testing instructions below. A
-working branch is not an official release.</p>
+and ZIP download fetch the current default branch. Its version may
+differ from that of the branch displaying this document, so verify the
+actual plugin version after installation. To test a separate working
+branch, use the testing instructions below. Updating a Git branch does
+not create a Release or automatically update an existing
+installation.</p>
 </blockquote>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
@@ -384,7 +385,7 @@ use the same <code>codex</code>, <code>node</code>, and <code>git</code>
 commands in that system's Terminal; plugin availability and UI labels
 can vary by Codex version, account, and organization policy.</p>
 <p><strong>v1.10.2 verification record (2026-09-23, Windows)</strong>:
-In the working branch, the consistency checker, 22 hook/validator
+For the v1.10.2 source, the consistency checker, 22 hook/validator
 automated tests, official plugin-structure validator, installation and
 direct hook execution in an isolated temporary environment,
 Korean/English HTML regeneration, and Chrome rendering/console checks

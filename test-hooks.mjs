@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, cpSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, cpSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -42,6 +42,18 @@ for (const [script, event, required] of [
 
   test(`${script}: 2 MiB stdin을 끝까지 처리`, () => {
     parseSuccessful(run(script, 'x'.repeat(2 * 1024 * 1024)), event);
+  });
+}
+
+const configuredHooks = JSON.parse(readFileSync(join(HOOKS, 'hooks.json'), 'utf8')).hooks;
+for (const event of ['SessionStart', 'UserPromptSubmit']) {
+  test(`${event}: commandWindows 설정 명령 실행`, () => {
+    const command = configuredHooks[event][0].hooks[0].commandWindows;
+    const result = spawnSync(command, {
+      input: '{}', encoding: 'utf8', shell: true, timeout: 10000,
+      env: { ...process.env, PLUGIN_ROOT: dirname(HOOKS) },
+    });
+    parseSuccessful(result, event);
   });
 }
 

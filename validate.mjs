@@ -206,9 +206,11 @@ if (koH2Count !== enH2Count)
 // ── 6) JSON 유효성 + Codex 매니페스트/마켓플레이스 배선 ───────────────
 const EXPECTED_PLUGIN_VERSION = REGISTRY.pluginVersion;
 const EXPECTED_REPOSITORY = 'https://github.com/sodam-ai/SoDam-Persona-Codex';
+if (existsSync(P(pluginPath('plugin.json'))))
+  err('Codex hook 탐색을 방해하는 플러그인 루트 plugin.json 존재');
 const manifestPaths = [
-  pluginPath('plugin.json'),                         // Agent Plugins 1.0 정본
-  pluginPath('.codex-plugin/plugin.json'),           // 구형 Codex 호환 fallback
+  pluginPath('.codex-plugin/plugin.json'),           // Codex 정본
+  pluginPath('compat/plugin.portable.json'),         // Agent Plugins 1.0 보존본
   pluginPath('.claude-plugin/plugin.json'),          // 이전 호스트 호환
 ];
 for (const manifestPath of manifestPaths) {
@@ -223,12 +225,12 @@ for (const manifestPath of manifestPaths) {
   } catch (e) { err(`${manifestPath} 파싱 실패: ${e.message}`); }
 }
 try {
-  const portable = JSON.parse(read(pluginPath('plugin.json')));
+  const portable = JSON.parse(read(pluginPath('compat/plugin.portable.json')));
   if (portable.$schema !== 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json')
-    err(`plugin.json Agent Plugins 1.0 schema 누락/불일치: ${portable.$schema}`);
+    err(`compat/plugin.portable.json Agent Plugins 1.0 schema 누락/불일치: ${portable.$schema}`);
   if (portable.extensions?.['com.openai']?.hooks !== './hooks/hooks.json')
-    err(`plugin.json OpenAI hooks 경로 불일치: ${portable.extensions?.['com.openai']?.hooks}`);
-} catch (e) { err(`Agent Plugins 1.0 plugin.json 검사 실패: ${e.message}`); }
+    err(`compat/plugin.portable.json OpenAI hooks 경로 불일치: ${portable.extensions?.['com.openai']?.hooks}`);
+} catch (e) { err(`Agent Plugins 1.0 호환 매니페스트 검사 실패: ${e.message}`); }
 try {
   const mkt = JSON.parse(read('.agents/plugins/marketplace.json'));
   const p0 = mkt.plugins?.[0];
@@ -365,7 +367,7 @@ if (warnings.length) {
 // 검사 대상으로 삼는다. feedback_*.md·reference_*.md·user_persona*.md 같은 사용자
 // 개인 메모리 파일은 이 저장소 밖에 있는 게 정상이라 대상에서 제외(외부 참조 오탐 방지).
 const REPO_KNOWN_BASENAMES = new Set([
-  'persona_core.md', 'persona_marker.txt', 'hooks.json', 'plugin.json',
+  'persona_core.md', 'persona_marker.txt', 'hooks.json', 'plugin.portable.json',
   'marketplace.json', 'README.md', 'README.en.md', 'LICENSE', 'NOTICE',
   'validate.mjs', 'diagnose.mjs', 'test-hooks.mjs', 'test-validator.mjs', 'persona-registry.json',
   'build-docs.mjs', 'doc-theme.html', 'GUIDE.md', 'GUIDE.en.md',
@@ -376,7 +378,7 @@ const isCheckableRepoRef = (ref) => {
   if (/^persona-[a-z0-9-]+\/SKILL\.md$/.test(ref)) return true;
   if (ref.startsWith('plugins/sodam-persona/')) return true;
   if (ref.startsWith('reference/')) return true;
-  if (ref.startsWith('.claude-plugin/') || ref.startsWith('.codex-plugin/') || ref.startsWith('.agents/')) return true;
+  if (ref.startsWith('.claude-plugin/') || ref.startsWith('.codex-plugin/') || ref.startsWith('.agents/') || ref.startsWith('compat/')) return true;
   if (ref.startsWith('.github/')) return true;
   return false;
 };
@@ -436,9 +438,10 @@ const validatorComments = readFileSync(P('validate.mjs'), 'utf8')
   .join('\n');
 checkPersonalPaths(validatorComments, 'validate.mjs (comments)');
 
-// ── 11) Codex hooks.json 변수·스크립트·컨텍스트 한도 검사 (2026-09-16 조정) ──
-// Codex 플러그인 hook은 ${PLUGIN_ROOT}를 사용한다. additionalContextLimit=0은
-// 내장 잘라내기를 끄므로, 아래 #13의 저장소 자체 12,000자 상한 검사와 반드시 함께 유지한다.
+// ── 11) Codex hooks.json 변수·스크립트·Windows 명령·제한 검사 (2026-09-23 조정) ──
+// 기본 명령은 ${PLUGIN_ROOT}를 사용한다. Windows에서는 환경변수를 Node가 직접 읽는
+// commandWindows를 사용해 셸 치환 차이를 피한다. additionalContextLimit=0은 내장
+// 잘라내기를 끄므로, 아래 #13의 저장소 자체 12,000자 상한 검사와 반드시 함께 유지한다.
 try {
   const hooksConfig = JSON.parse(read(pluginPath('hooks/hooks.json')));
   const commandHandlers = [];
@@ -449,6 +452,13 @@ try {
     Object.values(node).forEach(walk);
   })(hooksConfig);
   if (commandHandlers.length !== 2) err(`hooks.json command handler 수(${commandHandlers.length}) ≠ 2`);
+  for (const [event, script] of [['SessionStart', 'inject-core.js'], ['UserPromptSubmit', 'inject-marker.js']]) {
+    const handler = hooksConfig.hooks?.[event]?.[0]?.hooks?.[0];
+    if (handler?.type !== 'command' || !handler.command?.includes(`/hooks/${script}`))
+      err(`hooks.json ${event} 기본 명령과 ${script} 연결 불일치`);
+    if (!handler?.commandWindows?.includes(`'${script}'`))
+      err(`hooks.json ${event} Windows 명령과 ${script} 연결 불일치`);
+  }
   for (const handler of commandHandlers) {
     const command = handler.command;
     if (typeof command !== 'string') { err('hooks.json command handler에 command 문자열 없음'); continue; }
@@ -459,6 +469,21 @@ try {
     for (const m of command.matchAll(/\$\{PLUGIN_ROOT\}\/([^"']+)/g)) {
       if (!existsSync(P(PLUGIN_ROOT, m[1]))) err(`hooks.json 참조 스크립트 없음: ${m[1]}`);
     }
+    const commandWindows = handler.commandWindows;
+    if (typeof commandWindows !== 'string') {
+      err('hooks.json command handler에 commandWindows 문자열 없음');
+    } else {
+      if (!commandWindows.includes('process.env.PLUGIN_ROOT'))
+        err(`hooks.json commandWindows에 process.env.PLUGIN_ROOT 누락: "${commandWindows}"`);
+      if (commandWindows.includes('${PLUGIN_ROOT}') || commandWindows.includes('${CLAUDE_PLUGIN_ROOT}'))
+        err(`hooks.json commandWindows에서 셸 변수 치환 사용 금지: "${commandWindows}"`);
+      const windowsScript = commandWindows.match(/join\(process\.env\.PLUGIN_ROOT,'hooks','([^']+)'\)/)?.[1];
+      if (!windowsScript) err(`hooks.json commandWindows 스크립트 경로 해석 실패: "${commandWindows}"`);
+      else if (!existsSync(P(PLUGIN_ROOT, 'hooks', windowsScript)))
+        err(`hooks.json commandWindows 참조 스크립트 없음: hooks/${windowsScript}`);
+    }
+    if (handler.timeout !== 30)
+      err(`hooks.json timeout(${handler.timeout}) ≠ 30초`);
     if (handler.additionalContextLimit !== 0)
       err(`hooks.json additionalContextLimit(${handler.additionalContextLimit}) ≠ 0 — #13의 프로젝트 상한과 함께 써야 함`);
   }

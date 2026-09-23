@@ -4,9 +4,11 @@
 
 This document is written so that even someone who has never used a computer, a smartphone, a messenger app, or AI before can follow it from installation to actual use. Whenever an unfamiliar term appears for the first time, it is explained in `plain words (technical term)` form. Example: repository (an online storage place that holds code and documents together).
 
-The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It consists of 2 always-on core rules (**hooks** — small programs that run automatically at a specific moment) and 31 conditional expert knowledge modules (**skills**) that load only when relevant.
+The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It contains 2 **hooks** (small programs configured to run when Codex dispatches their events) and 31 conditional expert knowledge modules (**skills**) to load when relevant. Verify actual automatic execution in your installed environment; installation, permissions, and host behavior can affect it.
 
-> **Current version**: `1.10.1` · **Perspectives**: 37 · **Trigger patterns**: 43 patterns (A-AQ) · **Skills**: 31 · **Hooks**: 2 · **License**: Apache License 2.0
+> **Version of this source**: `1.10.2` · **Perspectives**: 37 · **Trigger patterns**: 43 patterns (A-AQ) · **Skills**: 31 · **Hooks**: 2 · **License**: Apache License 2.0
+
+> **Check before installing**: The default GitHub install and ZIP download fetch the current default branch. Its version may differ from that of the branch displaying this document, so verify the actual plugin version after installation. To test a separate working branch, use the testing instructions below. Updating a Git branch does not create a Release or automatically update an existing installation.
 
 ---
 
@@ -45,9 +47,9 @@ Before you start, make sure the 4 items below are in place. If anything is missi
 
 **Supported scope**: The target is any Windows, macOS, or Linux environment where Codex plugins and Node.js 18 or newer are available. Commands are shown for Windows PowerShell. On macOS/Linux, use the same `codex`, `node`, and `git` commands in that system's Terminal; plugin availability and UI labels can vary by Codex version, account, and organization policy.
 
-**Current verification baseline (2026-09-17)**: On Windows, the consistency checker, 8 hook tests, 7 validator failure-detection tests, official plugin-structure validator, hash comparison of all 47 installed plugin files, and Korean/English HTML regeneration were actually run and passed with Codex CLI `0.154.0`, Node.js `26.7.0`, and installed plugin `1.10.1`. Hook coverage included empty input, malformed JSON, 2 MiB input, a missing source file, and a blank source file.
+**v1.10.2 verification record (2026-09-23, Windows)**: For the v1.10.2 source, the consistency checker, 22 hook/validator automated tests, official plugin-structure validator, installation and direct hook execution in an isolated temporary environment, Korean/English HTML regeneration, and Chrome rendering/console checks passed. This does not prove that an existing personal installation was updated or that Codex automatically invoked the hook on an ordinary prompt.
 
-**Scope not currently verified**: GitHub Actions is configured to test Node.js 20, but the remote CI job was not actually run during this local review. Real Chrome desktop/tablet/mobile rendering and browser-console behavior, macOS/Linux devices, and every Codex app/IDE combination also remain unverified. On those environments, follow [Verify the installation](#verify-the-installation) and [Troubleshooting](#troubleshooting) directly.
+**Unverified scope**: The existing personal installation was v1.10.1 at the last check. Automatic v1.10.2 hook invocation on an ordinary prompt, macOS/Linux devices, and every Codex app/IDE combination remain unverified. CI and browser checks apply only to the tested commit and environment. Run [Verify the installation](#verify-the-installation) on each environment.
 
 **Account and permissions**: Your OpenAI account and permission to use Codex must be arranged separately. Organization accounts may restrict plugin installation. This plugin does not create accounts or handle sign-in, billing, or organization permissions.
 
@@ -133,6 +135,17 @@ codex plugin add sodam-persona@sodam-persona
 ```
 
 `.` (a single period) means "the folder I'm currently in."
+
+### Install the v1.10.2 working branch (for testing)
+
+Use these commands only in a **separate test environment** without this marketplace already registered. Codex CLI help confirms the `--ref` option.
+
+```powershell
+codex plugin marketplace add sodam-ai/SoDam-Persona-Codex --ref codex/fix-codex-global-hooks-v1.10.2
+codex plugin add sodam-persona@sodam-persona
+```
+
+If `sodam-persona` is already registered, do not register a duplicate; check `codex plugin marketplace list`. To test without removing an existing installation, use a separate Codex environment. Alternatively, clone with `git clone --branch codex/fix-codex-global-hooks-v1.10.2 https://github.com/sodam-ai/SoDam-Persona-Codex.git` and use the local-install route in an environment without a conflicting registration.
 
 ### Permission and trust check after installation
 
@@ -658,7 +671,7 @@ A Codex "plugin" is a bundle made of these 4 pieces.
 
 ### Why this repository still has Claude Code files too
 
-This project originally started as a plugin for Claude Code (a different AI coding tool) before being ported to Codex. As a remnant of that, `plugins/sodam-persona/.claude-plugin/plugin.json` and the root `.claude-plugin/marketplace.json` still exist, but **both exist only for compatibility with the earlier host and are not used at all during Codex installation.** Codex reads the marketplace definition from `.agents/plugins/marketplace.json`. The canonical plugin manifest is the Agent Plugins 1.0 file at `plugins/sodam-persona/plugin.json`; `.codex-plugin/plugin.json` remains as a fallback for earlier Codex versions.
+This project originally started as a plugin for Claude Code (a different AI coding tool) before being ported to Codex. As a remnant of that, `plugins/sodam-persona/.claude-plugin/plugin.json` and the root `.claude-plugin/marketplace.json` still exist, but **both exist only for compatibility with the earlier host and are not used at all during Codex installation.** Codex reads the marketplace definition from `.agents/plugins/marketplace.json` and the plugin manifest from `plugins/sodam-persona/.codex-plugin/plugin.json`. The Agent Plugins 1.0 format is preserved at `plugins/sodam-persona/compat/plugin.portable.json`. Keeping another manifest at the plugin root can cause current Codex versions to skip default hook discovery.
 
 ### Full repository layout
 
@@ -680,8 +693,8 @@ This project originally started as a plugin for Claude Code (a different AI codi
 ├── diagnose.mjs                           # Source/install/hook/consistency diagnosis
 ├── plugins/sodam-persona/persona-registry.json # Structured source of truth for roles, patterns, domains, version, and hook cap
 └── plugins/sodam-persona/                # The actual plugin body that gets distributed and installed
-    ├── plugin.json                       # Agent Plugins 1.0 manifest (source of truth)
-    ├── .codex-plugin/plugin.json         # Fallback manifest for earlier Codex versions
+    ├── .codex-plugin/plugin.json         # Codex manifest (source of truth)
+    ├── compat/plugin.portable.json       # Preserved Agent Plugins 1.0 format
     ├── .claude-plugin/plugin.json        # [Legacy host compatibility] Claude Code manifest
     ├── hooks/
     │   ├── hooks.json                    # Registers the SessionStart / UserPromptSubmit hooks
@@ -745,7 +758,7 @@ This checker mechanically prevents number drift when adding perspectives or chan
 | 3 | The documented A-AQ trigger-pattern count matches the actual section count |
 | 4 | The skill-folder count, README intro, and file map agree, and every skill frontmatter `name` matches its folder (including English README cross-checks) |
 | 5 | All 26 domain personas are wired into the core and marker, while both READMEs agree on domain counts, explicit invocations, and major-section structure |
-| 6 | The Agent Plugins 1.0, Codex fallback, and legacy manifests plus both marketplace JSON files have valid names, versions, and source paths |
+| 6 | The canonical Codex, preserved Agent Plugins 1.0, and legacy manifests plus both marketplace JSON files have valid names, versions, and source paths |
 | 7 | Required disclaimers, qualified-review boundaries, and non-final estimate wording exist for all 26 domains |
 | 8 | Warning only: generated HTML appears out of sync with current counts |
 | 9 | Backtick-wrapped repository file references point to files that exist |
@@ -760,7 +773,7 @@ See [Commands](#commands) and [Troubleshooting](#troubleshooting) for how to run
 
 ### Continuous integration (CI)
 
-`.github/workflows/validate.yml` automatically runs the consistency checker and both execution regression suites on every push to `main` and every pull request, blocking erroneous changes from reaching `main`.
+`.github/workflows/validate.yml` is configured to run the consistency checker and both regression suites for pushes to `main` and pull requests. Whether a failed CI run blocks a merge depends on GitHub branch-protection settings.
 
 ---
 
@@ -833,8 +846,8 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 | The consistency-check script | Repository root, `validate.mjs` |
 | The HTML-regeneration script | Repository root, `build-docs.mjs`, `doc-theme.html` |
 | The Codex marketplace definition (source of truth) | `.agents/plugins/marketplace.json` |
-| The Agent Plugins 1.0 manifest (source of truth) | `plugins/sodam-persona/plugin.json` |
-| Codex fallback / legacy Claude compatibility manifests | `plugins/sodam-persona/.codex-plugin/plugin.json`, `.claude-plugin/plugin.json` |
+| The Codex manifest (source of truth) | `plugins/sodam-persona/.codex-plugin/plugin.json` |
+| Preserved Agent Plugins 1.0 / legacy Claude compatibility manifests | `plugins/sodam-persona/compat/plugin.portable.json`, `.claude-plugin/plugin.json` |
 | Manual and automated test scenarios | `plugins/sodam-persona/reference/test_scenarios.md` |
 | The CI (automated check) configuration | `.github/workflows/validate.yml` |
 
@@ -847,6 +860,14 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 Listed with the most recent entries at the top. Click (or tap) an item to expand its details.
 
 <details open>
+<summary><strong>2026-09-23 — Codex hook discovery and Windows execution compatibility (v1.10.2)</strong></summary>
+
+- Made `.codex-plugin/plugin.json` the Codex manifest and preserved the Agent Plugins 1.0 file under `compat/`.
+- Added Windows commands and a 30-second timeout to both hooks, with checks in the consistency validator.
+- Installation, trust approval, and automatic injection during an ordinary prompt still require separate verification.
+
+</details>
+<details>
 <summary><strong>2026-09-17 — Execution stability, diagnosis, and registry hardening (v1.10.1)</strong></summary>
 
 - Added real hook-execution tests and validator failure-detection tests, then connected both to CI.
@@ -1063,7 +1084,7 @@ This project was later ported to be Codex-only, becoming today's `SoDam Persona 
 | `node validate.mjs` prints `❌ FAIL` | Some number — perspective count, trigger count, skill count, etc. — has drifted out of sync, usually while adding or editing a persona | Read the printed error list line by line, open the referenced file, and fix the number, then rerun. See the "15 checks" table in [Architecture](#architecture) for what each numbered check means |
 | An actionable investment, accounting/tax, or legal answer is missing its disclaimer | Likely a defect | Reinstall the latest version and retry in a new task. If it persists, file a GitHub Issue with the prompt and version, and run `validate.mjs` check #7 |
 | A path-related error appears when typing a command into Windows PowerShell | Quotation marks or backslashes changed while being retyped by hand | Copy this document's code blocks and paste them directly instead of typing them manually |
-| The persona feels like it's drifted after a long session | This is expected — the marker is re-injected on every message by design, to auto-recover the persona | No action needed. If it still feels off, start a new task for a fresh session |
+| The persona feels like it has drifted after a long session | The hook may not have run in that environment, or its marker may not have been followed | Check `codex plugin list`, reproduce in a new task, then report `node diagnose.mjs` results and the prompt in an Issue |
 
 ---
 
@@ -1079,13 +1100,13 @@ A. No. Aside from reading 2 fixed text files inside the plugin folder, the hooks
 A. Codex itself needs the internet to talk to an AI model. The plugin's hooks themselves only read local files and don't make any separate network connection.
 
 **Q. Can I use the accounting/tax or legal answers instead of consulting a real professional?**
-A. No. This persona is not an actually licensed tax accountant, CPA, or lawyer. It exists to provide reference information only, and any actionable decision (filing, contract interpretation, etc.) must be confirmed by a real professional first. This is why a disclaimer is always shown alongside such answers.
+A. No. This persona is not an actually licensed tax accountant, CPA, or lawyer. It provides reference information only; consult a real professional before an actionable decision (filing, contract interpretation, etc.). The rules require a disclaimer, but users should check whether it appears in each actual answer.
 
 **Q. Does it work with Claude Code too?**
 A. Legacy compatibility files (`.claude-plugin/`) still remain in the repository, but this project is currently **maintained for Codex only**, and new features and trigger updates are made against the Codex manifest. Up-to-date behavior on Claude Code is not guaranteed.
 
 **Q. Can I install it on multiple computers?**
-A. Yes. The plugin is designed to be self-contained, so it behaves identically on a brand-new computer with nothing more than a fresh install — no separate personal config files or memory needed.
+A. You can install it on multiple computers, but behavior may differ with Codex version, account permissions, Node.js, organization policy, and installed plugin version. Run [Verify the installation](#verify-the-installation) on each computer.
 
 **Q. What is the difference among image production (#32), video direction (#33), video post-production (#34), and media review (#35)?**
 A. #32 creates and finishes still images. #33 designs the message, storyboard, shots, camera movement, and source generation. #34 edits cuts, captions, audio, color, and deliverables. #35 reviews actual quality and evidence for provenance, consent, and licenses. #22 owns 3D render-scene settings.
@@ -1136,7 +1157,7 @@ A. Yes, the Apache License 2.0 explicitly allows this. There are a few condition
 A. No. This project has no affiliation with or sponsorship from OpenAI. It's an independent community plugin. "Codex" and "OpenAI" are trademarks of their respective owners, used in this document purely to refer to those products (nominative use).
 
 **Q. If a long session gets compacted, or goes through a sub-agent, does the persona disappear?**
-A. No. The `UserPromptSubmit` hook is designed to re-inject its compact marker on every single message, which automatically restores the persona even in those situations.
+A. The `UserPromptSubmit` hook is designed to re-inject its marker when that event is delivered. Delivery through compaction, sub-agents, and every Codex environment is unverified, so automatic recovery cannot be guaranteed. Check it in a new task.
 
 ---
 
@@ -1166,12 +1187,12 @@ In exchange, you **must** meet the following conditions.
 | Include a copy of the license | If you redistribute this code (or part of it), you must include a full copy of the Apache License 2.0 |
 | State any changes made | If you modified the original, you must prominently mark the modified files as changed |
 | Keep copyright/patent/trademark notices | You must retain the copyright, patent, and attribution notices from the original source instead of deleting them |
-| Include a copy of the `NOTICE` file | Since the original includes a `NOTICE` file, you must pass along its notices when redistributing (in your own `NOTICE` file, documentation, or on-screen display) |
+| Include relevant `NOTICE` attributions | Because the original contains a `NOTICE`, section 4(d) of Apache License 2.0 requires readable attribution notices relevant to the part distributed (`NOTICE`, documentation, or a display). Check the original text and what applies |
 
 And it is important to be clear about what is **not** guaranteed (a summary of the original's sections 7 and 8).
 
 - This software is provided **"AS IS,"** without any warranty of any kind, including merchantability or fitness for a particular purpose.
-- The copyright holder and contributors are not liable for any damages arising from the use of this software (including loss of business, work stoppage, computer failure, and similar).
+- Section 8 limits liability except where applicable law requires otherwise or a separate written agreement applies. It is not a guarantee that liability is impossible in every jurisdiction and situation.
 - Assessing the suitability of using or redistributing this software, and bearing any resulting risk, is entirely the user's own responsibility.
 
 ### What Apache License 2.0 actually covers
@@ -1236,7 +1257,7 @@ These links and policies can change, so check them again at the actual time of u
 
 ### Repository asset and external-dependency review
 
-Here is the result of scanning this repository's entire code and documentation (as of 2026-09-17, based on all 64 Git-tracked files).
+Here is the result of scanning this repository's entire code and documentation (as of 2026-09-23, based on all 64 Git-tracked files).
 
 | Check | Result |
 |---|---|
@@ -1253,7 +1274,9 @@ No additional license duty was identified from images, fonts, or external packag
 
 **One-line summary for absolute beginners**: the project code and documentation covered by Apache License 2.0 may be used as-is, modified, forked, redistributed, sold, operated as a service, used in education, or delivered to a client. Trademarks, third-party quotations, AI output, material you add, external-service terms, and actual ownership remain separate checks.
 
-| What you want to do | Allowed? | Conditions |
+**Current publication/delivery status**: Three third-party passages in `plugins/sodam-persona/skills/persona-triggers/SKILL.md` have attributed sources, but permission, license coverage, or an applicable quotation exception has not been verified. Do not describe public redistribution, resale, or client delivery of the repository containing these passages as rights-cleared. Confirm and record the rights basis or obtain legal/professional review before deciding. This is an unresolved third-party-rights issue, not an additional condition on Apache License 2.0.
+
+| What you want to do | Allowed under Apache 2.0? | Conditions and separate checks |
 |---|---|---|
 | Use this plugin as-is internally at a company or personally, without redistribution | Yes | No separate redistribution duty under this repository license; Codex/OpenAI terms and fees remain separate |
 | Clone it or fork it on GitHub into your own account | Yes | None (follow the "conditions" below if you redistribute it to others) |
@@ -1268,8 +1291,8 @@ No additional license duty was identified from images, fonts, or external packag
 
 | Priority | Required action |
 |---|---|
-| **Must Have** | Provide `LICENSE`, carry applicable `NOTICE` content, mark modified files, avoid implied trademark affiliation, and verify external-service terms, privacy duties, and permission for customer material |
-| **Should Have** | Verify the exact sources and permitted scope of third-party quotations, and document the legal copyright-holder name, contributor assignments, and ownership chain for AI-assisted material |
+| **Must Have** | Provide `LICENSE`, carry applicable `NOTICE` content, mark modified files, avoid implied trademark affiliation, and verify external-service terms, privacy duties, and permission for customer material. Before public redistribution, resale, or client delivery, also confirm and record a rights basis for the three third-party passages or obtain legal/professional review |
+| **Should Have** | Record the exact sources and applicable scope of third-party quotations, and document the legal copyright-holder name, contributor assignments, and ownership chain for AI-assisted material |
 | **Could Have** | Obtain lawyer review of client contracts, warranties, indemnities, and country-specific regulation, and retain a release-by-release external-material list or SBOM |
 
 ### What you must not do (summary)

@@ -282,16 +282,27 @@ form. Example: repository (an online storage place that holds code and
 documents together).</p>
 <p>The plugin itself is not a separate AI. It layers a set of "judge
 this way, answer this way" rule documents on top of the conversational
-ability Codex already has. It consists of 2 always-on core rules
-(<strong>hooks</strong> — small programs that run automatically at a
-specific moment) and 31 conditional expert knowledge modules
-(<strong>skills</strong>) that load only when relevant.</p>
+ability Codex already has. It contains 2 <strong>hooks</strong> (small
+programs configured to run when Codex dispatches their events) and 31
+conditional expert knowledge modules (<strong>skills</strong>) to load
+when relevant. Verify actual automatic execution in your installed
+environment; installation, permissions, and host behavior can affect
+it.</p>
 <blockquote>
-<p><strong>Current version</strong>: <code>1.10.1</code> ·
+<p><strong>Version of this source</strong>: <code>1.10.2</code> ·
 <strong>Perspectives</strong>: 37 · <strong>Trigger patterns</strong>:
 43 patterns (A-AQ) · <strong>Skills</strong>: 31 ·
 <strong>Hooks</strong>: 2 · <strong>License</strong>: Apache License
 2.0</p>
+</blockquote>
+<blockquote>
+<p><strong>Check before installing</strong>: The default GitHub install
+and ZIP download fetch the current default branch. Its version may
+differ from that of the branch displaying this document, so verify the
+actual plugin version after installation. To test a separate working
+branch, use the testing instructions below. Updating a Git branch does
+not create a Release or automatically update an existing
+installation.</p>
 </blockquote>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
@@ -373,21 +384,21 @@ available. Commands are shown for Windows PowerShell. On macOS/Linux,
 use the same <code>codex</code>, <code>node</code>, and <code>git</code>
 commands in that system's Terminal; plugin availability and UI labels
 can vary by Codex version, account, and organization policy.</p>
-<p><strong>Current verification baseline (2026-09-17)</strong>: On
-Windows, the consistency checker, 8 hook tests, 7 validator
-failure-detection tests, official plugin-structure validator, hash
-comparison of all 47 installed plugin files, and Korean/English HTML
-regeneration were actually run and passed with Codex CLI
-<code>0.154.0</code>, Node.js <code>26.7.0</code>, and installed plugin
-<code>1.10.1</code>. Hook coverage included empty input, malformed JSON,
-2 MiB input, a missing source file, and a blank source file.</p>
-<p><strong>Scope not currently verified</strong>: GitHub Actions is
-configured to test Node.js 20, but the remote CI job was not actually
-run during this local review. Real Chrome desktop/tablet/mobile
-rendering and browser-console behavior, macOS/Linux devices, and every
-Codex app/IDE combination also remain unverified. On those environments,
-follow <a href="#verify-the-installation">Verify the installation</a>
-and <a href="#troubleshooting">Troubleshooting</a> directly.</p>
+<p><strong>v1.10.2 verification record (2026-09-23, Windows)</strong>:
+For the v1.10.2 source, the consistency checker, 22 hook/validator
+automated tests, official plugin-structure validator, installation and
+direct hook execution in an isolated temporary environment,
+Korean/English HTML regeneration, and Chrome rendering/console checks
+passed. This does not prove that an existing personal installation was
+updated or that Codex automatically invoked the hook on an ordinary
+prompt.</p>
+<p><strong>Unverified scope</strong>: The existing personal installation
+was v1.10.1 at the last check. Automatic v1.10.2 hook invocation on an
+ordinary prompt, macOS/Linux devices, and every Codex app/IDE
+combination remain unverified. CI and browser checks apply only to the
+tested commit and environment. Run <a
+href="#verify-the-installation">Verify the installation</a> on each
+environment.</p>
 <p><strong>Account and permissions</strong>: Your OpenAI account and
 permission to use Codex must be arranged separately. Organization
 accounts may restrict plugin installation. This plugin does not create
@@ -522,6 +533,21 @@ class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb4-
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>codex plugin add sodam-persona@sodam-persona</span></code></pre></div>
 <p><code>.</code> (a single period) means "the folder I'm currently
 in."</p>
+<h3 id="install-the-v1102-working-branch-for-testing">Install the
+v1.10.2 working branch (for testing)</h3>
+<p>Use these commands only in a <strong>separate test
+environment</strong> without this marketplace already registered. Codex
+CLI help confirms the <code>--ref</code> option.</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>codex plugin marketplace add sodam-ai<span class="op">/</span>SoDam-Persona-Codex <span class="op">--</span>ref codex<span class="op">/</span>fix-codex-global-hooks-v1<span class="op">.</span><span class="dv">10.2</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">codex</span> plugin add sodam-persona@sodam-persona</span></code></pre></div>
+<p>If <code>sodam-persona</code> is already registered, do not register
+a duplicate; check <code>codex plugin marketplace list</code>. To test
+without removing an existing installation, use a separate Codex
+environment. Alternatively, clone with
+<code>git clone --branch codex/fix-codex-global-hooks-v1.10.2 https://github.com/sodam-ai/SoDam-Persona-Codex.git</code>
+and use the local-install route in an environment without a conflicting
+registration.</p>
 <h3 id="permission-and-trust-check-after-installation">Permission and
 trust check after installation</h3>
 <p>Installation alone is not the final step.</p>
@@ -540,9 +566,9 @@ policy blocks installation, an administrator must approve it.</li>
 security policy in your environment controls actual execution (<a
 href="#security--data-flow">Security &amp; Data Flow</a>).</p>
 <h3 id="verify-the-installation">Verify the installation</h3>
-<div class="sourceCode" id="cb5"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>codex plugin marketplace list</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>codex plugin list</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>codex plugin marketplace list</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>codex plugin list</span></code></pre></div>
 <p>The first command shows registered marketplaces; the second shows
 installed plugins. If <code>sodam-persona</code> appears in both and is
 enabled, package installation is complete. For a usage smoke test, start
@@ -551,10 +577,10 @@ and deeply"; the response depth should change.</p>
 <h3 id="update-and-uninstall">Update and uninstall</h3>
 <p>Use this order for a new version. Updating only the marketplace can
 leave the existing installed cache in use.</p>
-<div class="sourceCode" id="cb6"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>codex plugin marketplace upgrade sodam-persona</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>codex plugin remove sodam-persona@sodam-persona</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>codex plugin add sodam-persona@sodam-persona</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>codex plugin marketplace upgrade sodam-persona</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>codex plugin remove sodam-persona@sodam-persona</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>codex plugin add sodam-persona@sodam-persona</span></code></pre></div>
 <p>Start a new task after updating. To uninstall completely, omit the
 final <code>add</code>; if desired, also run
 <code>codex plugin marketplace remove sodam-persona</code>. Removal
@@ -1774,11 +1800,12 @@ the root <code>.claude-plugin/marketplace.json</code> still exist, but
 <strong>both exist only for compatibility with the earlier host and are
 not used at all during Codex installation.</strong> Codex reads the
 marketplace definition from
-<code>.agents/plugins/marketplace.json</code>. The canonical plugin
-manifest is the Agent Plugins 1.0 file at
-<code>plugins/sodam-persona/plugin.json</code>;
-<code>.codex-plugin/plugin.json</code> remains as a fallback for earlier
-Codex versions.</p>
+<code>.agents/plugins/marketplace.json</code> and the plugin manifest
+from <code>plugins/sodam-persona/.codex-plugin/plugin.json</code>. The
+Agent Plugins 1.0 format is preserved at
+<code>plugins/sodam-persona/compat/plugin.portable.json</code>. Keeping
+another manifest at the plugin root can cause current Codex versions to
+skip default hook discovery.</p>
 <h3 id="full-repository-layout">Full repository layout</h3>
 <pre class="text"><code>.
 ├── .agents/plugins/marketplace.json      # The marketplace definition Codex actually reads (source of truth)
@@ -1797,8 +1824,8 @@ Codex versions.</p>
 ├── diagnose.mjs                           # Source/install/hook/consistency diagnosis
 ├── plugins/sodam-persona/persona-registry.json # Structured source of truth for roles, patterns, domains, version, and hook cap
 └── plugins/sodam-persona/                # The actual plugin body that gets distributed and installed
-    ├── plugin.json                       # Agent Plugins 1.0 manifest (source of truth)
-    ├── .codex-plugin/plugin.json         # Fallback manifest for earlier Codex versions
+    ├── .codex-plugin/plugin.json         # Codex manifest (source of truth)
+    ├── compat/plugin.portable.json       # Preserved Agent Plugins 1.0 format
     ├── .claude-plugin/plugin.json        # [Legacy host compatibility] Claude Code manifest
     ├── hooks/
     │   ├── hooks.json                    # Registers the SessionStart / UserPromptSubmit hooks
@@ -1896,9 +1923,9 @@ major-section structure</td>
 </tr>
 <tr>
 <td>6</td>
-<td>The Agent Plugins 1.0, Codex fallback, and legacy manifests plus
-both marketplace JSON files have valid names, versions, and source
-paths</td>
+<td>The canonical Codex, preserved Agent Plugins 1.0, and legacy
+manifests plus both marketplace JSON files have valid names, versions,
+and source paths</td>
 </tr>
 <tr>
 <td>7</td>
@@ -1951,10 +1978,10 @@ broad single-word triggers and overlapping design roles</td>
 href="#troubleshooting">Troubleshooting</a> for how to run the checker
 and read its output.</p>
 <h3 id="continuous-integration-ci">Continuous integration (CI)</h3>
-<p><code>.github/workflows/validate.yml</code> automatically runs the
-consistency checker and both execution regression suites on every push
-to <code>main</code> and every pull request, blocking erroneous changes
-from reaching <code>main</code>.</p>
+<p><code>.github/workflows/validate.yml</code> is configured to run the
+consistency checker and both regression suites for pushes to
+<code>main</code> and pull requests. Whether a failed CI run blocks a
+merge depends on GitHub branch-protection settings.</p>
 <hr />
 <h2 id="security--data-flow">Security &amp; Data Flow</h2>
 <h3 id="what-the-hooks-do--do-not-do">What the hooks do / do not do</h3>
@@ -2127,12 +2154,13 @@ that passes this check.</p>
 <td><code>.agents/plugins/marketplace.json</code></td>
 </tr>
 <tr>
-<td>The Agent Plugins 1.0 manifest (source of truth)</td>
-<td><code>plugins/sodam-persona/plugin.json</code></td>
+<td>The Codex manifest (source of truth)</td>
+<td><code>plugins/sodam-persona/.codex-plugin/plugin.json</code></td>
 </tr>
 <tr>
-<td>Codex fallback / legacy Claude compatibility manifests</td>
-<td><code>plugins/sodam-persona/.codex-plugin/plugin.json</code>,
+<td>Preserved Agent Plugins 1.0 / legacy Claude compatibility
+manifests</td>
+<td><code>plugins/sodam-persona/compat/plugin.portable.json</code>,
 <code>.claude-plugin/plugin.json</code></td>
 </tr>
 <tr>
@@ -2156,6 +2184,18 @@ downloads this plugin, so this document does not cover it.</p>
 <p>Listed with the most recent entries at the top. Click (or tap) an
 item to expand its details.</p>
 <details open>
+<summary><strong>2026-09-23 — Codex hook discovery and Windows execution compatibility (v1.10.2)</strong></summary>
+
+<ul>
+<li>Made <code>.codex-plugin/plugin.json</code> the Codex manifest and
+preserved the Agent Plugins 1.0 file under <code>compat/</code>.</li>
+<li>Added Windows commands and a 30-second timeout to both hooks, with
+checks in the consistency validator.</li>
+<li>Installation, trust approval, and automatic injection during an
+ordinary prompt still require separate verification.</li>
+</ul>
+</details>
+<details>
 <summary><strong>2026-09-17 — Execution stability, diagnosis, and registry hardening (v1.10.1)</strong></summary>
 
 <ul>
@@ -2697,11 +2737,12 @@ hand</td>
 typing them manually</td>
 </tr>
 <tr>
-<td>The persona feels like it's drifted after a long session</td>
-<td>This is expected — the marker is re-injected on every message by
-design, to auto-recover the persona</td>
-<td>No action needed. If it still feels off, start a new task for a
-fresh session</td>
+<td>The persona feels like it has drifted after a long session</td>
+<td>The hook may not have run in that environment, or its marker may not
+have been followed</td>
+<td>Check <code>codex plugin list</code>, reproduce in a new task, then
+report <code>node diagnose.mjs</code> results and the prompt in an
+Issue</td>
 </tr>
 </tbody>
 </table>
@@ -2726,21 +2767,22 @@ only read local files and don't make any separate network
 connection.</p>
 <p><strong>Q. Can I use the accounting/tax or legal answers instead of
 consulting a real professional?</strong> A. No. This persona is not an
-actually licensed tax accountant, CPA, or lawyer. It exists to provide
-reference information only, and any actionable decision (filing,
-contract interpretation, etc.) must be confirmed by a real professional
-first. This is why a disclaimer is always shown alongside such
-answers.</p>
+actually licensed tax accountant, CPA, or lawyer. It provides reference
+information only; consult a real professional before an actionable
+decision (filing, contract interpretation, etc.). The rules require a
+disclaimer, but users should check whether it appears in each actual
+answer.</p>
 <p><strong>Q. Does it work with Claude Code too?</strong> A. Legacy
 compatibility files (<code>.claude-plugin/</code>) still remain in the
 repository, but this project is currently <strong>maintained for Codex
 only</strong>, and new features and trigger updates are made against the
 Codex manifest. Up-to-date behavior on Claude Code is not
 guaranteed.</p>
-<p><strong>Q. Can I install it on multiple computers?</strong> A. Yes.
-The plugin is designed to be self-contained, so it behaves identically
-on a brand-new computer with nothing more than a fresh install — no
-separate personal config files or memory needed.</p>
+<p><strong>Q. Can I install it on multiple computers?</strong> A. You
+can install it on multiple computers, but behavior may differ with Codex
+version, account permissions, Node.js, organization policy, and
+installed plugin version. Run <a href="#verify-the-installation">Verify
+the installation</a> on each computer.</p>
 <p><strong>Q. What is the difference among image production (#32), video
 direction (#33), video post-production (#34), and media review
 (#35)?</strong> A. #32 creates and finishes still images. #33 designs
@@ -2841,10 +2883,11 @@ It's an independent community plugin. "Codex" and "OpenAI" are
 trademarks of their respective owners, used in this document purely to
 refer to those products (nominative use).</p>
 <p><strong>Q. If a long session gets compacted, or goes through a
-sub-agent, does the persona disappear?</strong> A. No. The
-<code>UserPromptSubmit</code> hook is designed to re-inject its compact
-marker on every single message, which automatically restores the persona
-even in those situations.</p>
+sub-agent, does the persona disappear?</strong> A. The
+<code>UserPromptSubmit</code> hook is designed to re-inject its marker
+when that event is delivered. Delivery through compaction, sub-agents,
+and every Codex environment is unverified, so automatic recovery cannot
+be guaranteed. Check it in a new task.</p>
 <hr />
 <h2 id="legal-copyright-license-and-commercial-use">Legal, Copyright,
 License, and Commercial Use</h2>
@@ -2928,10 +2971,11 @@ files as changed</td>
 the original source instead of deleting them</td>
 </tr>
 <tr>
-<td>Include a copy of the <code>NOTICE</code> file</td>
-<td>Since the original includes a <code>NOTICE</code> file, you must
-pass along its notices when redistributing (in your own
-<code>NOTICE</code> file, documentation, or on-screen display)</td>
+<td>Include relevant <code>NOTICE</code> attributions</td>
+<td>Because the original contains a <code>NOTICE</code>, section 4(d) of
+Apache License 2.0 requires readable attribution notices relevant to the
+part distributed (<code>NOTICE</code>, documentation, or a display).
+Check the original text and what applies</td>
 </tr>
 </tbody>
 </table>
@@ -2941,9 +2985,9 @@ guaranteed (a summary of the original's sections 7 and 8).</p>
 <li>This software is provided <strong>"AS IS,"</strong> without any
 warranty of any kind, including merchantability or fitness for a
 particular purpose.</li>
-<li>The copyright holder and contributors are not liable for any damages
-arising from the use of this software (including loss of business, work
-stoppage, computer failure, and similar).</li>
+<li>Section 8 limits liability except where applicable law requires
+otherwise or a separate written agreement applies. It is not a guarantee
+that liability is impossible in every jurisdiction and situation.</li>
 <li>Assessing the suitability of using or redistributing this software,
 and bearing any resulting risk, is entirely the user's own
 responsibility.</li>
@@ -3131,7 +3175,7 @@ actual time of use, distribution, or client delivery.</p>
 <h3 id="repository-asset-and-external-dependency-review">Repository
 asset and external-dependency review</h3>
 <p>Here is the result of scanning this repository's entire code and
-documentation (as of 2026-09-17, based on all 64 Git-tracked files).</p>
+documentation (as of 2026-09-23, based on all 64 Git-tracked files).</p>
 <table>
 <thead>
 <tr>
@@ -3190,12 +3234,22 @@ modified, forked, redistributed, sold, operated as a service, used in
 education, or delivered to a client. Trademarks, third-party quotations,
 AI output, material you add, external-service terms, and actual
 ownership remain separate checks.</p>
+<p><strong>Current publication/delivery status</strong>: Three
+third-party passages in
+<code>plugins/sodam-persona/skills/persona-triggers/SKILL.md</code> have
+attributed sources, but permission, license coverage, or an applicable
+quotation exception has not been verified. Do not describe public
+redistribution, resale, or client delivery of the repository containing
+these passages as rights-cleared. Confirm and record the rights basis or
+obtain legal/professional review before deciding. This is an unresolved
+third-party-rights issue, not an additional condition on Apache License
+2.0.</p>
 <table>
 <thead>
 <tr>
 <th>What you want to do</th>
-<th>Allowed?</th>
-<th>Conditions</th>
+<th>Allowed under Apache 2.0?</th>
+<th>Conditions and separate checks</th>
 </tr>
 </thead>
 <tbody>
@@ -3273,11 +3327,13 @@ before publication, distribution, or client delivery</h3>
 <td>Provide <code>LICENSE</code>, carry applicable <code>NOTICE</code>
 content, mark modified files, avoid implied trademark affiliation, and
 verify external-service terms, privacy duties, and permission for
-customer material</td>
+customer material. Before public redistribution, resale, or client
+delivery, also confirm and record a rights basis for the three
+third-party passages or obtain legal/professional review</td>
 </tr>
 <tr>
 <td><strong>Should Have</strong></td>
-<td>Verify the exact sources and permitted scope of third-party
+<td>Record the exact sources and applicable scope of third-party
 quotations, and document the legal copyright-holder name, contributor
 assignments, and ownership chain for AI-assisted material</td>
 </tr>

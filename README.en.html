@@ -268,16 +268,30 @@
 <h1 class="title">SoDam-Persona — README (English)</h1>
 </header>
 <h1 id="sodam-persona-for-codex">SoDam Persona for Codex</h1>
+<h3 id="applied-perspective-indicator">Applied-perspective
+indicator</h3>
+<p>Every ordinary natural-language response must start with an indicator
+such as <code>[페르소나: L2 · CAD·BIM 정보 정합성 관점]</code>, naming
+only perspectives actually applied. Show it in progress messages and
+final answers; when no specialist perspective applies, show the actual L
+level and <code>전문 관점 미적용</code> (no specialist perspective
+applied). Do not omit it for short answers. User-required JSON/code-only
+output or a request to hide the indicator takes precedence. The
+indicator is not evidence of tool execution or successful work. Already
+injected instructions in existing conversations do not change with
+edited files; verify in a new conversation.</p>
 <h2 id="current-integration-status-2026-10-09">Current integration
 status (2026-10-09)</h2>
-<p>This Codex port, <code>sodam-ai/SoDam-Persona-Codex</code>,
-originates from <code>sodam-ai/SoDam-Persona</code>. Version 1.11.1
-provides 45 perspectives, 39 skills and intent-based activation. It
-preserves creation/editing skills and the Windows hook fix; the portable
-manifest stays under <code>compat/</code>. The 180 frozen inputs and 90
-supplementary Korean inputs are not successful model executions. Actual
-CLI/Desktop auto-routing and complete post-installation flows remain
-unverified.</p>
+<p>This is the working source of
+<code>sodam-ai/SoDam-Persona-Codex</code>, ported from upstream
+<code>sodam-ai/SoDam-Persona</code>. It currently provides version
+1.11.1, 45 perspectives, 39 skills, and two hooks, preserving
+creation/editing skills and the compat manifest. Source checks of the
+additional indicator and diagnosis fixes passed, but installed-version
+mismatch and complete Desktop usage remain unresolved/unverified. Check
+fixes against the commit containing this document; a version string
+alone does not establish file identity. No SoDam-Agent team-specific
+rules are included.</p>
 <p><strong>SoDam Persona</strong> gives OpenAI's AI coding assistant
 <strong>Codex</strong> (an AI program that helps you build software
 using natural-language instructions) the personality of a "careful,
@@ -301,7 +315,7 @@ it.</p>
 <blockquote>
 <p><strong>Version of this source</strong>: <code>1.11.1</code> ·
 <strong>Perspectives</strong>: 45 · <strong>Routing</strong>:
-intent-based; 43 legacy categories patterns (A-AQ) ·
+intent-based; words alone do not activate roles ·
 <strong>Skills</strong>: 39 · <strong>Hooks</strong>: 2 ·
 <strong>License</strong>: Apache License 2.0</p>
 </blockquote>
@@ -317,6 +331,8 @@ installation.</p>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol type="1">
+<li><a href="#current-integration-status-2026-10-09">Current integration
+status (2026-10-09)</a></li>
 <li><a href="#prerequisites">Prerequisites</a></li>
 <li><a href="#required-software">Required Software</a></li>
 <li><a href="#how-to-download">How to Download</a></li>
@@ -337,6 +353,10 @@ Map</a></li>
 (FAQ)</a></li>
 <li><a href="#legal-copyright-license-and-commercial-use">Legal,
 Copyright, License, and Commercial Use</a></li>
+<li><a
+href="#beginner-verification-update-and-distribution-steps">Beginner
+Verification, Update, and Distribution Steps</a></li>
+<li><a href="#v6-verification-scope">v6 verification scope</a></li>
 </ol>
 <hr />
 <h2 id="prerequisites">Prerequisites</h2>
@@ -544,14 +564,11 @@ class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb4-
 <p><code>.</code> (a single period) means "the folder I'm currently
 in."</p>
 <h3 id="testing-this-local-candidate">Testing this local candidate</h3>
-<p>Version 1.11.1 is distributed with this guide. Before merging, use
-the working branch; after merging, use the default branch. GitHub
-downloads do not contain uncommitted local changes. To test these exact
-files, open a terminal in the project root, inspect
-<code>plugins/sodam-persona/.codex-plugin/plugin.json</code>, and follow
-the local-install steps above in a separate environment without a
-duplicate marketplace. Do not assume an old testing branch still exists.
-No installation was performed while writing this guide.</p>
+<p>The GitHub distribution is defined by the commit containing this
+document. Check the default-branch README and commit, refresh the
+Marketplace snapshot, and test in a new conversation. Personal local
+changes are not included in downloads. Documentation edits do not
+automatically refresh installed copies.</p>
 <h3 id="permission-and-trust-check-after-installation">Permission and
 trust check after installation</h3>
 <p>Installation alone is not the final step.</p>
@@ -1138,9 +1155,8 @@ for documentation/code editors (run from the repository root)</h3>
 <tbody>
 <tr>
 <td><code>node validate.mjs</code></td>
-<td>Automatically checks consistency: perspective count, trigger pattern
-count, skill count, domain wiring, disclaimer text, personal path leaks,
-and more</td>
+<td>Checks perspective IDs and names, skill metadata and references,
+versions, hook format, personal path leaks, and script syntax</td>
 </tr>
 <tr>
 <td><code>node --test test-hooks.mjs</code></td>
@@ -1462,7 +1478,7 @@ old v5 A-AQ table parser does not apply to the v6 operating
 contract.</p>
 <h3 id="continuous-integration-ci">Continuous integration (CI)</h3>
 <p><code>.github/workflows/validate.yml</code> is configured to run the
-consistency checker and both regression suites for pushes to
+consistency checker and all three regression suites for pushes to
 <code>main</code> and pull requests. Whether a failed CI run blocks a
 merge depends on GitHub branch-protection settings.</p>
 <hr />
@@ -1665,6 +1681,24 @@ downloads this plugin, so this document does not cover it.</p>
 <hr />
 <h2 id="changelog-summary">Changelog Summary</h2>
 <details open>
+<summary><strong>2026-10-09 — mandatory perspective indicator, diagnosis restoration, and final-check guidance</strong></summary>
+
+<ul>
+<li>Instructions require actual applied perspectives at the start of
+progress messages and final answers. No-specialist status, user
+output-format priority, and distinction from execution evidence are
+preserved.</li>
+<li>Restored missing diagnose.mjs unchanged from the Codex distribution
+and removed the duplicate root manifest while preserving compat.</li>
+<li>Automated tests 35/35 and document/screen checks passed, but
+installation 1.11.0 differs from source 1.11.1. Complete Desktop usage
+remains unverified.</li>
+<li>HTML is generated from Korean/English Markdown. This documentation
+edit does not install, commit, push, or create a Release.</li>
+</ul>
+</details>
+
+<details open>
 <summary><strong>2026-10-09 — local candidate 1.11.1 integration</strong></summary>
 
 <ul>
@@ -1674,9 +1708,8 @@ manifest retained.</li>
 supplementary inputs; input counts are not model execution results.</li>
 <li>35 local automated tests passed. Actual CLI/Desktop auto-routing
 remains unverified.</li>
-<li>HTML generated from the corresponding Markdown. Global installation
-is a separate operation; no GitHub Release is created
-automatically.</li>
+<li>HTML generated from the corresponding Markdown. No global
+installation, release or push performed.</li>
 </ul>
 </details>
 
@@ -2519,15 +2552,15 @@ requires a rights warranty needs <strong>legal/professional
 review</strong></td>
 </tr>
 <tr>
-<td>Three third-party wordings remaining in
-<code>persona-triggers</code></td>
+<td>Three historical third-party sources (attribution retained in
+<code>NOTICE</code>; wording removed in current v6)</td>
 <td>Provenance is identified, but separate permission, a license, or the
 applicability of a quotation exception in each jurisdiction was not
 verified</td>
-<td>Before public or commercial redistribution, record a lawful basis
-such as permission, an applicable license, or a quotation exception. If
-that basis is unclear, <strong>legal/professional review is
-required</strong></td>
+<td>If reusing those passages, before public or commercial
+redistribution record a lawful basis such as permission, an applicable
+license, or a quotation exception. If that basis is unclear,
+<strong>legal/professional review is required</strong></td>
 </tr>
 <tr>
 <td>Product, company, and trademark names</td>
@@ -2567,9 +2600,11 @@ id="copyright-and-third-party-attribution-summary-of-the-notice-file">Copyright
 and third-party attribution (summary of the <code>NOTICE</code>
 file)</h3>
 <ul>
-<li><code>plugins/sodam-persona/skills/persona-triggers/SKILL.md</code>
-contains the following <strong>short quotations or abridged/paraphrased
-wording</strong>, not third-party source code.
+<li><code>NOTICE</code> preserves third-party provenance from earlier
+distributions. Current v6 removed these passages from
+<code>plugins/sodam-persona/skills/persona-triggers/SKILL.md</code>.
+<code>NOTICE</code> now distinguishes historical provenance from present
+inclusion and does not establish permission.
 <ul>
 <li>"Chesterton's Fence" — a simplified paraphrase of the principle
 associated with G. K. Chesterton's <em>The Thing</em>, "The Drift from
@@ -2733,16 +2768,15 @@ modified, forked, redistributed, sold, operated as a service, used in
 education, or delivered to a client. Trademarks, third-party quotations,
 AI output, material you add, external-service terms, and actual
 ownership remain separate checks.</p>
-<p><strong>Current publication/delivery status</strong>: Three
-third-party passages in
-<code>plugins/sodam-persona/skills/persona-triggers/SKILL.md</code> have
-attributed sources, but permission, license coverage, or an applicable
-quotation exception has not been verified. Do not describe public
-redistribution, resale, or client delivery of the repository containing
-these passages as rights-cleared. Confirm and record the rights basis or
-obtain legal/professional review before deciding. This is an unresolved
-third-party-rights issue, not an additional condition on Apache License
-2.0.</p>
+<p><strong>Current publication/delivery status</strong>: The three
+historical third-party passages are absent from the current v6 skill.
+<code>NOTICE</code> preserves provenance and now accurately
+distinguishes past inclusion. This does not establish clearance of all
+rights. Contributor title, AI-assisted material provenance and
+similarity, added assets, and external-service terms remain separate
+pre-delivery checks. Items requiring <strong>legal/professional
+review</strong> are recorded in the <a href="LEGAL_REVIEW.en.md">rights
+review record</a>.</p>
 <table>
 <thead>
 <tr>
@@ -2762,8 +2796,8 @@ Codex/OpenAI terms and fees remain separate</td>
 <tr>
 <td>Clone it or fork it on GitHub into your own account</td>
 <td>Yes</td>
-<td>None (follow the "conditions" below if you redistribute it to
-others)</td>
+<td>Public forks are redistribution: retain LICENSE and applicable
+notices; a private local copy alone is not public distribution</td>
 </tr>
 <tr>
 <td>Modify it and include it in your own commercial product/service</td>
@@ -2790,8 +2824,9 @@ advice</td>
 <td>Use it as training material (courses, tutorials, internal company
 training)</td>
 <td>Yes</td>
-<td>None (follow the "conditions" table above if you redistribute the
-material itself)</td>
+<td>Educational use is permitted; distributing course materials requires
+applicable redistribution conditions and separate checks for external
+material</td>
 </tr>
 <tr>
 <td>Include it in a deliverable you hand off to a company or client</td>
@@ -2826,9 +2861,8 @@ before publication, distribution, or client delivery</h3>
 <td>Provide <code>LICENSE</code>, carry applicable <code>NOTICE</code>
 content, mark modified files, avoid implied trademark affiliation, and
 verify external-service terms, privacy duties, and permission for
-customer material. Before public redistribution, resale, or client
-delivery, also confirm and record a rights basis for the three
-third-party passages or obtain legal/professional review</td>
+customer material. If restoring the historical passages, confirm and
+record their rights basis or obtain legal/professional review</td>
 </tr>
 <tr>
 <td><strong>Should Have</strong></td>
@@ -2862,6 +2896,213 @@ source</li>
 <code>LICENSE</code> and <code>NOTICE</code> originals in the repository
 directly, and consult a lawyer for any commercial-redistribution
 scenario you're not fully certain about.</p>
+<h2 id="beginner-verification-update-and-distribution-steps">Beginner
+Verification, Update, and Distribution Steps</h2>
+<h3 id="understand-the-different-states-first">Understand the different
+states first</h3>
+<table>
+<thead>
+<tr>
+<th>What you check</th>
+<th>What it means</th>
+<th>What it does not prove</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GitHub files</td>
+<td>The distribution source other people download</td>
+<td>Automatic updates of your PC installation</td>
+</tr>
+<tr>
+<td>Source files on your PC</td>
+<td>Files currently edited and checked</td>
+<td>That Codex actually uses those files</td>
+</tr>
+<tr>
+<td>Installed plugin and version</td>
+<td>What is registered with Codex</td>
+<td>That all files of the same version are identical</td>
+</tr>
+<tr>
+<td>Direct hook execution</td>
+<td>Instructions are returned as valid JSON</td>
+<td>That every AI answer follows them</td>
+</tr>
+<tr>
+<td>An actual answer in a new conversation</td>
+<td>The indicator and reasoning work in that conversation</td>
+<td>Error-free behavior for every future request</td>
+</tr>
+</tbody>
+</table>
+<p>In the final-check environment on 2026-10-09, the source was
+<strong>1.11.1</strong> and the global installation was <strong>1.11.0
+(enabled)</strong>. The indicator rule was also patched into the
+installed source, but the complete versions did not match. These are
+observations from that PC; check your own installation with the commands
+below. Do not assume the additional local indicator/diagnosis fixes are
+already present on every GitHub branch.</p>
+<h3 id="step-1--run-the-diagnosis">Step 1 — Run the diagnosis</h3>
+<p>PowerShell is a window for typing commands. Open this project folder
+in File Explorer, type <code>powershell</code> in its address bar, and
+press Enter to open a terminal there. Enter the commands <strong>one
+line at a time and press Enter</strong>. If <code>node</code> is not
+found, start with Node.js in <a href="#required-software">Required
+Software</a>.</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>node <span class="op">--</span>version</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>codex <span class="op">--</span>version</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>codex plugin list</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>node diagnose<span class="op">.</span><span class="fu">mjs</span></span></code></pre></div>
+<p>Find the enabled state, version, and source location of
+<code>sodam-persona@sodam-persona</code>. <code>diagnose.mjs</code>
+checks source/installed versions, enabled state, both hooks, and
+repository consistency without modifying files. <strong>Exit code
+0</strong> means these diagnostic conditions passed; <strong>exit code
+1</strong> means at least one did not. Resolve version mismatch,
+disabled/missing installation, unknown installation state, hook errors,
+or consistency errors, then rerun it. Code 0 does not mean the actual
+Desktop conversation was verified.</p>
+<h3 id="step-2--update-according-to-the-installation-source">Step 2 —
+Update according to the installation source</h3>
+<ul>
+<li><strong>GitHub installation:</strong> <a
+href="#update-and-uninstall">Update and uninstall</a> refreshes a Git
+marketplace snapshot. Confirm it comes from the Codex port before
+updating.</li>
+<li><strong>Local-folder installation:</strong>
+<code>marketplace upgrade</code> does not replace the contents of a
+local source folder with GitHub files. Identify the reported source
+folder, preserve personal edits, and update only verified files. With
+uncommitted changes, do not blindly run <code>git pull</code>,
+force-reset, or overwrite the folder.</li>
+<li><strong>Before removal/reinstallation:</strong> Preserve personal
+edits in a cache first. If the source folder is unclear, compare
+<code>codex plugin list</code> with the source files rather than
+deleting it.</li>
+<li><strong>After updating:</strong> Rerun the diagnosis and create a
+new conversation. Restarting the app alone does not install the latest
+version. Equal versions may still contain different edited files, so
+check the actual source location too.</li>
+</ul>
+<h3 id="step-3--make-ordinary-requests">Step 3 — Make ordinary
+requests</h3>
+<p>Enter these in new Codex conversations as ordinary work requests. A
+separate new conversation for each comparison reduces carry-over from
+previous requests.</p>
+<pre class="text"><code>건축 도면과 BIM 모델의 치수가 서로 다를 때 무엇부터 확인해야 해?</code></pre>
+<pre class="text"><code>건축시각화 홍보 영상의 콘셉트와 고객 제안서 구성을 잡아줘.</code></pre>
+<pre class="text"><code>“BIM과 ComfyUI를 사용했습니다.” 이 문장 맞춤법만 확인해줘. 다른 작업은 하지 마.</code></pre>
+<p>These ask, respectively, what to check when drawing/BIM dimensions
+differ, for an architectural-visualization video concept and client
+proposal structure, and only for a spelling check of a quoted sentence.
+An ordinary natural-language response must begin with the perspectives
+actually applied. The last request merely mentions product/domain words
+and must not launch architectural or generation work. If no specialist
+perspective applies, show <code>전문 관점 미적용</code>. User-required
+JSON/code-only output or an explicit request to hide the indicator takes
+precedence. Imitating the indicator alone is insufficient: the answer
+itself must match the request.</p>
+<h3 id="step-4--checks-for-people-editing-the-source">Step 4 — Checks
+for people editing the source</h3>
+<p>Ordinary users do not need to run development checks every time.
+After editing source or documentation, run them from the repository
+root. There is no <code>package.json</code>, TypeScript configuration,
+or separate lint command. Checks use JavaScript syntax, consistency
+validation, Node's built-in tests, and Pandoc documentation
+generation.</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>node <span class="op">--</span>check validate<span class="op">.</span><span class="fu">mjs</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>node <span class="op">--</span>check diagnose<span class="op">.</span><span class="fu">mjs</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>node validate<span class="op">.</span><span class="fu">mjs</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>node <span class="op">--</span>test test-hooks<span class="op">.</span><span class="fu">mjs</span> test-validator<span class="op">.</span><span class="fu">mjs</span> test-supplemental<span class="op">.</span><span class="fu">mjs</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>node build-docs<span class="op">.</span><span class="fu">mjs</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>git <span class="fu">diff</span> <span class="op">--</span>check</span></code></pre></div>
+<p>There are currently 35 tests. <code>test-hooks.mjs</code> covers
+normal/empty/malformed JSON, 2MiB input, Windows commands, missing/blank
+resources, and delivery of the mandatory indicator instructions.
+<code>test-validator.mjs</code> verifies rejection of injected errors.
+<code>test-supplemental.mjs</code> checks Korean quotation/exclusion
+inputs and compatibility-file placement. The 180 frozen inputs plus 90
+supplementary inputs are <strong>not 270 successful AI
+executions</strong>. Separate final checks also exercised
+Unicode/null/5MiB input and simulated denied permissions. Hooks do not
+evaluate or execute stdin metadata: they drain it and output fixed
+instructions.</p>
+<p><code>node build-docs.mjs</code> requires Pandoc. Follow the <a
+href="https://pandoc.org/installing.html">official Pandoc installation
+guide</a>. Edit Markdown and use this command to generate HTML; do not
+edit the HTML body separately. If a failed check cannot be resolved,
+stop distribution rather than reporting success or skipping the
+check.</p>
+<h3
+id="step-5--separate-github-distribution-from-local-installation">Step 5
+— Separate GitHub distribution from local installation</h3>
+<ol type="1">
+<li>Inspect <code>git status --short</code>, <code>git diff</code>, and
+<code>git ls-files</code>; check changed/tracked files for secrets,
+personal files, large files, and caches. Exclude
+<code>CHECKPOINT.md</code>.</li>
+<li>Check the branch and remote URL. Upstream <code>SoDam-Persona</code>
+and distribution target <code>SoDam-Persona-Codex</code> are different
+repositories; do not trust a remote alias alone.</li>
+<li>Commit only verified changes in meaningful units on a working branch
+and push that branch. Use a Pull Request instead of pushing directly to
+the default branch, and check conflicts, CI, and protection rules before
+merging.</li>
+<li>Verify the final Korean/English README, HTML, LICENSE, and NOTICE on
+the default branch. About and Topics must describe implemented
+functionality and public-safe information only.</li>
+<li>A Release is a separate decision. Installing a plugin and publishing
+GitHub files are different operations. After distribution, update
+according to the installation source and verify in a new
+conversation.</li>
+</ol>
+<h3 id="actual-final-check-scope">Actual final-check scope</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Observation on 2026-10-09</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consistency, JS syntax, tests, documentation generation</td>
+<td>Passed; automated tests 35/35</td>
+</tr>
+<tr>
+<td>Korean/English Markdown and HTML bodies</td>
+<td>Matching within each language</td>
+</tr>
+<tr>
+<td>Documentation screens</td>
+<td>No horizontal overflow at 1440px/390px; toggles and TOC targets
+checked; no console errors in file preview</td>
+</tr>
+<tr>
+<td>Public candidate security</td>
+<td>No checked credential-pattern findings in 79 files; full Git history
+and all possible secret formats remain unverified</td>
+</tr>
+<tr>
+<td>Diagnosis command</td>
+<td>Hooks/consistency passed; exit code 1 because source/installed
+versions differed</td>
+</tr>
+<tr>
+<td>Complete Desktop/CLI usage flows</td>
+<td>Unverified/not run; matching installation and actual answer
+compliance still required</td>
+</tr>
+<tr>
+<td>Built-in login/API/DB/product server</td>
+<td>Not implemented; Codex-host authentication, permissions, and
+communication are separate</td>
+</tr>
+</tbody>
+</table>
 <h2 id="v6-verification-scope">v6 verification scope</h2>
 <p>1.11.1 · 45 roles · 39 skills. File/hook checks do not prove
 behavioral or media quality. Commands: <code>node validate.mjs</code>,
@@ -2878,5 +3119,6 @@ distributing modified files. Sections 3, 6, 7, 8 and 9 cover patent
 conditions, trademarks, warranty disclaimers, liability and optional
 obligations. This guide is not legal advice or a guarantee of compliance
 or ownership of generated outputs.</p>
+<!-- Modified 2026-10-09: legal provenance and distribution guidance synchronized. -->
 </body>
 </html>

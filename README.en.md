@@ -1,8 +1,11 @@
 # SoDam Persona for Codex
 
+### Applied-perspective indicator
+Every ordinary natural-language response must start with an indicator such as `[페르소나: L2 · CAD·BIM 정보 정합성 관점]`, naming only perspectives actually applied. Show it in progress messages and final answers; when no specialist perspective applies, show the actual L level and `전문 관점 미적용` (no specialist perspective applied). Do not omit it for short answers. User-required JSON/code-only output or a request to hide the indicator takes precedence. The indicator is not evidence of tool execution or successful work. Already injected instructions in existing conversations do not change with edited files; verify in a new conversation.
+
 ## Current integration status (2026-10-09)
 
-This Codex port, `sodam-ai/SoDam-Persona-Codex`, originates from `sodam-ai/SoDam-Persona`. Version 1.11.1 provides 45 perspectives, 39 skills and intent-based activation. It preserves creation/editing skills and the Windows hook fix; the portable manifest stays under `compat/`. The 180 frozen inputs and 90 supplementary Korean inputs are not successful model executions. Actual CLI/Desktop auto-routing and complete post-installation flows remain unverified.
+This is the working source of `sodam-ai/SoDam-Persona-Codex`, ported from upstream `sodam-ai/SoDam-Persona`. It currently provides version 1.11.1, 45 perspectives, 39 skills, and two hooks, preserving creation/editing skills and the compat manifest. Source checks of the additional indicator and diagnosis fixes passed, but installed-version mismatch and complete Desktop usage remain unresolved/unverified. Check fixes against the commit containing this document; a version string alone does not establish file identity. No SoDam-Agent team-specific rules are included.
 
 
 **SoDam Persona** gives OpenAI's AI coding assistant **Codex** (an AI program that helps you build software using natural-language instructions) the personality of a "careful, detail-oriented Korean development partner." It is an add-on program (a **plugin** — a small extra program that adds features to an existing program).
@@ -11,7 +14,7 @@ This document is written so that even someone who has never used a computer, a s
 
 The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It contains 2 **hooks** (small programs configured to run when Codex dispatches their events) and 39 conditional expert knowledge modules (**skills**) to load when relevant. Verify actual automatic execution in your installed environment; installation, permissions, and host behavior can affect it.
 
-> **Version of this source**: `1.11.1` · **Perspectives**: 45 · **Routing**: intent-based; 43 legacy categories patterns (A-AQ) · **Skills**: 39 · **Hooks**: 2 · **License**: Apache License 2.0
+> **Version of this source**: `1.11.1` · **Perspectives**: 45 · **Routing**: intent-based; words alone do not activate roles · **Skills**: 39 · **Hooks**: 2 · **License**: Apache License 2.0
 
 > **Check before installing**: The default GitHub install and ZIP download fetch the current default branch. Its version may differ from that of the branch displaying this document, so verify the actual plugin version after installation. To test a separate working branch, use the testing instructions below. Updating a Git branch does not create a Release or automatically update an existing installation.
 
@@ -19,23 +22,26 @@ The plugin itself is not a separate AI. It layers a set of "judge this way, answ
 
 ## Table of Contents
 
-1. [Prerequisites](#prerequisites)
-2. [Required Software](#required-software)
-3. [How to Download](#how-to-download)
-4. [Installation](#installation)
-5. [Quick Start](#quick-start)
-6. [How to Run](#how-to-run)
-7. [How to Use](#how-to-use)
-8. [Commands](#commands)
-9. [How It Works](#how-it-works)
-10. [Workflow](#workflow)
-11. [Architecture](#architecture)
-12. [Security & Data Flow](#security--data-flow)
-13. [Files & Documentation Map](#files--documentation-map)
-14. [Changelog Summary](#changelog-summary)
-15. [Troubleshooting](#troubleshooting)
-16. [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq)
-17. [Legal, Copyright, License, and Commercial Use](#legal-copyright-license-and-commercial-use)
+1. [Current integration status (2026-10-09)](#current-integration-status-2026-10-09)
+2. [Prerequisites](#prerequisites)
+3. [Required Software](#required-software)
+4. [How to Download](#how-to-download)
+5. [Installation](#installation)
+6. [Quick Start](#quick-start)
+7. [How to Run](#how-to-run)
+8. [How to Use](#how-to-use)
+9. [Commands](#commands)
+10. [How It Works](#how-it-works)
+11. [Workflow](#workflow)
+12. [Architecture](#architecture)
+13. [Security & Data Flow](#security--data-flow)
+14. [Files & Documentation Map](#files--documentation-map)
+15. [Changelog Summary](#changelog-summary)
+16. [Troubleshooting](#troubleshooting)
+17. [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq)
+18. [Legal, Copyright, License, and Commercial Use](#legal-copyright-license-and-commercial-use)
+19. [Beginner Verification, Update, and Distribution Steps](#beginner-verification-update-and-distribution-steps)
+20. [v6 verification scope](#v6-verification-scope)
 
 ---
 
@@ -143,7 +149,7 @@ codex plugin add sodam-persona@sodam-persona
 
 ### Testing this local candidate
 
-Version 1.11.1 is distributed with this guide. Before merging, use the working branch; after merging, use the default branch. GitHub downloads do not contain uncommitted local changes. To test these exact files, open a terminal in the project root, inspect `plugins/sodam-persona/.codex-plugin/plugin.json`, and follow the local-install steps above in a separate environment without a duplicate marketplace. Do not assume an old testing branch still exists. No installation was performed while writing this guide.
+The GitHub distribution is defined by the commit containing this document. Check the default-branch README and commit, refresh the Marketplace snapshot, and test in a new conversation. Personal local changes are not included in downloads. Documentation edits do not automatically refresh installed copies.
 
 ### Permission and trust check after installation
 
@@ -374,7 +380,7 @@ Mixing certain words into your request automatically changes how deep the respon
 
 | Command | Description |
 |---|---|
-| `node validate.mjs` | Automatically checks consistency: perspective count, trigger pattern count, skill count, domain wiring, disclaimer text, personal path leaks, and more |
+| `node validate.mjs` | Checks perspective IDs and names, skill metadata and references, versions, hook format, personal path leaks, and script syntax |
 | `node --test test-hooks.mjs` | Tests both hooks with normal, empty, malformed, 2 MiB, missing-source, and blank-source inputs |
 | `node --test test-validator.mjs` | Proves the validator rejects registry, version, wiring, size, personal-path, and unsafe-folder errors |
 | `node diagnose.mjs` | Read-only diagnosis of source/installed versions, enabled state, both hooks, and repository consistency |
@@ -644,7 +650,7 @@ These checks do not prove semantic disclaimer quality, all activation phrases, a
 
 ### Continuous integration (CI)
 
-`.github/workflows/validate.yml` is configured to run the consistency checker and both regression suites for pushes to `main` and pull requests. Whether a failed CI run blocks a merge depends on GitHub branch-protection settings.
+`.github/workflows/validate.yml` is configured to run the consistency checker and all three regression suites for pushes to `main` and pull requests. Whether a failed CI run blocks a merge depends on GitHub branch-protection settings.
 
 ---
 
@@ -729,12 +735,23 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 ## Changelog Summary
 
 <details open>
+<summary><strong>2026-10-09 — mandatory perspective indicator, diagnosis restoration, and final-check guidance</strong></summary>
+
+- Instructions require actual applied perspectives at the start of progress messages and final answers. No-specialist status, user output-format priority, and distinction from execution evidence are preserved.
+- Restored missing diagnose.mjs unchanged from the Codex distribution and removed the duplicate root manifest while preserving compat.
+- Automated tests 35/35 and document/screen checks passed, but installation 1.11.0 differs from source 1.11.1. Complete Desktop usage remains unverified.
+- HTML is generated from Korean/English Markdown. This documentation edit does not install, commit, push, or create a Release.
+
+</details>
+
+
+<details open>
 <summary><strong>2026-10-09 — local candidate 1.11.1 integration</strong></summary>
 
 - 45 perspectives and 39 skills; creation/editing skills and portable manifest retained.
 - Activation/exclusion boundaries, 180 fixed inputs and 90 Korean supplementary inputs; input counts are not model execution results.
 - 35 local automated tests passed. Actual CLI/Desktop auto-routing remains unverified.
-- HTML generated from the corresponding Markdown. Global installation is a separate operation; no GitHub Release is created automatically.
+- HTML generated from the corresponding Markdown. No global installation, release or push performed.
 
 </details>
 
@@ -1084,7 +1101,7 @@ And it is important to be clear about what is **not** guaranteed (a summary of t
 | Material | Current verified status | What to do before public or commercial use |
 |---|---|---|
 | Code, documentation, prompts, and rules written for this project | Apache License 2.0 is stated. The legal identity of the copyright holder, contributor transfers, and the chain of title for AI-assisted material were not independently proven | Keep `LICENSE` and relevant `NOTICE` attribution, and mark modified files prominently. Client delivery that requires a rights warranty needs **legal/professional review** |
-| Three third-party wordings remaining in `persona-triggers` | Provenance is identified, but separate permission, a license, or the applicability of a quotation exception in each jurisdiction was not verified | Before public or commercial redistribution, record a lawful basis such as permission, an applicable license, or a quotation exception. If that basis is unclear, **legal/professional review is required** |
+| Three historical third-party sources (attribution retained in `NOTICE`; wording removed in current v6) | Provenance is identified, but separate permission, a license, or the applicability of a quotation exception in each jurisdiction was not verified | If reusing those passages, before public or commercial redistribution record a lawful basis such as permission, an applicable license, or a quotation exception. If that basis is unclear, **legal/professional review is required** |
 | Product, company, and trademark names | Only text needed to describe compatibility and provenance is present; no logo file is bundled | Do not imply affiliation, sponsorship, or official approval, and use the names only as reasonably needed to identify the products or sources |
 | Inputs and outputs from external AI services such as Codex | This project's Apache License 2.0 cannot guarantee ownership or commercial-use rights in those materials | Check rights and consent for the input, output similarity and infringement risk, and the latest terms and policies for the applicable account type |
 | Customer files, internal documents, and personal data supplied by the user | No real material of this kind is currently stored in the repository, but users may provide it after installation | Confirm authority to upload and process it, confidentiality duties, a lawful privacy basis, and customer consent first |
@@ -1093,7 +1110,7 @@ Listing a source in `NOTICE` is **attribution**, not a new permission to use thi
 
 ### Copyright and third-party attribution (summary of the `NOTICE` file)
 
-- `plugins/sodam-persona/skills/persona-triggers/SKILL.md` contains the following **short quotations or abridged/paraphrased wording**, not third-party source code.
+- `NOTICE` preserves third-party provenance from earlier distributions. Current v6 removed these passages from `plugins/sodam-persona/skills/persona-triggers/SKILL.md`. `NOTICE` now distinguishes historical provenance from present inclusion and does not establish permission.
   - "Chesterton's Fence" — a simplified paraphrase of the principle associated with G. K. Chesterton's *The Thing*, "The Drift from Domesticity"
   - "Hyrum's Law" — an abridged formulation of the observation attributed to Hyrum Wright and published at `https://www.hyrumslaw.com/`
   - Goal-Driven Execution — a short excerpt from a public post attributed to Andrej Karpathy. Public archive reviewed: `https://adhx.com/karpathy/status/2015883857489522876`
@@ -1156,16 +1173,16 @@ No additional license duty was identified from images, fonts, or external packag
 
 **One-line summary for absolute beginners**: the project code and documentation covered by Apache License 2.0 may be used as-is, modified, forked, redistributed, sold, operated as a service, used in education, or delivered to a client. Trademarks, third-party quotations, AI output, material you add, external-service terms, and actual ownership remain separate checks.
 
-**Current publication/delivery status**: Three third-party passages in `plugins/sodam-persona/skills/persona-triggers/SKILL.md` have attributed sources, but permission, license coverage, or an applicable quotation exception has not been verified. Do not describe public redistribution, resale, or client delivery of the repository containing these passages as rights-cleared. Confirm and record the rights basis or obtain legal/professional review before deciding. This is an unresolved third-party-rights issue, not an additional condition on Apache License 2.0.
+**Current publication/delivery status**: The three historical third-party passages are absent from the current v6 skill. `NOTICE` preserves provenance and now accurately distinguishes past inclusion. This does not establish clearance of all rights. Contributor title, AI-assisted material provenance and similarity, added assets, and external-service terms remain separate pre-delivery checks. Items requiring **legal/professional review** are recorded in the [rights review record](LEGAL_REVIEW.en.md).
 
 | What you want to do | Allowed under Apache 2.0? | Conditions and separate checks |
 |---|---|---|
 | Use this plugin as-is internally at a company or personally, without redistribution | Yes | No separate redistribution duty under this repository license; Codex/OpenAI terms and fees remain separate |
-| Clone it or fork it on GitHub into your own account | Yes | None (follow the "conditions" below if you redistribute it to others) |
+| Clone it or fork it on GitHub into your own account | Yes | Public forks are redistribution: retain LICENSE and applicable notices; a private local copy alone is not public distribution |
 | Modify it and include it in your own commercial product/service | Yes | Follow the "conditions" table above (license copy, marking changes, keeping notices) |
 | Repackage this code and resell it | Yes | Same as above. The Apache License 2.0 does not forbid charging money for redistribution itself |
 | Run a service (e.g. SaaS) built on top of this plugin | Yes | Follow redistribution conditions if source/plugin files reach customers. Even for server-only use, separately check Codex/OpenAI terms, privacy duties, and professional-service regulation; show disclaimers so users do not mistake output for real investment/legal/tax advice |
-| Use it as training material (courses, tutorials, internal company training) | Yes | None (follow the "conditions" table above if you redistribute the material itself) |
+| Use it as training material (courses, tutorials, internal company training) | Yes | Educational use is permitted; distributing course materials requires applicable redistribution conditions and separate checks for external material |
 | Include it in a deliverable you hand off to a company or client | Yes | Follow the "conditions" table above. The license copy and NOTICE notices must also reach the client |
 | Distribute a product under the "SoDam" / "sodam-ai" name in a way that implies your product originates from or is sponsored by that brand | **Not established as permitted** | The license grants no trademark rights (section 6). Use beyond reasonable and customary origin description requires confirmation from the rights holder |
 
@@ -1173,7 +1190,7 @@ No additional license duty was identified from images, fonts, or external packag
 
 | Priority | Required action |
 |---|---|
-| **Must Have** | Provide `LICENSE`, carry applicable `NOTICE` content, mark modified files, avoid implied trademark affiliation, and verify external-service terms, privacy duties, and permission for customer material. Before public redistribution, resale, or client delivery, also confirm and record a rights basis for the three third-party passages or obtain legal/professional review |
+| **Must Have** | Provide `LICENSE`, carry applicable `NOTICE` content, mark modified files, avoid implied trademark affiliation, and verify external-service terms, privacy duties, and permission for customer material. If restoring the historical passages, confirm and record their rights basis or obtain legal/professional review |
 | **Should Have** | Record the exact sources and applicable scope of third-party quotations, and document the legal copyright-holder name, contributor assignments, and ownership chain for AI-assisted material |
 | **Could Have** | Obtain lawyer review of client contracts, warranties, indemnities, and country-specific regulation, and retain a release-by-release external-material list or SBOM |
 
@@ -1187,6 +1204,96 @@ No additional license duty was identified from images, fonts, or external packag
 If you have a specific situation in mind, please read the `LICENSE` and `NOTICE` originals in the repository directly, and consult a lawyer for any commercial-redistribution scenario you're not fully certain about.
 
 
+## Beginner Verification, Update, and Distribution Steps
+
+### Understand the different states first
+
+| What you check | What it means | What it does not prove |
+|---|---|---|
+| GitHub files | The distribution source other people download | Automatic updates of your PC installation |
+| Source files on your PC | Files currently edited and checked | That Codex actually uses those files |
+| Installed plugin and version | What is registered with Codex | That all files of the same version are identical |
+| Direct hook execution | Instructions are returned as valid JSON | That every AI answer follows them |
+| An actual answer in a new conversation | The indicator and reasoning work in that conversation | Error-free behavior for every future request |
+
+In the final-check environment on 2026-10-09, the source was **1.11.1** and the global installation was **1.11.0 (enabled)**. The indicator rule was also patched into the installed source, but the complete versions did not match. These are observations from that PC; check your own installation with the commands below. Do not assume the additional local indicator/diagnosis fixes are already present on every GitHub branch.
+
+### Step 1 — Run the diagnosis
+
+PowerShell is a window for typing commands. Open this project folder in File Explorer, type `powershell` in its address bar, and press Enter to open a terminal there. Enter the commands **one line at a time and press Enter**. If `node` is not found, start with Node.js in [Required Software](#required-software).
+
+```powershell
+node --version
+codex --version
+codex plugin list
+node diagnose.mjs
+```
+
+Find the enabled state, version, and source location of `sodam-persona@sodam-persona`. `diagnose.mjs` checks source/installed versions, enabled state, both hooks, and repository consistency without modifying files. **Exit code 0** means these diagnostic conditions passed; **exit code 1** means at least one did not. Resolve version mismatch, disabled/missing installation, unknown installation state, hook errors, or consistency errors, then rerun it. Code 0 does not mean the actual Desktop conversation was verified.
+
+### Step 2 — Update according to the installation source
+
+- **GitHub installation:** [Update and uninstall](#update-and-uninstall) refreshes a Git marketplace snapshot. Confirm it comes from the Codex port before updating.
+- **Local-folder installation:** `marketplace upgrade` does not replace the contents of a local source folder with GitHub files. Identify the reported source folder, preserve personal edits, and update only verified files. With uncommitted changes, do not blindly run `git pull`, force-reset, or overwrite the folder.
+- **Before removal/reinstallation:** Preserve personal edits in a cache first. If the source folder is unclear, compare `codex plugin list` with the source files rather than deleting it.
+- **After updating:** Rerun the diagnosis and create a new conversation. Restarting the app alone does not install the latest version. Equal versions may still contain different edited files, so check the actual source location too.
+
+### Step 3 — Make ordinary requests
+
+Enter these in new Codex conversations as ordinary work requests. A separate new conversation for each comparison reduces carry-over from previous requests.
+
+```text
+건축 도면과 BIM 모델의 치수가 서로 다를 때 무엇부터 확인해야 해?
+```
+
+```text
+건축시각화 홍보 영상의 콘셉트와 고객 제안서 구성을 잡아줘.
+```
+
+```text
+“BIM과 ComfyUI를 사용했습니다.” 이 문장 맞춤법만 확인해줘. 다른 작업은 하지 마.
+```
+
+These ask, respectively, what to check when drawing/BIM dimensions differ, for an architectural-visualization video concept and client proposal structure, and only for a spelling check of a quoted sentence. An ordinary natural-language response must begin with the perspectives actually applied. The last request merely mentions product/domain words and must not launch architectural or generation work. If no specialist perspective applies, show `전문 관점 미적용`. User-required JSON/code-only output or an explicit request to hide the indicator takes precedence. Imitating the indicator alone is insufficient: the answer itself must match the request.
+
+### Step 4 — Checks for people editing the source
+
+Ordinary users do not need to run development checks every time. After editing source or documentation, run them from the repository root. There is no `package.json`, TypeScript configuration, or separate lint command. Checks use JavaScript syntax, consistency validation, Node's built-in tests, and Pandoc documentation generation.
+
+```powershell
+node --check validate.mjs
+node --check diagnose.mjs
+node validate.mjs
+node --test test-hooks.mjs test-validator.mjs test-supplemental.mjs
+node build-docs.mjs
+git diff --check
+```
+
+There are currently 35 tests. `test-hooks.mjs` covers normal/empty/malformed JSON, 2MiB input, Windows commands, missing/blank resources, and delivery of the mandatory indicator instructions. `test-validator.mjs` verifies rejection of injected errors. `test-supplemental.mjs` checks Korean quotation/exclusion inputs and compatibility-file placement. The 180 frozen inputs plus 90 supplementary inputs are **not 270 successful AI executions**. Separate final checks also exercised Unicode/null/5MiB input and simulated denied permissions. Hooks do not evaluate or execute stdin metadata: they drain it and output fixed instructions.
+
+`node build-docs.mjs` requires Pandoc. Follow the [official Pandoc installation guide](https://pandoc.org/installing.html). Edit Markdown and use this command to generate HTML; do not edit the HTML body separately. If a failed check cannot be resolved, stop distribution rather than reporting success or skipping the check.
+
+### Step 5 — Separate GitHub distribution from local installation
+
+1. Inspect `git status --short`, `git diff`, and `git ls-files`; check changed/tracked files for secrets, personal files, large files, and caches. Exclude `CHECKPOINT.md`.
+2. Check the branch and remote URL. Upstream `SoDam-Persona` and distribution target `SoDam-Persona-Codex` are different repositories; do not trust a remote alias alone.
+3. Commit only verified changes in meaningful units on a working branch and push that branch. Use a Pull Request instead of pushing directly to the default branch, and check conflicts, CI, and protection rules before merging.
+4. Verify the final Korean/English README, HTML, LICENSE, and NOTICE on the default branch. About and Topics must describe implemented functionality and public-safe information only.
+5. A Release is a separate decision. Installing a plugin and publishing GitHub files are different operations. After distribution, update according to the installation source and verify in a new conversation.
+
+### Actual final-check scope
+
+| Item | Observation on 2026-10-09 |
+|---|---|
+| Consistency, JS syntax, tests, documentation generation | Passed; automated tests 35/35 |
+| Korean/English Markdown and HTML bodies | Matching within each language |
+| Documentation screens | No horizontal overflow at 1440px/390px; toggles and TOC targets checked; no console errors in file preview |
+| Public candidate security | No checked credential-pattern findings in 79 files; full Git history and all possible secret formats remain unverified |
+| Diagnosis command | Hooks/consistency passed; exit code 1 because source/installed versions differed |
+| Complete Desktop/CLI usage flows | Unverified/not run; matching installation and actual answer compliance still required |
+| Built-in login/API/DB/product server | Not implemented; Codex-host authentication, permissions, and communication are separate |
+
+
 ## v6 verification scope
 1.11.1 · 45 roles · 39 skills. File/hook checks do not prove behavioral or media quality. Commands: `node validate.mjs`, `node --test test-hooks.mjs test-validator.mjs test-supplemental.mjs`, `node build-docs.mjs`.
 
@@ -1195,3 +1302,5 @@ Local regression currently covers 35 automated tests; defining 270 routing input
 ### Source and legal scope
 
 The root LICENSE and NOTICE are the controlling notices. Apache-2.0 permission is conditional and does not grant blanket rights to third-party materials, trademarks, customer data or AI outputs. Preserve copyright/NOTICE, provide the license and mark modifications when distributing modified files. Sections 3, 6, 7, 8 and 9 cover patent conditions, trademarks, warranty disclaimers, liability and optional obligations. This guide is not legal advice or a guarantee of compliance or ownership of generated outputs.
+
+<!-- Modified 2026-10-09: legal provenance and distribution guidance synchronized. -->

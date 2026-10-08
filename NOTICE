@@ -8,23 +8,19 @@ See the LICENSE file for the full license text.
 Third-party quotations and provenance
 --------------------------------------------------------------------------------
 
-Earlier distributions contained short quotations or paraphrases in
-plugins/sodam-persona/skills/persona-triggers/SKILL.md. Their provenance is retained below for historical attribution. This distribution does NOT bundle or
-redistribute third-party source code, images, fonts, audio, or video:
+Earlier distributions included short quotations or paraphrases in
+plugins/sodam-persona/skills/persona-triggers/SKILL.md. Those passages are
+absent from the current v6 skill. The following provenance is retained as
+historical attribution; it does not assert present inclusion or permission:
 
-  - "Chesterton's Fence" — the project uses a simplified paraphrase of the
+  - "Chesterton's Fence" — earlier versions used a simplified paraphrase of the
     principle associated with G. K. Chesterton's The Thing, "The Drift from
     Domesticity."
-  - "Hyrum's Law" — the project uses a shortened formulation of the observation
+  - "Hyrum's Law" — earlier versions used a shortened formulation of the observation
     published at https://www.hyrumslaw.com/ and attributed to Hyrum Wright.
-  - Goal-Driven Execution — the project includes a short excerpt attributed to
+  - Goal-Driven Execution — earlier versions included a short excerpt attributed to
     Andrej Karpathy; a public archive of the referenced post is available at
     https://adhx.com/karpathy/status/2015883857489522876.
-
-The Apache License, Version 2.0 grant for this project applies only to rights
-that the licensor and contributors can lawfully grant. It does not itself
-license or clear the third-party wording listed above. Listing a source in this
-NOTICE file is attribution, not permission.
 
 These acknowledgments identify provenance only. They do not claim that any
 quotation is in the public domain, licensed to this project, or legally usable
@@ -54,3 +50,6 @@ the project's stated notice; this audit did not independently verify legal-entit
 identity, contributor title, or the ownership chain for AI-assisted material.
 This is not legal advice. Independent legal review is required when those facts
 or commercial redistribution rights are material.
+
+Modification notice (2026-10-09): corrected present-inclusion wording to
+historical provenance after checking the current v6 distribution.

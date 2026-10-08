@@ -30,8 +30,8 @@ function parseSuccessful(result, event) {
 }
 
 for (const [script, event, required] of [
-  ['inject-core.js', 'SessionStart', ['메타 규칙', '37명', 'persona-triggers']],
-  ['inject-marker.js', 'UserPromptSubmit', ['페르소나', '37명', 'persona-triggers']],
+  ['inject-core.js', 'SessionStart', ['메타 규칙', '37명', 'persona-triggers', '첫 줄에는 반드시', '실제 적용한 관점', '전문 관점 미적용', 'JSON·코드만']],
+  ['inject-marker.js', 'UserPromptSubmit', ['페르소나', '37명', 'persona-triggers', '첫 줄에는 반드시', '실제 적용한 관점', '전문 관점 미적용', 'JSON·코드만']],
 ]) {
   test(`${script}: 정상·빈·잘못된 JSON 입력에도 유효한 hook JSON`, () => {
     for (const input of ['{}', '', '{broken']) {

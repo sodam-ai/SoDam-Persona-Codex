@@ -40,3 +40,5 @@ Before delivery, inspect manifests, README, verification results, licensing, sec
 ## Rights before sharing or selling
 
 Commercial use is permitted where Apache 2.0 lawfully applies, subject to its conditions. Include [LICENSE](LICENSE) and applicable [NOTICE](NOTICE) in actual redistributed files; mark changed files prominently. Check external material, AI outputs and provider/account terms separately. No warranty of ownership or non-infringement is made. See [legal review](LEGAL_REVIEW.en.md) for unverified facts and legal/professional review needs.
+
+The reproducible document baseline is Pandoc 3.7.0.2. CI verifies the official asset SHA-256 before installing the same version. Output differs from the distribution-provided Pandoc 3.1.3; if HTML body comparison fails, check the version first rather than skipping validation.

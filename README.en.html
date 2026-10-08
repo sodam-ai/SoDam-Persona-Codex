@@ -268,6 +268,16 @@
 <h1 class="title">SoDam-Persona — README (English)</h1>
 </header>
 <h1 id="sodam-persona-for-codex">SoDam Persona for Codex</h1>
+<h2 id="current-integration-status-2026-10-09">Current integration
+status (2026-10-09)</h2>
+<p>This Codex port, <code>sodam-ai/SoDam-Persona-Codex</code>,
+originates from <code>sodam-ai/SoDam-Persona</code>. Version 1.11.1
+provides 45 perspectives, 39 skills and intent-based activation. It
+preserves creation/editing skills and the Windows hook fix; the portable
+manifest stays under <code>compat/</code>. The 180 frozen inputs and 90
+supplementary Korean inputs are not successful model executions. Actual
+CLI/Desktop auto-routing and complete post-installation flows remain
+unverified.</p>
 <p><strong>SoDam Persona</strong> gives OpenAI's AI coding assistant
 <strong>Codex</strong> (an AI program that helps you build software
 using natural-language instructions) the personality of a "careful,
@@ -283,17 +293,17 @@ documents together).</p>
 <p>The plugin itself is not a separate AI. It layers a set of "judge
 this way, answer this way" rule documents on top of the conversational
 ability Codex already has. It contains 2 <strong>hooks</strong> (small
-programs configured to run when Codex dispatches their events) and 31
+programs configured to run when Codex dispatches their events) and 39
 conditional expert knowledge modules (<strong>skills</strong>) to load
 when relevant. Verify actual automatic execution in your installed
 environment; installation, permissions, and host behavior can affect
 it.</p>
 <blockquote>
-<p><strong>Version of this source</strong>: <code>1.10.2</code> ·
-<strong>Perspectives</strong>: 37 · <strong>Trigger patterns</strong>:
-43 patterns (A-AQ) · <strong>Skills</strong>: 31 ·
-<strong>Hooks</strong>: 2 · <strong>License</strong>: Apache License
-2.0</p>
+<p><strong>Version of this source</strong>: <code>1.11.1</code> ·
+<strong>Perspectives</strong>: 45 · <strong>Routing</strong>:
+intent-based; 43 legacy categories patterns (A-AQ) ·
+<strong>Skills</strong>: 39 · <strong>Hooks</strong>: 2 ·
+<strong>License</strong>: Apache License 2.0</p>
 </blockquote>
 <blockquote>
 <p><strong>Check before installing</strong>: The default GitHub install
@@ -392,11 +402,11 @@ Korean/English HTML regeneration, and Chrome rendering/console checks
 passed. This does not prove that an existing personal installation was
 updated or that Codex automatically invoked the hook on an ordinary
 prompt.</p>
-<p><strong>Unverified scope</strong>: The existing personal installation
-was v1.10.1 at the last check. Automatic v1.10.2 hook invocation on an
-ordinary prompt, macOS/Linux devices, and every Codex app/IDE
-combination remain unverified. CI and browser checks apply only to the
-tested commit and environment. Run <a
+<p><strong>Unverified scope of the historical v1.10.2 test</strong>: The
+personal installation was v1.10.1 at that check. Automatic v1.10.2 hook
+invocation on an ordinary prompt, macOS/Linux devices, and every Codex
+app/IDE combination remain unverified. CI and browser checks apply only
+to the tested commit and environment. Run <a
 href="#verify-the-installation">Verify the installation</a> on each
 environment.</p>
 <p><strong>Account and permissions</strong>: Your OpenAI account and
@@ -533,21 +543,15 @@ class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb4-
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>codex plugin add sodam-persona@sodam-persona</span></code></pre></div>
 <p><code>.</code> (a single period) means "the folder I'm currently
 in."</p>
-<h3 id="install-the-v1102-working-branch-for-testing">Install the
-v1.10.2 working branch (for testing)</h3>
-<p>Use these commands only in a <strong>separate test
-environment</strong> without this marketplace already registered. Codex
-CLI help confirms the <code>--ref</code> option.</p>
-<div class="sourceCode" id="cb5"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>codex plugin marketplace add sodam-ai<span class="op">/</span>SoDam-Persona-Codex <span class="op">--</span>ref codex<span class="op">/</span>fix-codex-global-hooks-v1<span class="op">.</span><span class="dv">10.2</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">codex</span> plugin add sodam-persona@sodam-persona</span></code></pre></div>
-<p>If <code>sodam-persona</code> is already registered, do not register
-a duplicate; check <code>codex plugin marketplace list</code>. To test
-without removing an existing installation, use a separate Codex
-environment. Alternatively, clone with
-<code>git clone --branch codex/fix-codex-global-hooks-v1.10.2 https://github.com/sodam-ai/SoDam-Persona-Codex.git</code>
-and use the local-install route in an environment without a conflicting
-registration.</p>
+<h3 id="testing-this-local-candidate">Testing this local candidate</h3>
+<p>Version 1.11.1 is distributed with this guide. Before merging, use
+the working branch; after merging, use the default branch. GitHub
+downloads do not contain uncommitted local changes. To test these exact
+files, open a terminal in the project root, inspect
+<code>plugins/sodam-persona/.codex-plugin/plugin.json</code>, and follow
+the local-install steps above in a separate environment without a
+duplicate marketplace. Do not assume an old testing branch still exists.
+No installation was performed while writing this guide.</p>
 <h3 id="permission-and-trust-check-after-installation">Permission and
 trust check after installation</h3>
 <p>Installation alone is not the final step.</p>
@@ -566,9 +570,9 @@ policy blocks installation, an administrator must approve it.</li>
 security policy in your environment controls actual execution (<a
 href="#security--data-flow">Security &amp; Data Flow</a>).</p>
 <h3 id="verify-the-installation">Verify the installation</h3>
-<div class="sourceCode" id="cb6"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>codex plugin marketplace list</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>codex plugin list</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>codex plugin marketplace list</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>codex plugin list</span></code></pre></div>
 <p>The first command shows registered marketplaces; the second shows
 installed plugins. If <code>sodam-persona</code> appears in both and is
 enabled, package installation is complete. For a usage smoke test, start
@@ -577,10 +581,10 @@ and deeply"; the response depth should change.</p>
 <h3 id="update-and-uninstall">Update and uninstall</h3>
 <p>Use this order for a new version. Updating only the marketplace can
 leave the existing installed cache in use.</p>
-<div class="sourceCode" id="cb7"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>codex plugin marketplace upgrade sodam-persona</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>codex plugin remove sodam-persona@sodam-persona</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>codex plugin add sodam-persona@sodam-persona</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>codex plugin marketplace upgrade sodam-persona</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>codex plugin remove sodam-persona@sodam-persona</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>codex plugin add sodam-persona@sodam-persona</span></code></pre></div>
 <p>Start a new task after updating. To uninstall completely, omit the
 final <code>add</code>; if desired, also run
 <code>codex plugin marketplace remove sodam-persona</code>. Removal
@@ -919,7 +923,7 @@ href="#how-it-works">How It Works</a>.</p>
 <td>"just answer plainly", "turn off the persona"</td>
 </tr>
 <tr>
-<td>Force the entire persona on</td>
+<td>Review relevant viewpoints in depth on</td>
 <td>"full persona version"</td>
 </tr>
 </tbody>
@@ -1111,7 +1115,8 @@ credits, uploads, and outputs (#37)</td>
 <tr>
 <td><code>$persona-create</code></td>
 <td>Add a domain persona through an interview. Under the current
-numbering, the next perspective starts at #38</td>
+numbering, the next perspective follows the registry (currently
+#46)</td>
 </tr>
 <tr>
 <td><code>$persona-edit</code></td>
@@ -1162,469 +1167,33 @@ regenerates <code>README.html</code>/<code>README.en.html</code>
 </table>
 <hr />
 <h2 id="how-it-works">How It Works</h2>
-<p>This section explains the actual rules the persona uses to judge
-situations, written so you can understand it without reading the
-code.</p>
-<h3 id="four-response-intensity-levels-l0-l3">Four response-intensity
-levels (L0-L3)</h3>
-<p>Every request is classified into one of the 4 levels below, which
-determines how deep the response goes.</p>
-<table>
-<thead>
-<tr>
-<th>Level</th>
-<th>Applies to</th>
-<th>Response shape</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>L0</strong></td>
-<td>Greetings/small talk, 1-2 word requests, simple status checks ("what
-did you do?")</td>
-<td>1-3 lines, free tone</td>
-</tr>
-<tr>
-<td><strong>L1</strong></td>
-<td>Concept explanations, opinions/advice requests</td>
-<td>Core point + rationale + a light check, a firm recommendation plus
-stated limitations</td>
-</tr>
-<tr>
-<td><strong>L2</strong></td>
-<td>General work: code changes, debugging, implementation</td>
-<td>The <code>persona-format</code> skill activates, following a 7-step
-procedure</td>
-</tr>
-<tr>
-<td><strong>L3</strong></td>
-<td>Major work involving security, money, deployment, or irreversible
-actions</td>
-<td><code>persona-format</code> + <code>persona-triggers</code> +
-<code>persona-safety</code> all activate, plus a full review by all 37
-perspectives</td>
-</tr>
-</tbody>
-</table>
-<h3
-id="trigger-words--how-a-single-word-shifts-intensity-and-perspective">Trigger
-words — how a single word shifts intensity and perspective</h3>
-<p>When specific words (triggers) are detected in what you say, the
-following 6 effects fire automatically as applicable. A single trigger
-can produce several effects at once.</p>
-<ol type="1">
-<li><strong>Raise intensity</strong> — "in depth", "thoroughly", "make
-sure" → from L1 up to L2/L3</li>
-<li><strong>Lower intensity</strong> — "briefly", "in short", "in one
-line" → always takes priority over every other effect</li>
-<li><strong>Load an additional skill</strong> —
-<code>persona-triggers</code> / <code>persona-format</code> /
-<code>persona-safety</code></li>
-<li><strong>Activate a domain expert</strong> — legal → #11, investing →
-#13, accounting/tax → #14, marketing → #15,
-architecture/interiors/construction/cost/design/3D/rendering → #16-#24,
-source search/verification → #25, research/analysis → #26,
-ideation/concept strategy → #27, project delivery → #28, product
-value/backlog → #29, PMO/governance → #30, and project
-analysis/operations → #31, image production/editing → #32, video
-production/direction → #33, video editing/post-production → #34, and
-media quality/rights review → #35, local generative-AI workflows → #36,
-and hosted generative-AI platforms → #37</li>
-<li><strong>Fully activate a single perspective</strong> — "security"
-alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone →
-#4, "AI"/"agent"/"MCP" alone → #6</li>
-<li><strong>Evidence mode</strong> (intensity stays the same) —
-"evidence", "source", "example", "fact" etc. → present real evidence and
-clearly separate speculation from confirmed fact</li>
-</ol>
-<p>These trigger words are organized into 43 patterns (A-AQ), and the
-full word lists plus the priority order for conflicts all live in the
-<code>persona-triggers</code> skill. Priority summary: <strong>length
-constraints (e.g. "briefly") &gt; intensity (e.g. "in depth") &gt;
-domain expert &gt; single perspective &gt; additional
-skill.</strong></p>
-<h3
-id="37-perspectives--the-expert-checklist-reviewed-before-every-answer">37
-perspectives — the expert checklist reviewed before every answer</h3>
-<p>For every response at L1 or above, 3-5 of the 37 perspectives below
-that are relevant to the task are briefly reviewed internally before
-answering — automatically, even without a trigger word. This does not
-apply to L0 small talk or "briefly"-style requests.</p>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Perspective</th>
-<th>Especially important when</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>Senior developer (15+ years)</td>
-<td>Always on — code quality, maintainability, extensibility</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Senior security expert (15+ years)</td>
-<td>Always on — threat modeling, auth, encryption, sensitive data</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Non-developer / total beginner / no prior experience</td>
-<td>Always on — understandability, entry barriers, likelihood of user
-mistakes</td>
-</tr>
-<tr>
-<td>4</td>
-<td>QA/test engineer</td>
-<td>Work involving bugs, edge cases, regression testing</td>
-</tr>
-<tr>
-<td>5</td>
-<td>DevOps / operations / SRE</td>
-<td>Work involving deployment, servers, monitoring, incident
-response</td>
-</tr>
-<tr>
-<td>6</td>
-<td>Data/AI engineer</td>
-<td>Work involving models, prompts, agents, MCP</td>
-</tr>
-<tr>
-<td>7</td>
-<td>Senior designer</td>
-<td>Work involving screen design, layout, color</td>
-</tr>
-<tr>
-<td>8</td>
-<td>UX researcher</td>
-<td>Work involving user experience, usability, user journeys</td>
-</tr>
-<tr>
-<td>9</td>
-<td>Planning and requirements router</td>
-<td>Classifying requests, shaping initial requirements and MVP scope,
-and routing to the responsible specialist</td>
-</tr>
-<tr>
-<td>10</td>
-<td>C-level / business (25+ years)</td>
-<td>Work involving revenue, market, competitive positioning</td>
-</tr>
-<tr>
-<td>11</td>
-<td>Professional lawyer (15+ years)</td>
-<td>Work involving law, contracts, personal data, licensing</td>
-</tr>
-<tr>
-<td>12</td>
-<td>Cost optimization / business operations (15+ years)</td>
-<td>Work involving operating cost, API cost, cost-effectiveness</td>
-</tr>
-<tr>
-<td>13</td>
-<td>Professional investor (15+ years)</td>
-<td>Work involving investing, trading, automated trading</td>
-</tr>
-<tr>
-<td>14</td>
-<td>Accounting/tax specialist (15+ years)</td>
-<td>Work involving taxes, filings, expense processing (disclaimer
-required)</td>
-</tr>
-<tr>
-<td>15</td>
-<td>Marketing/sales specialist (15+ years)</td>
-<td>Work involving copy, ads, conversion, SEO</td>
-</tr>
-<tr>
-<td>16</td>
-<td>Architectural design specialist (15+ years)</td>
-<td>Site planning, codes, permits, multidisciplinary design</td>
-</tr>
-<tr>
-<td>17</td>
-<td>Interior design specialist (15+ years)</td>
-<td>Space, circulation, finishes, lighting, furniture</td>
-</tr>
-<tr>
-<td>18</td>
-<td>Building/interior construction specialist (15+ years)</td>
-<td>Methods, schedule, quality, safety, defects</td>
-</tr>
-<tr>
-<td>19</td>
-<td>Building/interior cost estimator (15+ years)</td>
-<td>Quantities, unit rates, construction cost, value engineering</td>
-</tr>
-<tr>
-<td>20</td>
-<td>Building/interior design director (15+ years)</td>
-<td>Cross-discipline integration, design consistency, approval
-criteria</td>
-</tr>
-<tr>
-<td>21</td>
-<td>Building/interior 3D modeling specialist (15+ years)</td>
-<td>BIM, geometry, coordinates, topology, file interoperability</td>
-</tr>
-<tr>
-<td>22</td>
-<td>Building/interior rendering and visualization specialist (15+
-years)</td>
-<td>Materials, lighting, cameras, render output</td>
-</tr>
-<tr>
-<td>23</td>
-<td>Architectural concept design specialist (15+ years)</td>
-<td>Architectural concepts, massing, form, facades, exterior
-materials</td>
-</tr>
-<tr>
-<td>24</td>
-<td>Interior concept design specialist (15+ years)</td>
-<td>Interior concepts, atmosphere, color, materials, lighting, furniture
-composition</td>
-</tr>
-<tr>
-<td>25</td>
-<td>Source search and verification specialist (15+ years)</td>
-<td>External sources, primary documents, recency, and source
-reliability</td>
-</tr>
-<tr>
-<td>26</td>
-<td>Research and analysis specialist (15+ years)</td>
-<td>Research questions, comparison criteria, synthesis, and
-uncertainty</td>
-</tr>
-<tr>
-<td>27</td>
-<td>Ideation and concept strategy specialist (15+ years)</td>
-<td>Generating alternatives, evaluating them, and designing tests</td>
-</tr>
-<tr>
-<td>28</td>
-<td>Project manager (15+ years)</td>
-<td>Integrating scope, schedule, budget, resources, risks, dependencies,
-and delivery</td>
-</tr>
-<tr>
-<td>29</td>
-<td>Product manager and product owner (15+ years)</td>
-<td>Deciding user value, product goals, roadmap, backlog, and
-priorities</td>
-</tr>
-<tr>
-<td>30</td>
-<td>PMO and project governance specialist (15+ years)</td>
-<td>Designing standards, stage gates, status reporting, portfolio, and
-change control</td>
-</tr>
-<tr>
-<td>31</td>
-<td>Project analyst and operations coordinator (15+ years)</td>
-<td>Tracking meetings, decisions, actions, requirements, status data,
-and handoffs</td>
-</tr>
-<tr>
-<td>32</td>
-<td>Image production and editing specialist (15+ years)</td>
-<td>Image generation, retouching, compositing, background removal,
-upscaling, and output</td>
-</tr>
-<tr>
-<td>33</td>
-<td>Video production and direction specialist (15+ years)</td>
-<td>Video concept, storyboard, shots, cameras, capture, AI generation,
-and continuity</td>
-</tr>
-<tr>
-<td>34</td>
-<td>Video editing and post-production specialist (15+ years)</td>
-<td>Cuts, captions, audio, grading, compositing, encoding, and
-deliverables</td>
-</tr>
-<tr>
-<td>35</td>
-<td>Media quality and rights reviewer (15+ years)</td>
-<td>Technical quality, AI errors, continuity, provenance, consent, and
-licensing</td>
-</tr>
-<tr>
-<td>36</td>
-<td>Generative-AI local workflow engineer (15+ year foundation)</td>
-<td>ComfyUI-style installation, nodes, models, CUDA/VRAM, APIs,
-preservation, and recovery</td>
-</tr>
-<tr>
-<td>37</td>
-<td>Generative-AI platform operator (15+ year foundation)</td>
-<td>Hosted Midjourney/Higgsfield/Runway-style features, accounts,
-credits, uploads, and outputs</td>
-</tr>
-</tbody>
-</table>
-<h3 id="26-domain-experts--conditionally-going-deep">26 domain experts —
-conditionally going deep</h3>
-<p>Among the 37 perspectives above, #11 and #13 through #37 each have
-their own dedicated skill, which loads much deeper knowledge when a
-related trigger is detected.</p>
-<ul>
-<li><strong>Professional investor (#13,
-<code>persona-investor</code>)</strong>: Always asks "if this fails,
-does the user lose money?" Covers edge cases like order rejection and
-slippage, distinguishes paper mode from live mode, and warns about
-backtest overfitting.</li>
-<li><strong>Professional lawyer (#11,
-<code>persona-lawyer</code>)</strong>: Covers audit-log obligations,
-staying clear of capital-markets-law boundaries (avoiding
-investment-advisory language), personal-data protection/GDPR, and
-disclaimer/consent standards.</li>
-<li><strong>Accounting/tax specialist (#14,
-<code>persona-accountant</code>)</strong>: Covers filing deadlines,
-expense-eligibility rules, and the line between legal tax savings and
-illegal tax evasion. <strong>Always includes the disclaimer</strong>
-"for general information only; please have a licensed tax accountant or
-CPA confirm before actually filing or paying."</li>
-<li><strong>Marketing/sales specialist (#15,
-<code>persona-marketer</code>)</strong>: Covers positioning,
-copywriting, conversion rate, and SEO, while filtering out exaggerated
-or false advertising claims.</li>
-<li><strong>Architectural design specialist (#16,
-<code>persona-architectural-designer</code>)</strong>: Covers site
-planning, codes, permits, drawing coordination, and multidisciplinary
-design.</li>
-<li><strong>Interior design specialist (#17,
-<code>persona-interior-designer</code>)</strong>: Covers space,
-circulation, finishes, lighting, furniture, and interior details.</li>
-<li><strong>Construction specialist (#18,
-<code>persona-construction-expert</code>)</strong>: Covers methods,
-schedule, quality, safety, defects, and site conditions.</li>
-<li><strong>Cost estimator (#19,
-<code>persona-cost-estimator</code>)</strong>: Covers quantities, unit
-rates, construction cost, value engineering, changes, and estimate
-assumptions.</li>
-<li><strong>Design director (#20,
-<code>persona-design-director</code>)</strong>: Integrates the design
-language, consistency, and approval criteria across architecture and
-interiors.</li>
-<li><strong>Architectural concept design specialist (#23,
-<code>persona-architectural-design-expert</code>)</strong>: Covers site
-context, massing, form, facades, elevations, exterior materials, and 3D
-validation criteria.</li>
-<li><strong>Interior concept design specialist (#24,
-<code>persona-interior-design-expert</code>)</strong>: Covers interior
-concepts, atmosphere, color, materials, lighting, furniture composition,
-and 3D validation criteria.</li>
-<li><strong>3D modeling specialist (#21,
-<code>persona-spatial-3d-modeling-expert</code>)</strong>: Covers BIM,
-NURBS and mesh modeling, coordinates, units, conversion, and
-interoperability, including Revit and Rhino.</li>
-<li><strong>Rendering and visualization specialist (#22,
-<code>persona-rendering-visualization-expert</code>)</strong>: Covers
-materials, lighting, cameras, render quality, and output verification in
-tools such as D5, Twinmotion, Unreal, and Unity.</li>
-<li><strong>Source search and verification specialist (#25,
-<code>persona-source-verification-expert</code>)</strong>: Prefers
-official and primary sources, checks publication date, version,
-conflicting evidence, and reliability, and marks unavailable material as
-unverified instead of inventing a citation.</li>
-<li><strong>Research and analysis specialist (#26,
-<code>persona-research-analyst</code>)</strong>: Defines the research
-question and scope, normalizes comparison criteria, and separates facts,
-source claims, interpretation, hypotheses, and information gaps.</li>
-<li><strong>Ideation and concept strategy specialist (#27,
-<code>persona-ideation-strategist</code>)</strong>: Generates
-alternatives, evaluates them against goals, cost, risk, and feasibility,
-and proposes small experiments and stop criteria.</li>
-<li><strong>Project manager (#28,
-<code>persona-project-manager</code>)</strong>: Integrates scope,
-schedule, budget, resources, risks, issues, dependencies, changes, and
-delivery while separating plan, actuals, and forecast.</li>
-<li><strong>Product manager and product owner (#29,
-<code>persona-product-owner</code>)</strong>: Owns user problems,
-product goals, roadmap, backlog, priorities, user stories, and
-acceptance criteria.</li>
-<li><strong>PMO and project governance specialist (#30,
-<code>persona-pmo-governance-expert</code>)</strong>: Designs project
-standards, stage gates, exceptions, reporting metrics, portfolio
-control, change control, and auditability.</li>
-<li><strong>Project analyst and operations coordinator (#31,
-<code>persona-project-analyst-coordinator</code>)</strong>: Tracks
-meetings, decisions, actions, requirements, status data, documents, and
-handoffs by source and approval state.</li>
-<li><strong>Image production and editing specialist (#32,
-<code>persona-image-production-expert</code>)</strong>: Handles AI image
-generation, photo/render retouching, compositing, background removal,
-upscaling, and visual inspection of the actual result.</li>
-<li><strong>Video production and direction specialist (#33,
-<code>persona-video-production-director</code>)</strong>: Designs
-purpose, concept, storyboard, shots, camera movement, capture or AI
-generation, and scene continuity.</li>
-<li><strong>Video editing and post-production specialist (#34,
-<code>persona-video-post-production-expert</code>)</strong>: Handles
-cuts, captions, audio, grading, compositing, encoding, master files, and
-platform deliverables.</li>
-<li><strong>Media quality and rights reviewer (#35,
-<code>persona-media-quality-rights-reviewer</code>)</strong>: Reviews
-actual file quality, AI errors, playback, sync, continuity, provenance,
-consent, and licenses, and hands legal interpretation to #11.</li>
-<li><strong>Generative-AI local workflow engineer (#36,
-<code>persona-generative-ai-workflow-engineer</code>)</strong>: Owns
-installation, servers, workflows, nodes, models, CUDA/VRAM, APIs,
-preservation, and recovery for ComfyUI-style local tools.</li>
-<li><strong>Generative-AI platform operator (#37,
-<code>persona-generative-ai-platform-operator</code>)</strong>: Owns
-current features, accounts, plans, credits, uploads, downloads, and
-verification dates for Midjourney/Higgsfield/Runway-style hosted
-services.</li>
-</ul>
-<p><code>Drawing</code>, <code>drawing work</code>, <code>CAD</code>,
-<code>DWG</code>, floor plans, detail drawings, and shop drawings
-activate pattern AB, which routes the request to the appropriate lead
-and reviewing roles among #16 through #24.</p>
-<p>When multiple domains apply at once (e.g., "the tax and legal risk of
-this investment income"), all relevant domain experts activate
-together.</p>
-<p>Search, research, and ideation combine according to the work stage. A
-simple external-source lookup uses #25; a comparison and synthesis
-request uses #25+#26; an evidence-based request that continues through
-actionable ideas uses #25+#26+#27. File, code, UI, database, or SEO
-search, a casual “good idea” remark, and merely naming an IDE do not
-activate these personas.</p>
-<p>Project-management requests are split by accountability. #28 leads
-execution and delivery, #29 product value and backlog, #30
-organizational standards and portfolio governance, and #31 records and
-operational traceability. The abbreviations <code>PM</code>,
-<code>PO</code>, <code>PMO</code>, and <code>PA</code> alone do not
-activate them. Plan, actuals, forecast, and unknown status stay
-separate, and missing completion percentages, dates, or owners are never
-invented.</p>
-<h3 id="4-anti-patterns--discipline-the-persona-enforces-on-itself">4
-anti-patterns — discipline the persona enforces on itself</h3>
-<ol type="1">
-<li><strong>Never state a guess as fact without data</strong> — mark
-hypotheses as "possible" and confirmed facts as "confirmed"</li>
-<li><strong>Never reverse a prior answer without reason</strong> — when
-changing a decision, present new evidence and explain why</li>
-<li><strong>Read the user's real intent, not just their literal words
-first</strong> — "let's remove this feature" may really mean "I want
-this feature to work properly," and that possibility is checked
-first</li>
-<li><strong>Prefer directly verifiable data (logs, files) over
-speculation</strong></li>
-</ol>
-<h3 id="it-always-pauses-before-irreversible-actions">It always pauses
-before irreversible actions</h3>
-<p>The persona rules instruct Codex to check user intent and approval
-status before hard-to-reverse actions such as deleting files/folders,
-force-pushing to git, changing a database, deploying, processing
-payments, or sending external messages. Actual execution permissions
-follow Codex settings and authorizations the user has already given. See
-<a href="#security--data-flow">Security &amp; Data Flow</a>.</p>
-<hr />
+<p>v6 judges response length, authorized work scope, investigation
+depth, and actual risk separately. A short report does not reduce the
+requested verification scope. Keywords alone do not create a high-risk
+action or a new approval requirement.</p>
+<p>The operating contract is
+<code>plugins/sodam-persona/reference/operating_contract.md</code>;
+domain routing is
+<code>plugins/sodam-persona/reference/domain_routing.md</code>. The
+original 37 plus eight new roles form a 45-role catalog. Select relevant
+owners and reviewers; internal viewpoints are not independent expert
+verification.</p>
+<p>L0 covers simple status, L1 explanation, L2 implementation/review,
+and L3 actual cost, disclosure, data-loss or irreversible risk. Explicit
+user instructions and higher-priority instructions prevail. Continue
+authorized reversible work; check new risk, scope expansion and
+tool-specific write gates.</p>
+<p>Distinguish installation, connection, calls, application and output
+verification; documents, builds and real usage; media generation,
+technical inspection, actual watching/listening and commercial quality.
+Completion claims require requirement-linked evidence and unverified
+boundaries.</p>
+<h3 id="new-roles">New roles</h3>
+<p>#38 agent harness, #39 system integration, #40 acceptance evidence,
+#41 context handoff, #42 CAD/BIM consistency, #43 design/construction
+change impact, #44 ArchViz business creative, #45 domain automation.</p>
+<p>15+ years describes the intended review standard, not an actual
+credential or work history.</p>
 <h2 id="workflow">Workflow</h2>
 <h3 id="the-flow-of-an-ordinary-conversation-every-session">The flow of
 an ordinary conversation (every session)</h3>
@@ -1651,7 +1220,7 @@ an ordinary conversation (every session)</h3>
        ▼
 6. Matching skills load conditionally
    (whichever of persona-triggers / persona-format / persona-safety /
-    whichever of the 26 domain skills apply)
+    whichever of the 34 domain skills apply)
        │
        ▼
 7. L2/L3 responses follow the 7-step response format (recap → root cause →
@@ -1836,7 +1405,7 @@ skip default hook discovery.</p>
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 response format
     │   ├── persona-safety/SKILL.md       # Always-on security rules, irreversible-action gate
-    │   ├── persona-triggers/SKILL.md     # Full A-AQ trigger-word detail and the 37-perspective mapping table
+    │   ├── persona-triggers/SKILL.md     # Intent-based routing and relevant-role selection
     │   ├── persona-investor/SKILL.md     # #13 professional investor domain
     │   ├── persona-lawyer/SKILL.md       # #11 professional lawyer domain
     │   ├── persona-accountant/SKILL.md   # #14 accounting/tax specialist domain
@@ -1874,109 +1443,23 @@ skip default hook discovery.</p>
         ├── media_production_collaboration.md # Shared inputs, handoffs, and conflict rules
         ├── generative_ai_tools_collaboration.md # Local/hosted generative-AI state, safety, cost, and handoffs
         └── test_scenarios.md             # A set of sample utterances for verifying trigger behavior</code></pre>
-<p>The <code>commands/</code> folder preserves the original Claude Code
-workflow text as an internal reference. Codex does not run these as
-slash commands directly; instead, the
+<p>The <code>commands/</code> folder contains the v6 creation and
+editing workflow references. Codex does not run these as slash commands
+directly; instead, the
 <code>persona-create</code>/<code>persona-edit</code> skills read and
 follow their content.</p>
-<h3
-id="the-15-checks-performed-by-the-automated-consistency-checker-validatemjs">The
-15 checks performed by the automated consistency checker
-(<code>validate.mjs</code>)</h3>
-<p>This checker mechanically prevents number drift when adding
-perspectives or changing triggers. It uses only built-in Node.js modules
-and no external libraries.</p>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>What it checks</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>Perspective numbers are continuous from 1 through the last
-entry</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Labels such as "35 people" and "37 perspectives" match the actual
-count in every core file, skill, and README</td>
-</tr>
-<tr>
-<td>3</td>
-<td>The documented A-AQ trigger-pattern count matches the actual section
-count</td>
-</tr>
-<tr>
-<td>4</td>
-<td>The skill-folder count, README intro, and file map agree, and every
-skill frontmatter <code>name</code> matches its folder (including
-English README cross-checks)</td>
-</tr>
-<tr>
-<td>5</td>
-<td>All 26 domain personas are wired into the core and marker, while
-both READMEs agree on domain counts, explicit invocations, and
-major-section structure</td>
-</tr>
-<tr>
-<td>6</td>
-<td>The canonical Codex, preserved Agent Plugins 1.0, and legacy
-manifests plus both marketplace JSON files have valid names, versions,
-and source paths</td>
-</tr>
-<tr>
-<td>7</td>
-<td>Required disclaimers, qualified-review boundaries, and non-final
-estimate wording exist for all 26 domains</td>
-</tr>
-<tr>
-<td>8</td>
-<td>Warning only: generated HTML appears out of sync with current
-counts</td>
-</tr>
-<tr>
-<td>9</td>
-<td>Backtick-wrapped repository file references point to files that
-exist</td>
-</tr>
-<tr>
-<td>10</td>
-<td>No personal absolute path containing a developer account name leaked
-into distributed files</td>
-</tr>
-<tr>
-<td>11</td>
-<td>Codex hooks use <code>${PLUGIN_ROOT}</code>, point to existing
-scripts, and pair context-limit settings with the project cap</td>
-</tr>
-<tr>
-<td>12</td>
-<td>Domain-skill trigger lists match the canonical
-<code>persona-triggers</code> list</td>
-</tr>
-<tr>
-<td>13</td>
-<td>The serialized hook output stays below the project's
-12,000-character cap</td>
-</tr>
-<tr>
-<td>14</td>
-<td>Core triggers match the canonical lists, and all nine
-built-environment skills share the collaboration protocol while avoiding
-broad single-word triggers and overlapping design roles</td>
-</tr>
-<tr>
-<td>15</td>
-<td>Every <code>persona-*</code> skill folder uses a path-safe name</td>
-</tr>
-</tbody>
-</table>
-<p>See <a href="#commands">Commands</a> and <a
-href="#troubleshooting">Troubleshooting</a> for how to run the checker
-and read its output.</p>
+<h3 id="automated-consistency-checking-validatemjs">Automated
+consistency checking (<code>validate.mjs</code>)</h3>
+<p>v6 checks 45 role IDs and names, 34 domain routes, 39 skill metadata
+entries, three manifest versions, two hook commands and outputs, the
+12000-character serialized cap, Markdown and plugin-relative references,
+JavaScript syntax, personal paths and common credential patterns. Unsafe
+names, symbolic links and secret files are rejected.</p>
+<p>These checks do not prove semantic disclaimer quality, all activation
+phrases, actual permission screens or user journeys. Domain boundaries
+and behavior need separate testing with explicit unverified scope. The
+old v5 A-AQ table parser does not apply to the v6 operating
+contract.</p>
 <h3 id="continuous-integration-ci">Continuous integration (CI)</h3>
 <p><code>.github/workflows/validate.yml</code> is configured to run the
 consistency checker and both regression suites for pushes to
@@ -2123,7 +1606,7 @@ that passes this check.</p>
 <code>persona_marker.txt</code></td>
 </tr>
 <tr>
-<td>All 31 skills</td>
+<td>All 39 skills</td>
 <td><code>plugins/sodam-persona/skills/persona-*/SKILL.md</code></td>
 </tr>
 <tr>
@@ -2131,7 +1614,7 @@ that passes this check.</p>
 <td><code>plugins/sodam-persona/skills/persona-triggers/SKILL.md</code></td>
 </tr>
 <tr>
-<td>Details for all 26 domain experts</td>
+<td>Details for all 34 domain experts</td>
 <td>The 26 domain-specific <code>persona-*</code> folders under
 <code>plugins/sodam-persona/skills/</code></td>
 </tr>
@@ -2181,6 +1664,22 @@ downloads this plugin, so this document does not cover it.</p>
 </blockquote>
 <hr />
 <h2 id="changelog-summary">Changelog Summary</h2>
+<details open>
+<summary><strong>2026-10-09 — local candidate 1.11.1 integration</strong></summary>
+
+<ul>
+<li>45 perspectives and 39 skills; creation/editing skills and portable
+manifest retained.</li>
+<li>Activation/exclusion boundaries, 180 fixed inputs and 90 Korean
+supplementary inputs; input counts are not model execution results.</li>
+<li>35 local automated tests passed. Actual CLI/Desktop auto-routing
+remains unverified.</li>
+<li>HTML generated from the corresponding Markdown. Global installation
+is a separate operation; no GitHub Release is created
+automatically.</li>
+</ul>
+</details>
+
 <p>Listed with the most recent entries at the top. Click (or tap) an
 item to expand its details.</p>
 <details open>
@@ -2863,9 +2362,9 @@ Mixing in words like "briefly", "in short", or "just the key point"
 switches it to a short format immediately. This rule has the highest
 priority of all.</p>
 <p><strong>Q. I actually want it to go deeper and more
-thorough.</strong> A. Using expressions like "objectively", "in depth",
-"thoroughly", or "full persona version" brings all 37 perspectives into
-the review.</p>
+thorough.</strong> A. These expressions increase review depth. Select
+relevant roles from the 45-role catalog; they do not force all roles or
+a high-risk classification.</p>
 <p><strong>Q. I found a bug or something misbehaving. Where do I report
 it?</strong> A. Please report it through the repository's GitHub Issues
 feature. Including a reproducible example of what you typed speeds up
@@ -3363,5 +2862,21 @@ source</li>
 <code>LICENSE</code> and <code>NOTICE</code> originals in the repository
 directly, and consult a lawyer for any commercial-redistribution
 scenario you're not fully certain about.</p>
+<h2 id="v6-verification-scope">v6 verification scope</h2>
+<p>1.11.1 · 45 roles · 39 skills. File/hook checks do not prove
+behavioral or media quality. Commands: <code>node validate.mjs</code>,
+<code>node --test test-hooks.mjs test-validator.mjs test-supplemental.mjs</code>,
+<code>node build-docs.mjs</code>.</p>
+<p>Local regression currently covers 35 automated tests; defining 270
+routing inputs does not mean 270 model executions passed.</p>
+<h3 id="source-and-legal-scope">Source and legal scope</h3>
+<p>The root LICENSE and NOTICE are the controlling notices. Apache-2.0
+permission is conditional and does not grant blanket rights to
+third-party materials, trademarks, customer data or AI outputs. Preserve
+copyright/NOTICE, provide the license and mark modifications when
+distributing modified files. Sections 3, 6, 7, 8 and 9 cover patent
+conditions, trademarks, warranty disclaimers, liability and optional
+obligations. This guide is not legal advice or a guarantee of compliance
+or ownership of generated outputs.</p>
 </body>
 </html>

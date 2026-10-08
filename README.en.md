@@ -1,12 +1,17 @@
 # SoDam Persona for Codex
 
+## Current integration status (2026-10-09)
+
+This Codex port, `sodam-ai/SoDam-Persona-Codex`, originates from `sodam-ai/SoDam-Persona`. Version 1.11.1 provides 45 perspectives, 39 skills and intent-based activation. It preserves creation/editing skills and the Windows hook fix; the portable manifest stays under `compat/`. The 180 frozen inputs and 90 supplementary Korean inputs are not successful model executions. Actual CLI/Desktop auto-routing and complete post-installation flows remain unverified.
+
+
 **SoDam Persona** gives OpenAI's AI coding assistant **Codex** (an AI program that helps you build software using natural-language instructions) the personality of a "careful, detail-oriented Korean development partner." It is an add-on program (a **plugin** — a small extra program that adds features to an existing program).
 
 This document is written so that even someone who has never used a computer, a smartphone, a messenger app, or AI before can follow it from installation to actual use. Whenever an unfamiliar term appears for the first time, it is explained in `plain words (technical term)` form. Example: repository (an online storage place that holds code and documents together).
 
-The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It contains 2 **hooks** (small programs configured to run when Codex dispatches their events) and 31 conditional expert knowledge modules (**skills**) to load when relevant. Verify actual automatic execution in your installed environment; installation, permissions, and host behavior can affect it.
+The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It contains 2 **hooks** (small programs configured to run when Codex dispatches their events) and 39 conditional expert knowledge modules (**skills**) to load when relevant. Verify actual automatic execution in your installed environment; installation, permissions, and host behavior can affect it.
 
-> **Version of this source**: `1.10.2` · **Perspectives**: 37 · **Trigger patterns**: 43 patterns (A-AQ) · **Skills**: 31 · **Hooks**: 2 · **License**: Apache License 2.0
+> **Version of this source**: `1.11.1` · **Perspectives**: 45 · **Routing**: intent-based; 43 legacy categories patterns (A-AQ) · **Skills**: 39 · **Hooks**: 2 · **License**: Apache License 2.0
 
 > **Check before installing**: The default GitHub install and ZIP download fetch the current default branch. Its version may differ from that of the branch displaying this document, so verify the actual plugin version after installation. To test a separate working branch, use the testing instructions below. Updating a Git branch does not create a Release or automatically update an existing installation.
 
@@ -49,7 +54,7 @@ Before you start, make sure the 4 items below are in place. If anything is missi
 
 **v1.10.2 verification record (2026-09-23, Windows)**: For the v1.10.2 source, the consistency checker, 22 hook/validator automated tests, official plugin-structure validator, installation and direct hook execution in an isolated temporary environment, Korean/English HTML regeneration, and Chrome rendering/console checks passed. This does not prove that an existing personal installation was updated or that Codex automatically invoked the hook on an ordinary prompt.
 
-**Unverified scope**: The existing personal installation was v1.10.1 at the last check. Automatic v1.10.2 hook invocation on an ordinary prompt, macOS/Linux devices, and every Codex app/IDE combination remain unverified. CI and browser checks apply only to the tested commit and environment. Run [Verify the installation](#verify-the-installation) on each environment.
+**Unverified scope of the historical v1.10.2 test**: The personal installation was v1.10.1 at that check. Automatic v1.10.2 hook invocation on an ordinary prompt, macOS/Linux devices, and every Codex app/IDE combination remain unverified. CI and browser checks apply only to the tested commit and environment. Run [Verify the installation](#verify-the-installation) on each environment.
 
 **Account and permissions**: Your OpenAI account and permission to use Codex must be arranged separately. Organization accounts may restrict plugin installation. This plugin does not create accounts or handle sign-in, billing, or organization permissions.
 
@@ -136,16 +141,9 @@ codex plugin add sodam-persona@sodam-persona
 
 `.` (a single period) means "the folder I'm currently in."
 
-### Install the v1.10.2 working branch (for testing)
+### Testing this local candidate
 
-Use these commands only in a **separate test environment** without this marketplace already registered. Codex CLI help confirms the `--ref` option.
-
-```powershell
-codex plugin marketplace add sodam-ai/SoDam-Persona-Codex --ref codex/fix-codex-global-hooks-v1.10.2
-codex plugin add sodam-persona@sodam-persona
-```
-
-If `sodam-persona` is already registered, do not register a duplicate; check `codex plugin marketplace list`. To test without removing an existing installation, use a separate Codex environment. Alternatively, clone with `git clone --branch codex/fix-codex-global-hooks-v1.10.2 https://github.com/sodam-ai/SoDam-Persona-Codex.git` and use the local-install route in an environment without a conflicting registration.
+Version 1.11.1 is distributed with this guide. Before merging, use the working branch; after merging, use the default branch. GitHub downloads do not contain uncommitted local changes. To test these exact files, open a terminal in the project root, inspect `plugins/sodam-persona/.codex-plugin/plugin.json`, and follow the local-install steps above in a separate environment without a duplicate marketplace. Do not assume an old testing branch still exists. No installation was performed while writing this guide.
 
 ### Permission and trust check after installation
 
@@ -321,7 +319,7 @@ Mixing certain words into your request automatically changes how deep the respon
 | A very short, simple answer | "briefly", "in short", "just the key point" |
 | Every expert perspective gathered, in depth | "objectively", "in depth", "thoroughly" |
 | Free-form answers with no persona formatting | "just answer plainly", "turn off the persona" |
-| Force the entire persona on | "full persona version" |
+| Review relevant viewpoints in depth on | "full persona version" |
 
 ---
 
@@ -369,7 +367,7 @@ Mixing certain words into your request automatically changes how deep the respon
 | `$persona-media-quality-rights-reviewer <text>` | Image/video quality, provenance, consent, and license-review perspective (#35) |
 | `$persona-generative-ai-workflow-engineer <text>` | Local ComfyUI-style tools, workflows, nodes, models, CUDA/VRAM, APIs, and recovery (#36) |
 | `$persona-generative-ai-platform-operator <text>` | Hosted Midjourney/Higgsfield/Runway-style features, accounts, credits, uploads, and outputs (#37) |
-| `$persona-create` | Add a domain persona through an interview. Under the current numbering, the next perspective starts at #38 |
+| `$persona-create` | Add a domain persona through an interview. Under the current numbering, the next perspective follows the registry (currently #46) |
 | `$persona-edit` | Interview-style add/edit/remove of trigger words for an existing persona |
 
 ### Commands for documentation/code editors (run from the repository root)
@@ -386,127 +384,18 @@ Mixing certain words into your request automatically changes how deep the respon
 
 ## How It Works
 
-This section explains the actual rules the persona uses to judge situations, written so you can understand it without reading the code.
+v6 judges response length, authorized work scope, investigation depth, and actual risk separately. A short report does not reduce the requested verification scope. Keywords alone do not create a high-risk action or a new approval requirement.
 
-### Four response-intensity levels (L0-L3)
+The operating contract is `plugins/sodam-persona/reference/operating_contract.md`; domain routing is `plugins/sodam-persona/reference/domain_routing.md`. The original 37 plus eight new roles form a 45-role catalog. Select relevant owners and reviewers; internal viewpoints are not independent expert verification.
 
-Every request is classified into one of the 4 levels below, which determines how deep the response goes.
+L0 covers simple status, L1 explanation, L2 implementation/review, and L3 actual cost, disclosure, data-loss or irreversible risk. Explicit user instructions and higher-priority instructions prevail. Continue authorized reversible work; check new risk, scope expansion and tool-specific write gates.
 
-| Level | Applies to | Response shape |
-|---|---|---|
-| **L0** | Greetings/small talk, 1-2 word requests, simple status checks ("what did you do?") | 1-3 lines, free tone |
-| **L1** | Concept explanations, opinions/advice requests | Core point + rationale + a light check, a firm recommendation plus stated limitations |
-| **L2** | General work: code changes, debugging, implementation | The `persona-format` skill activates, following a 7-step procedure |
-| **L3** | Major work involving security, money, deployment, or irreversible actions | `persona-format` + `persona-triggers` + `persona-safety` all activate, plus a full review by all 37 perspectives |
+Distinguish installation, connection, calls, application and output verification; documents, builds and real usage; media generation, technical inspection, actual watching/listening and commercial quality. Completion claims require requirement-linked evidence and unverified boundaries.
 
-### Trigger words — how a single word shifts intensity and perspective
+### New roles
+#38 agent harness, #39 system integration, #40 acceptance evidence, #41 context handoff, #42 CAD/BIM consistency, #43 design/construction change impact, #44 ArchViz business creative, #45 domain automation.
 
-When specific words (triggers) are detected in what you say, the following 6 effects fire automatically as applicable. A single trigger can produce several effects at once.
-
-1. **Raise intensity** — "in depth", "thoroughly", "make sure" → from L1 up to L2/L3
-2. **Lower intensity** — "briefly", "in short", "in one line" → always takes priority over every other effect
-3. **Load an additional skill** — `persona-triggers` / `persona-format` / `persona-safety`
-4. **Activate a domain expert** — legal → #11, investing → #13, accounting/tax → #14, marketing → #15, architecture/interiors/construction/cost/design/3D/rendering → #16-#24, source search/verification → #25, research/analysis → #26, ideation/concept strategy → #27, project delivery → #28, product value/backlog → #29, PMO/governance → #30, and project analysis/operations → #31, image production/editing → #32, video production/direction → #33, video editing/post-production → #34, and media quality/rights review → #35, local generative-AI workflows → #36, and hosted generative-AI platforms → #37
-5. **Fully activate a single perspective** — "security" alone → #2, "design"/"UI" alone → #7, "UX" alone → #8, "testing" alone → #4, "AI"/"agent"/"MCP" alone → #6
-6. **Evidence mode** (intensity stays the same) — "evidence", "source", "example", "fact" etc. → present real evidence and clearly separate speculation from confirmed fact
-
-These trigger words are organized into 43 patterns (A-AQ), and the full word lists plus the priority order for conflicts all live in the `persona-triggers` skill. Priority summary: **length constraints (e.g. "briefly") > intensity (e.g. "in depth") > domain expert > single perspective > additional skill.**
-
-### 37 perspectives — the expert checklist reviewed before every answer
-
-For every response at L1 or above, 3-5 of the 37 perspectives below that are relevant to the task are briefly reviewed internally before answering — automatically, even without a trigger word. This does not apply to L0 small talk or "briefly"-style requests.
-
-| # | Perspective | Especially important when |
-|---|---|---|
-| 1 | Senior developer (15+ years) | Always on — code quality, maintainability, extensibility |
-| 2 | Senior security expert (15+ years) | Always on — threat modeling, auth, encryption, sensitive data |
-| 3 | Non-developer / total beginner / no prior experience | Always on — understandability, entry barriers, likelihood of user mistakes |
-| 4 | QA/test engineer | Work involving bugs, edge cases, regression testing |
-| 5 | DevOps / operations / SRE | Work involving deployment, servers, monitoring, incident response |
-| 6 | Data/AI engineer | Work involving models, prompts, agents, MCP |
-| 7 | Senior designer | Work involving screen design, layout, color |
-| 8 | UX researcher | Work involving user experience, usability, user journeys |
-| 9 | Planning and requirements router | Classifying requests, shaping initial requirements and MVP scope, and routing to the responsible specialist |
-| 10 | C-level / business (25+ years) | Work involving revenue, market, competitive positioning |
-| 11 | Professional lawyer (15+ years) | Work involving law, contracts, personal data, licensing |
-| 12 | Cost optimization / business operations (15+ years) | Work involving operating cost, API cost, cost-effectiveness |
-| 13 | Professional investor (15+ years) | Work involving investing, trading, automated trading |
-| 14 | Accounting/tax specialist (15+ years) | Work involving taxes, filings, expense processing (disclaimer required) |
-| 15 | Marketing/sales specialist (15+ years) | Work involving copy, ads, conversion, SEO |
-| 16 | Architectural design specialist (15+ years) | Site planning, codes, permits, multidisciplinary design |
-| 17 | Interior design specialist (15+ years) | Space, circulation, finishes, lighting, furniture |
-| 18 | Building/interior construction specialist (15+ years) | Methods, schedule, quality, safety, defects |
-| 19 | Building/interior cost estimator (15+ years) | Quantities, unit rates, construction cost, value engineering |
-| 20 | Building/interior design director (15+ years) | Cross-discipline integration, design consistency, approval criteria |
-| 21 | Building/interior 3D modeling specialist (15+ years) | BIM, geometry, coordinates, topology, file interoperability |
-| 22 | Building/interior rendering and visualization specialist (15+ years) | Materials, lighting, cameras, render output |
-| 23 | Architectural concept design specialist (15+ years) | Architectural concepts, massing, form, facades, exterior materials |
-| 24 | Interior concept design specialist (15+ years) | Interior concepts, atmosphere, color, materials, lighting, furniture composition |
-| 25 | Source search and verification specialist (15+ years) | External sources, primary documents, recency, and source reliability |
-| 26 | Research and analysis specialist (15+ years) | Research questions, comparison criteria, synthesis, and uncertainty |
-| 27 | Ideation and concept strategy specialist (15+ years) | Generating alternatives, evaluating them, and designing tests |
-| 28 | Project manager (15+ years) | Integrating scope, schedule, budget, resources, risks, dependencies, and delivery |
-| 29 | Product manager and product owner (15+ years) | Deciding user value, product goals, roadmap, backlog, and priorities |
-| 30 | PMO and project governance specialist (15+ years) | Designing standards, stage gates, status reporting, portfolio, and change control |
-| 31 | Project analyst and operations coordinator (15+ years) | Tracking meetings, decisions, actions, requirements, status data, and handoffs |
-| 32 | Image production and editing specialist (15+ years) | Image generation, retouching, compositing, background removal, upscaling, and output |
-| 33 | Video production and direction specialist (15+ years) | Video concept, storyboard, shots, cameras, capture, AI generation, and continuity |
-| 34 | Video editing and post-production specialist (15+ years) | Cuts, captions, audio, grading, compositing, encoding, and deliverables |
-| 35 | Media quality and rights reviewer (15+ years) | Technical quality, AI errors, continuity, provenance, consent, and licensing |
-| 36 | Generative-AI local workflow engineer (15+ year foundation) | ComfyUI-style installation, nodes, models, CUDA/VRAM, APIs, preservation, and recovery |
-| 37 | Generative-AI platform operator (15+ year foundation) | Hosted Midjourney/Higgsfield/Runway-style features, accounts, credits, uploads, and outputs |
-
-### 26 domain experts — conditionally going deep
-
-Among the 37 perspectives above, #11 and #13 through #37 each have their own dedicated skill, which loads much deeper knowledge when a related trigger is detected.
-
-- **Professional investor (#13, `persona-investor`)**: Always asks "if this fails, does the user lose money?" Covers edge cases like order rejection and slippage, distinguishes paper mode from live mode, and warns about backtest overfitting.
-- **Professional lawyer (#11, `persona-lawyer`)**: Covers audit-log obligations, staying clear of capital-markets-law boundaries (avoiding investment-advisory language), personal-data protection/GDPR, and disclaimer/consent standards.
-- **Accounting/tax specialist (#14, `persona-accountant`)**: Covers filing deadlines, expense-eligibility rules, and the line between legal tax savings and illegal tax evasion. **Always includes the disclaimer** "for general information only; please have a licensed tax accountant or CPA confirm before actually filing or paying."
-- **Marketing/sales specialist (#15, `persona-marketer`)**: Covers positioning, copywriting, conversion rate, and SEO, while filtering out exaggerated or false advertising claims.
-- **Architectural design specialist (#16, `persona-architectural-designer`)**: Covers site planning, codes, permits, drawing coordination, and multidisciplinary design.
-- **Interior design specialist (#17, `persona-interior-designer`)**: Covers space, circulation, finishes, lighting, furniture, and interior details.
-- **Construction specialist (#18, `persona-construction-expert`)**: Covers methods, schedule, quality, safety, defects, and site conditions.
-- **Cost estimator (#19, `persona-cost-estimator`)**: Covers quantities, unit rates, construction cost, value engineering, changes, and estimate assumptions.
-- **Design director (#20, `persona-design-director`)**: Integrates the design language, consistency, and approval criteria across architecture and interiors.
-- **Architectural concept design specialist (#23, `persona-architectural-design-expert`)**: Covers site context, massing, form, facades, elevations, exterior materials, and 3D validation criteria.
-- **Interior concept design specialist (#24, `persona-interior-design-expert`)**: Covers interior concepts, atmosphere, color, materials, lighting, furniture composition, and 3D validation criteria.
-- **3D modeling specialist (#21, `persona-spatial-3d-modeling-expert`)**: Covers BIM, NURBS and mesh modeling, coordinates, units, conversion, and interoperability, including Revit and Rhino.
-- **Rendering and visualization specialist (#22, `persona-rendering-visualization-expert`)**: Covers materials, lighting, cameras, render quality, and output verification in tools such as D5, Twinmotion, Unreal, and Unity.
-- **Source search and verification specialist (#25, `persona-source-verification-expert`)**: Prefers official and primary sources, checks publication date, version, conflicting evidence, and reliability, and marks unavailable material as unverified instead of inventing a citation.
-- **Research and analysis specialist (#26, `persona-research-analyst`)**: Defines the research question and scope, normalizes comparison criteria, and separates facts, source claims, interpretation, hypotheses, and information gaps.
-- **Ideation and concept strategy specialist (#27, `persona-ideation-strategist`)**: Generates alternatives, evaluates them against goals, cost, risk, and feasibility, and proposes small experiments and stop criteria.
-- **Project manager (#28, `persona-project-manager`)**: Integrates scope, schedule, budget, resources, risks, issues, dependencies, changes, and delivery while separating plan, actuals, and forecast.
-- **Product manager and product owner (#29, `persona-product-owner`)**: Owns user problems, product goals, roadmap, backlog, priorities, user stories, and acceptance criteria.
-- **PMO and project governance specialist (#30, `persona-pmo-governance-expert`)**: Designs project standards, stage gates, exceptions, reporting metrics, portfolio control, change control, and auditability.
-- **Project analyst and operations coordinator (#31, `persona-project-analyst-coordinator`)**: Tracks meetings, decisions, actions, requirements, status data, documents, and handoffs by source and approval state.
-- **Image production and editing specialist (#32, `persona-image-production-expert`)**: Handles AI image generation, photo/render retouching, compositing, background removal, upscaling, and visual inspection of the actual result.
-- **Video production and direction specialist (#33, `persona-video-production-director`)**: Designs purpose, concept, storyboard, shots, camera movement, capture or AI generation, and scene continuity.
-- **Video editing and post-production specialist (#34, `persona-video-post-production-expert`)**: Handles cuts, captions, audio, grading, compositing, encoding, master files, and platform deliverables.
-- **Media quality and rights reviewer (#35, `persona-media-quality-rights-reviewer`)**: Reviews actual file quality, AI errors, playback, sync, continuity, provenance, consent, and licenses, and hands legal interpretation to #11.
-- **Generative-AI local workflow engineer (#36, `persona-generative-ai-workflow-engineer`)**: Owns installation, servers, workflows, nodes, models, CUDA/VRAM, APIs, preservation, and recovery for ComfyUI-style local tools.
-- **Generative-AI platform operator (#37, `persona-generative-ai-platform-operator`)**: Owns current features, accounts, plans, credits, uploads, downloads, and verification dates for Midjourney/Higgsfield/Runway-style hosted services.
-
-`Drawing`, `drawing work`, `CAD`, `DWG`, floor plans, detail drawings, and shop drawings activate pattern AB, which routes the request to the appropriate lead and reviewing roles among #16 through #24.
-
-When multiple domains apply at once (e.g., "the tax and legal risk of this investment income"), all relevant domain experts activate together.
-
-Search, research, and ideation combine according to the work stage. A simple external-source lookup uses #25; a comparison and synthesis request uses #25+#26; an evidence-based request that continues through actionable ideas uses #25+#26+#27. File, code, UI, database, or SEO search, a casual “good idea” remark, and merely naming an IDE do not activate these personas.
-
-Project-management requests are split by accountability. #28 leads execution and delivery, #29 product value and backlog, #30 organizational standards and portfolio governance, and #31 records and operational traceability. The abbreviations `PM`, `PO`, `PMO`, and `PA` alone do not activate them. Plan, actuals, forecast, and unknown status stay separate, and missing completion percentages, dates, or owners are never invented.
-
-### 4 anti-patterns — discipline the persona enforces on itself
-
-1. **Never state a guess as fact without data** — mark hypotheses as "possible" and confirmed facts as "confirmed"
-2. **Never reverse a prior answer without reason** — when changing a decision, present new evidence and explain why
-3. **Read the user's real intent, not just their literal words first** — "let's remove this feature" may really mean "I want this feature to work properly," and that possibility is checked first
-4. **Prefer directly verifiable data (logs, files) over speculation**
-
-### It always pauses before irreversible actions
-
-The persona rules instruct Codex to check user intent and approval status before hard-to-reverse actions such as deleting files/folders, force-pushing to git, changing a database, deploying, processing payments, or sending external messages. Actual execution permissions follow Codex settings and authorizations the user has already given. See [Security & Data Flow](#security--data-flow).
-
----
+15+ years describes the intended review standard, not an actual credential or work history.
 
 ## Workflow
 
@@ -536,7 +425,7 @@ The persona rules instruct Codex to check user intent and approval status before
        ▼
 6. Matching skills load conditionally
    (whichever of persona-triggers / persona-format / persona-safety /
-    whichever of the 26 domain skills apply)
+    whichever of the 34 domain skills apply)
        │
        ▼
 7. L2/L3 responses follow the 7-step response format (recap → root cause →
@@ -705,7 +594,7 @@ This project originally started as a plugin for Claude Code (a different AI codi
     ├── skills/
     │   ├── persona-format/SKILL.md       # L2/L3 response format
     │   ├── persona-safety/SKILL.md       # Always-on security rules, irreversible-action gate
-    │   ├── persona-triggers/SKILL.md     # Full A-AQ trigger-word detail and the 37-perspective mapping table
+    │   ├── persona-triggers/SKILL.md     # Intent-based routing and relevant-role selection
     │   ├── persona-investor/SKILL.md     # #13 professional investor domain
     │   ├── persona-lawyer/SKILL.md       # #11 professional lawyer domain
     │   ├── persona-accountant/SKILL.md   # #14 accounting/tax specialist domain
@@ -745,31 +634,13 @@ This project originally started as a plugin for Claude Code (a different AI codi
         └── test_scenarios.md             # A set of sample utterances for verifying trigger behavior
 ```
 
-The `commands/` folder preserves the original Claude Code workflow text as an internal reference. Codex does not run these as slash commands directly; instead, the `persona-create`/`persona-edit` skills read and follow their content.
+The `commands/` folder contains the v6 creation and editing workflow references. Codex does not run these as slash commands directly; instead, the `persona-create`/`persona-edit` skills read and follow their content.
 
-### The 15 checks performed by the automated consistency checker (`validate.mjs`)
+### Automated consistency checking (`validate.mjs`)
 
-This checker mechanically prevents number drift when adding perspectives or changing triggers. It uses only built-in Node.js modules and no external libraries.
+v6 checks 45 role IDs and names, 34 domain routes, 39 skill metadata entries, three manifest versions, two hook commands and outputs, the 12000-character serialized cap, Markdown and plugin-relative references, JavaScript syntax, personal paths and common credential patterns. Unsafe names, symbolic links and secret files are rejected.
 
-| # | What it checks |
-|---|---|
-| 1 | Perspective numbers are continuous from 1 through the last entry |
-| 2 | Labels such as "35 people" and "37 perspectives" match the actual count in every core file, skill, and README |
-| 3 | The documented A-AQ trigger-pattern count matches the actual section count |
-| 4 | The skill-folder count, README intro, and file map agree, and every skill frontmatter `name` matches its folder (including English README cross-checks) |
-| 5 | All 26 domain personas are wired into the core and marker, while both READMEs agree on domain counts, explicit invocations, and major-section structure |
-| 6 | The canonical Codex, preserved Agent Plugins 1.0, and legacy manifests plus both marketplace JSON files have valid names, versions, and source paths |
-| 7 | Required disclaimers, qualified-review boundaries, and non-final estimate wording exist for all 26 domains |
-| 8 | Warning only: generated HTML appears out of sync with current counts |
-| 9 | Backtick-wrapped repository file references point to files that exist |
-| 10 | No personal absolute path containing a developer account name leaked into distributed files |
-| 11 | Codex hooks use `${PLUGIN_ROOT}`, point to existing scripts, and pair context-limit settings with the project cap |
-| 12 | Domain-skill trigger lists match the canonical `persona-triggers` list |
-| 13 | The serialized hook output stays below the project's 12,000-character cap |
-| 14 | Core triggers match the canonical lists, and all nine built-environment skills share the collaboration protocol while avoiding broad single-word triggers and overlapping design roles |
-| 15 | Every `persona-*` skill folder uses a path-safe name |
-
-See [Commands](#commands) and [Troubleshooting](#troubleshooting) for how to run the checker and read its output.
+These checks do not prove semantic disclaimer quality, all activation phrases, actual permission screens or user journeys. Domain boundaries and behavior need separate testing with explicit unverified scope. The old v5 A-AQ table parser does not apply to the v6 operating contract.
 
 ### Continuous integration (CI)
 
@@ -839,9 +710,9 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 | Hook events and command definitions | `plugins/sodam-persona/hooks/hooks.json` |
 | SessionStart script / core text | `plugins/sodam-persona/hooks/inject-core.js`, `persona_core.md` |
 | UserPromptSubmit script / compact marker | `plugins/sodam-persona/hooks/inject-marker.js`, `persona_marker.txt` |
-| All 31 skills | `plugins/sodam-persona/skills/persona-*/SKILL.md` |
+| All 39 skills | `plugins/sodam-persona/skills/persona-*/SKILL.md` |
 | The full trigger-word list and perspective mapping table | `plugins/sodam-persona/skills/persona-triggers/SKILL.md` |
-| Details for all 26 domain experts | The 26 domain-specific `persona-*` folders under `plugins/sodam-persona/skills/` |
+| Details for all 34 domain experts | The 26 domain-specific `persona-*` folders under `plugins/sodam-persona/skills/` |
 | The original procedure text for creating/editing personas | `plugins/sodam-persona/commands/create.md`, `edit.md` |
 | The consistency-check script | Repository root, `validate.mjs` |
 | The HTML-regeneration script | Repository root, `build-docs.mjs`, `doc-theme.html` |
@@ -856,6 +727,17 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 ---
 
 ## Changelog Summary
+
+<details open>
+<summary><strong>2026-10-09 — local candidate 1.11.1 integration</strong></summary>
+
+- 45 perspectives and 39 skills; creation/editing skills and portable manifest retained.
+- Activation/exclusion boundaries, 180 fixed inputs and 90 Korean supplementary inputs; input counts are not model execution results.
+- 35 local automated tests passed. Actual CLI/Desktop auto-routing remains unverified.
+- HTML generated from the corresponding Markdown. Global installation is a separate operation; no GitHub Release is created automatically.
+
+</details>
+
 
 Listed with the most recent entries at the top. Click (or tap) an item to expand its details.
 
@@ -1145,7 +1027,7 @@ A. Call `$persona-edit` (to edit an existing perspective) or `$persona-create` (
 A. Mixing in words like "briefly", "in short", or "just the key point" switches it to a short format immediately. This rule has the highest priority of all.
 
 **Q. I actually want it to go deeper and more thorough.**
-A. Using expressions like "objectively", "in depth", "thoroughly", or "full persona version" brings all 37 perspectives into the review.
+A. These expressions increase review depth. Select relevant roles from the 45-role catalog; they do not force all roles or a high-risk classification.
 
 **Q. I found a bug or something misbehaving. Where do I report it?**
 A. Please report it through the repository's GitHub Issues feature. Including a reproducible example of what you typed speeds up diagnosis a lot.
@@ -1303,3 +1185,13 @@ No additional license duty was identified from images, fonts, or external packag
 - Reuse third-party copyrighted material that may be embedded in Codex's generated output commercially, as-is, without checking its source
 
 If you have a specific situation in mind, please read the `LICENSE` and `NOTICE` originals in the repository directly, and consult a lawyer for any commercial-redistribution scenario you're not fully certain about.
+
+
+## v6 verification scope
+1.11.1 · 45 roles · 39 skills. File/hook checks do not prove behavioral or media quality. Commands: `node validate.mjs`, `node --test test-hooks.mjs test-validator.mjs test-supplemental.mjs`, `node build-docs.mjs`.
+
+Local regression currently covers 35 automated tests; defining 270 routing inputs does not mean 270 model executions passed.
+
+### Source and legal scope
+
+The root LICENSE and NOTICE are the controlling notices. Apache-2.0 permission is conditional and does not grant blanket rights to third-party materials, trademarks, customer data or AI outputs. Preserve copyright/NOTICE, provide the license and mark modifications when distributing modified files. Sections 3, 6, 7, 8 and 9 cover patent conditions, trademarks, warranty disclaimers, liability and optional obligations. This guide is not legal advice or a guarantee of compliance or ownership of generated outputs.

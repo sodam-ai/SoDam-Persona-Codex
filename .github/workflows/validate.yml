@@ -27,4 +27,9 @@ jobs:
         run: node validate.mjs
 
       - name: 훅·검증기·한국어 입력 회귀 검사
-        run: node --test test-hooks.mjs test-validator.mjs test-supplemental.mjs
+        run: node --test test-hooks.mjs test-validator.mjs test-supplemental.mjs test-diagnose.mjs test-evaluate.mjs test-docs.mjs
+
+      - name: Install document checker prerequisite
+        run: sudo apt-get update && sudo apt-get install -y pandoc
+      - name: Verify Markdown and HTML content synchronization
+        run: node check-docs.mjs

@@ -1,11 +1,28 @@
 # SoDam Persona for Codex
 
+### 처음 사용하는 분의 최단 경로
+[쉬운 시작 안내](QUICKSTART.md)에서 설치 → 새 대화 → 관점 표시 → 진단 순서로 확인하세요. 개발·시험·배포 기준은 [개발 안내](DEVELOPMENT.md)를 따릅니다.
+
+<details>
+<summary>1.11.2 개선 요약과 검증 범위</summary>
+
+- 45개 역할과 39개 스킬을 유지하고 전문 지침의 공통 정본·활성 기준을 통일했습니다.
+- 법률·투자 표현 치환 지침과 모든 행위 기록·특정 OS 보호 방식의 일괄 강제를 실제 과업 조건에 맞게 정리했습니다. 법률 해석은 법무/전문가 검토 필요입니다.
+- 개인 업무 선호를 공개 공통 규칙과 분리했습니다. 기존 사용자의 승인된 선호를 취소하지 않습니다.
+- 진단은 JSON 등록 정보·정확한 버전·설치 캐시 SHA-256·설치 훅 출력을 검사합니다. 내용이 다르면 설치 코드를 실행하지 않습니다.
+- 270개 사례를 실제 Codex 새 대화로 실행하는 시험 명령을 추가했습니다. 역할 선택과 답변 품질을 구분하고, 품질은 사람이 실제 답변을 검토해야 합니다.
+- `node check-docs.mjs`가 MD/HTML 본문 및 한·영 제목 구조를 검사합니다. 번역 의미·화면 품질의 자동 보장은 아닙니다.
+- 이 소스는 로컬 후보입니다. 자동 시험 53개와 후보 지침을 직접 제공한 전체 행동 시험을 수행했습니다. 전체 재시험 최초 CLI 실패 2개는 별도 재실행 통과했으나 원인은 미확인입니다. 마지막 마케팅 수정 후 관련 6개 사례를 추가 확인했습니다. Desktop 자동 훅·모든 답변의 전문 정확성·공개 배포 완료는 주장하지 않습니다. [실제 검증 기록](VERIFICATION.md)을 확인하세요.
+
+</details>
+
+
 ### 적용 관점 표시
 일반 자연어 응답 첫 줄에 `[페르소나: L2 · CAD·BIM 정보 정합성 관점]`처럼 실제 적용 관점을 반드시 표시합니다. 진행 안내와 최종 답변에 각각 표시하고, 전문 관점이 없으면 실제 L단계와 `전문 관점 미적용`을 표시합니다. 짧은 답변도 생략하지 않습니다. 사용자 지정 JSON·코드 전용 출력 또는 표시 금지 지시는 우선합니다. 표시 자체는 도구 실행이나 작업 성공의 증거가 아닙니다. 현재 대화에 이미 주입된 지침은 파일 수정으로 바뀌지 않으므로 새 대화에서 확인하세요.
 
 ## 현재 반영 상태 (2026-10-09)
 
-이 저장소는 원본 `sodam-ai/SoDam-Persona`를 Codex 전용으로 포팅한 `sodam-ai/SoDam-Persona-Codex`의 작업 소스입니다. 현재 1.11.1·45개 관점·39개 스킬·2개 훅이며 생성/편집 스킬과 compat/ 호환 매니페스트를 보존합니다. 추가 관점 표시 의무와 진단 보완의 소스 검사는 통과했지만 설치본 버전 불일치와 실제 Desktop 전체 흐름은 해결/검증되지 않았습니다. 추가 수정은 이 문서가 포함된 커밋 기준으로 확인하세요. 버전 문자열만으로 파일 일치를 보장하지 않습니다. SoDam-Agent 전용 팀 규칙은 포함하지 않습니다.
+이 저장소는 원본 `sodam-ai/SoDam-Persona`를 Codex 전용으로 포팅한 `sodam-ai/SoDam-Persona-Codex`의 작업 소스입니다. 현재 1.11.2·45개 관점·39개 스킬·2개 훅이며 생성/편집 스킬과 compat/ 호환 매니페스트를 보존합니다. 추가 관점 표시 의무와 진단 보완의 소스 검사는 통과했지만 설치본 버전 불일치와 실제 Desktop 전체 흐름은 해결/검증되지 않았습니다. 추가 수정은 이 문서가 포함된 커밋 기준으로 확인하세요. 버전 문자열만으로 파일 일치를 보장하지 않습니다. SoDam-Agent 전용 팀 규칙은 포함하지 않습니다.
 
 
 **SoDam Persona**는 OpenAI의 AI 코딩 도우미인 **Codex**(사람의 말로 개발을 돕는 AI 프로그램)에 "신중하고 꼼꼼한 한국어 개발 파트너" 성격을 심어주는 부가 프로그램(플러그인, plugin — 원래 프로그램에 기능을 더해주는 작은 추가 프로그램)입니다.
@@ -14,7 +31,7 @@
 
 이 플러그인 자체는 별도의 AI가 아닙니다. Codex가 이미 갖고 있는 대화 능력 위에 "이렇게 판단하고 이렇게 답하라"는 규칙 문서를 자동으로 얹어주는 설정 모음입니다. Codex가 해당 이벤트를 전달할 때 실행되도록 설정된 hook(후크 — 특정 시점에 실행되는 작은 프로그램) 2개와, 상황에 맞을 때 불러오는 전문 지식 모음(skill, 스킬) 39개로 이루어져 있습니다. 설치·권한·환경에 따라 실제 자동 실행 여부를 확인해야 합니다.
 
-> **이 소스의 버전**: `1.11.1` · **관점 수**: 45개 · **활성 기준**: 의도 기반(단어만으로 선택하지 않음) · **스킬 수**: 39개 · **hook 수**: 2개 · **라이선스**: Apache License 2.0
+> **이 소스의 버전**: `1.11.2` · **관점 수**: 45개 · **활성 기준**: 의도 기반(단어만으로 선택하지 않음) · **스킬 수**: 39개 · **hook 수**: 2개 · **라이선스**: Apache License 2.0
 
 > **설치 전 확인**: 기본 GitHub 설치와 ZIP 다운로드는 기본 브랜치의 현재 내용을 가져옵니다. 이 문서를 보는 브랜치와 기본 브랜치의 버전이 다를 수 있으므로 설치 후 실제 플러그인 버전을 확인하세요. 별도 작업 브랜치를 시험하려면 아래 시험용 설치 절을 따르세요. Git 브랜치 반영은 Release 생성이나 기존 설치본의 자동 업데이트가 아닙니다.
 
@@ -47,16 +64,59 @@
 
 ## 사전 준비물
 
+### 설치 전에 읽는 왕초보 안내
+
+이 문서는 원본 프로젝트의 Codex 포팅 소스 기준입니다. **문서·파일이 있음 → 설치됨 → 활성화됨 → 훅이 실행됨 → 실제 답변이 맞음**은 각각 다른 확인 단계입니다. 폴더를 다른 곳으로 옮기거나 PC를 다시 켠 것만으로 후보가 설치되지 않습니다.
+
+1. Windows 시작 메뉴에서 PowerShell을 찾아 엽니다. 명령 블록에는 한 줄씩 입력하고 Enter를 누릅니다. 코드 블록의 세 개짜리 백틱과 설명 문장은 입력하지 않습니다.
+2. Node.js·Git이 없다면 아래 공식 다운로드에서 운영체제에 맞는 설치 파일을 받습니다. Node.js는 지원 중인 LTS, Git은 운영체제에 맞는 설치 프로그램을 선택합니다. 설치 프로그램을 실행한 뒤 PowerShell을 다시 열고 버전을 확인합니다.
+3. Codex가 없다면 공식 CLI/앱 안내의 현재 설치 방법을 따르고 계정으로 로그인합니다. 이 문서가 새 계정·무료 이용·설치 권한을 제공하지는 않습니다. CLI 명령과 앱 화면에서 쓰는 대화는 구분하세요.
+4. 명령어는 PowerShell에, “도면을 검토해줘” 같은 요청과 `$persona-...`는 Codex 대화 입력칸에 씁니다. 브라우저 주소창·메신저·일반 ChatGPT 대화에 플러그인 설치 명령을 넣어도 설치되지 않습니다.
+5. 휴대전화로 README를 읽을 수 있지만 이 프로젝트는 모바일 앱이 아닙니다. 휴대전화·메신저에 독립 설치하는 명령은 제공하지 않습니다. 실제 지원은 사용하는 Codex 호스트에서 확인하세요.
+
+| 쉬운 뜻 | 이 문서에서 쓰는 용어 |
+|---|---|
+| 프로그램을 실행하는 글자 명령 창 | 터미널 / PowerShell |
+| 원본 코드와 문서가 모인 폴더 | 저장소 / 프로젝트 최상위 |
+| Codex에 규칙을 추가하는 묶음 | 플러그인 |
+| 정해진 시점에 실행되는 작은 프로그램 | 훅(hook) |
+| 특정 요청에 적용하는 전문 지침 | 스킬(skill) |
+| 검사 결과가 통과했는지 표시한 값 | PASS 또는 종료코드 0; 모든 실사용 성공을 보장하지 않음 |
+
+### 가장 짧은 설치·실행 순서
+
+일반 사용자는 프로젝트 개발·시험 프로그램을 먼저 실행할 필요가 없습니다. PowerShell에 아래 명령을 한 줄씩 입력합니다. `codex plugin --help`에서 설치 명령이 없으면 공식 Codex 업데이트와 조직 정책을 먼저 확인합니다.
+
+```powershell
+node --version
+codex --version
+codex plugin --help
+git --version
+codex plugin marketplace add sodam-ai/SoDam-Persona-Codex
+codex plugin add sodam-persona@sodam-persona
+codex plugin list
+codex
+```
+
+GitHub 명령은 공개 기본 브랜치의 배포본을 설치합니다. 이미 등록된 출처가 있거나 오류가 나오면 아래 설치·오류 절을 먼저 읽습니다. 최신 로컬 후보를 시험하려면 위 명령을 반복하기 전에 로컬 설치 절을 따릅니다. 설치 후 **새 빈 Codex 대화**에 다음 문장을 입력합니다.
+
+```text
+도면과 BIM 모델의 치수·단위·개정 불일치를 어떤 순서로 검토할지 설명해줘. 파일은 수정하지 마.
+```
+
+정상 기대: 응답 첫 줄에 실제 적용 관점이 있고 본문이 단위·개정 비교를 설명합니다. 실제 파일을 제공하지 않았는데 “검토 완료”라고 하면 잘못된 응답입니다. 표시만 나오고 본문이 요청과 다르거나 설치 진단이 실패하면 사용 검증 완료로 판단하지 않습니다.
+
+
 설치를 시작하기 전에 아래 4가지가 준비되어 있는지 확인하세요. 하나라도 없으면 [필요 프로그램](#필요-프로그램)에서 설치 방법을 안내합니다.
 
 | # | 준비물 | 왜 필요한가 | 없으면 |
 |---|---|---|---|
 | 1 | Codex CLI(터미널에서 쓰는 버전) 또는 Codex 데스크톱 앱, 또는 Codex가 연결된 IDE(코드 편집기) 확장 | 이 플러그인은 Codex "안"에서 동작하는 부가 기능이라, Codex 자체가 먼저 있어야 합니다 | 플러그인을 설치할 대상이 없어 진행 불가 |
-| 2 | Node.js 18 이상 | hook 2개와 검증 스크립트(`validate.mjs`)가 JavaScript로 작성되어 Node.js가 실행 엔진 역할을 합니다 | hook이 실행되지 않아 페르소나가 전혀 동작하지 않음 |
+| 2 | Node.js 20 이상 권장 | hook 2개와 검증 스크립트(`validate.mjs`)가 JavaScript로 작성되어 Node.js가 실행 엔진 역할을 합니다 | hook이 실행되지 않아 페르소나가 전혀 동작하지 않음 |
 | 3 | Git(GitHub에서 설치할 경우에만 필요) | `codex plugin marketplace add sodam-ai/SoDam-Persona-Codex`처럼 GitHub 주소로 설치할 때 Codex 내부적으로 저장소를 내려받는 데 사용 | 로컬 저장소 설치 방식으로 대체 가능(Git 없이도 가능) |
 | 4 | 터미널(명령어를 글자로 입력해 컴퓨터에 지시하는 검은 화면 프로그램) 사용 경험 아주 조금 | 설치 명령을 한 줄씩 입력하고 Enter를 누르는 정도만 할 수 있으면 충분 | 이 문서의 [실행 방법](#실행-방법)에서 터미널 여는 법부터 설명 |
 
-**지원 범위**: Codex 플러그인 기능과 Node.js 18 이상을 사용할 수 있는 Windows·macOS·Linux 환경을 대상으로 합니다. 명령 예시는 Windows PowerShell 기준입니다. macOS/Linux에서는 해당 운영체제의 Terminal에서 같은 `codex`, `node`, `git` 명령을 사용하되, Codex 플러그인 제공 여부와 화면 이름은 설치한 Codex 버전·계정·조직 정책에 따라 다를 수 있습니다.
+**환경 기준**: Windows·macOS·Linux에서 Codex 플러그인과 Node.js를 사용할 수 있어야 합니다. 현재 실제 검증은 Windows / Codex CLI 0.160.1 / Node.js 26.7.0 / Pandoc 3.7.0.2입니다. CI 설정은 Ubuntu / Node.js 20이며 원격 CI 실행은 미확인입니다. Node.js 18 및 모든 앱·IDE·운영체제 조합을 시험한 것은 아닙니다. 새 설치는 Node.js 공식 다운로드의 지원 중인 LTS 버전을 사용하고 해당 환경에서 검사하세요. 명령 예시는 PowerShell 기준입니다.
 
 **v1.10.2 검증 기록(2026-09-23, Windows)**: v1.10.2 소스에서 정합성 검사, hook·검증기 자동 테스트 총 22건, 공식 플러그인 구조 검사, 격리된 임시 환경의 설치·직접 hook 실행, 한·영 HTML 재생성과 Chrome 화면·콘솔 검사가 통과했습니다. 기존 개인 설치본 갱신이나 일반 자연어 요청에서 hook 자동 호출까지 입증한 것은 아닙니다.
 
@@ -68,14 +128,14 @@
 
 ## 필요 프로그램
 
-아래 표 순서대로 설치하면 막힘이 없습니다. 이미 설치되어 있다면 버전 확인 명령으로 점검만 하고 넘어가세요.
+아래 표 순서대로 준비하고 각 단계의 확인 명령이 성공하는지 확인하세요. 이미 설치되어 있다면 버전 확인 명령으로 점검만 하고 넘어가세요.
 
 | 프로그램 | 최소 버전 | 다운로드 | 설치 확인 명령 |
 |---|---|---|---|
-| Codex CLI / 데스크톱 앱 | 최신 버전 | OpenAI 공식 웹사이트에서 "Codex" 검색 후 안내에 따라 설치 | (Codex 자체 안내에 따름) |
-| Node.js | 18.0.0 이상 | `https://nodejs.org` (LTS 버전 권장) | `node --version` |
-| Git | 최신 버전 (GitHub 설치 시에만) | `https://git-scm.com` | `git --version` |
-| Pandoc (문서 편집자만, 선택) | 최신 버전 | `https://pandoc.org/installing.html` | `pandoc --version` |
+| Codex CLI / 데스크톱 앱 | 플러그인 명령 지원 필요; CLI 0.160.1에서 검증 | [공식 CLI 설치 안내](https://developers.openai.com/codex/cli), [공식 앱 안내](https://developers.openai.com/codex/app) | `codex --version`, `codex plugin --help` (CLI) |
+| Node.js | 20 이상 권장 | [Node.js 공식 다운로드](https://nodejs.org/en/download) (지원 중인 LTS 권장) | `node --version` |
+| Git | 최신 버전 (GitHub 설치 시에만) | [Git 공식 다운로드](https://git-scm.com/downloads) | `git --version` |
+| Pandoc (문서 편집자만, 선택) | 최신 버전 | [Pandoc 공식 설치](https://pandoc.org/installing.html) | `pandoc --version` |
 
 - **Codex CLI/데스크톱 앱**은 이 플러그인을 "실행할 무대"입니다. 반드시 먼저 설치·로그인까지 끝내주세요.
 - **Node.js**는 일반 사용자에게도 필수입니다(hook 실행용). 설치 후 터미널을 새로 열어야 `node` 명령이 인식됩니다.
@@ -93,7 +153,7 @@ git --version
 
 ### 환경 변수 안내
 
-이 플러그인은 사용자가 직접 설정해야 하는 환경 변수(API 키, `.env` 파일 등)가 **하나도 없습니다**(hook 스크립트 2개를 코드 기준으로 전수 확인한 결과 `process.env`를 읽는 코드가 없음). hook 명령의 `${PLUGIN_ROOT}`는 Codex가 실행 시점에 플러그인 설치 경로로 자동 치환해 주는 값이라, 사용자가 별도로 지정할 필요가 없습니다.
+일반 사용을 위해 이 프로젝트에 API 키·`.env`를 만들 필요는 없습니다. 두 훅은 `process.env`를 읽지 않으며 `${PLUGIN_ROOT}`는 호스트가 제공하는 설치 경로입니다. 개발용 `diagnose.mjs`는 `CODEX_HOME` 또는 `--home`으로 검사할 홈을 지정하고, `evaluate.mjs`는 Codex CLI를 호출해 호스트의 인증·사용량을 사용합니다. 홈은 설정·캐시가 있는 폴더이며 프로젝트 폴더와 다릅니다. `CODEX_HOME`이 설정되어 있으면 기본 CLI 홈보다 우선합니다. 다른 플러그인이나 모델 제공자의 키 요구는 별도이며, 키를 README·Git·평가 기록에 적지 마세요.
 
 ---
 
@@ -149,7 +209,7 @@ codex plugin add sodam-persona@sodam-persona
 
 ### 현재 로컬 후보를 시험하는 방법
 
-GitHub 배포본은 이 문서가 포함된 커밋 기준입니다. 원격 기본 브랜치의 README와 커밋을 확인하고 Marketplace 스냅샷을 갱신한 뒤 새 대화에서 테스트하세요. 개인 로컬 변경은 다운로드에 포함되지 않습니다. 문서 작성 과정에서 설치본을 자동 갱신하지 않았습니다.
+이 로컬 후보를 시험하려면 먼저 실제 대상 폴더에 최상위 README와 `.claude-plugin/marketplace.json`이 있는지 확인하고 위 로컬 설치 명령을 사용합니다. 등록명이 같은 기존 마켓플레이스가 있다면 `codex plugin marketplace list`로 출처를 확인하세요. 다른 출처를 덮어쓰기 위해 곧바로 제거하지 말고 개인 수정·설정과 원본을 먼저 보존합니다. GitHub 기본 브랜치 설치는 미커밋 로컬 후보를 가져오지 않습니다. 공개 저장소의 브랜치·버전·커밋 확인과 설치 후 진단은 별도입니다. 이 문서 작성으로 전역 설치본을 갱신하지 않았습니다.
 
 ### 설치 뒤 권한·신뢰 확인
 
@@ -169,7 +229,7 @@ codex plugin marketplace list
 codex plugin list
 ```
 
-첫 번째 명령은 등록된 마켓플레이스 목록을, 두 번째 명령은 실제로 설치된 플러그인 목록을 보여줍니다. 둘 다에서 `sodam-persona`가 보이고 설치 상태가 활성화되어 있으면 패키지 설치가 끝난 것입니다. 이어서 새 task에서 평범한 질문과 `객관적으로 깊게 검토해줘`를 각각 입력해 응답 깊이가 달라지는지 확인하면 실제 사용 점검까지 끝납니다.
+첫 번째 명령은 등록된 마켓플레이스 목록을, 두 번째 명령은 설치된 플러그인 목록을 보여줍니다. 출처·버전·활성 상태를 확인하고 `node diagnose.mjs`로 후보와 설치 파일을 비교하세요. 이어서 새 대화에서 위 CAD/BIM 예제를 입력해 관점 표시, 요청에 맞는 본문, 확인하지 않은 파일을 확인했다고 말하지 않는지 점검합니다. 목록이나 표시만으로 자동 훅 실행·모든 기능의 정상 작동이 입증되지는 않습니다.
 
 ### 업데이트와 제거
 
@@ -201,23 +261,23 @@ codex plugin add sodam-persona@sodam-persona
 
 ## 실행 방법
 
-"플러그인을 실행한다"는 개념은 따로 없습니다. 이 플러그인은 **Codex를 실행하고 대화를 시작하는 순간 자동으로 함께 동작**합니다. 즉, "실행 방법"은 곧 "Codex를 여는 방법"입니다.
+플러그인만 따로 실행하는 사용자 앱은 없습니다. Codex에서 설치·활성 상태와 실행 권한을 갖춘 뒤 호스트가 해당 이벤트를 전달하면 훅이 지침을 주입하도록 설계되어 있습니다. CLI·Desktop·IDE가 같은 설치 홈·파일·훅을 사용한다고 가정하지 말고 각 환경에서 진단과 새 대화의 실제 응답을 확인하세요.
 
 ### 터미널에서 Codex CLI로 실행
 
 1. 터미널(윈도우는 PowerShell 또는 명령 프롬프트, macOS는 Terminal 앱)을 연다.
 2. `codex`라고 입력하고 Enter를 누른다(정확한 실행 명령은 설치한 Codex CLI 버전의 공식 안내를 따른다).
-3. 새 task(작업 세션)가 열리면, 그 세션 시작 시점에 이 플러그인의 SessionStart hook이 자동으로 실행되어 페르소나 코어를 주입합니다.
+3. 새 task에서 설치·활성·권한과 SessionStart 이벤트 전달이 갖춰지면 훅이 코어를 주입합니다. 실제 답변을 확인하고 자동 훅을 확인하지 못했으면 미검증으로 남깁니다.
 
 ### Codex 데스크톱 앱으로 실행
 
 1. 설치된 Codex 앱 아이콘을 실행한다.
 2. 새 대화(작업)를 시작한다.
-3. 마찬가지로 세션 시작 시점에 hook이 자동으로 실행됩니다.
+3. 앱의 실제 설치본과 권한을 확인하고 새 대화에서 관점 표시·본문을 시험합니다. CLI 설치 성공만으로 앱 자동 훅 실행을 보장하지 않습니다.
 
 ### IDE(코드 편집기) 확장으로 실행
 
-Codex가 연결된 IDE 확장을 쓰는 경우, IDE 안에서 Codex 패널을 열고 새 세션을 시작하면 동일하게 적용됩니다.
+IDE 안에서 Codex 패널을 열고 새 세션을 시작합니다. 해당 확장이 이 플러그인 구조·훅 이벤트를 지원하는지 확인해야 하며, 모든 IDE 조합은 미검증입니다.
 
 ### 터미널을 처음 쓰는 분을 위한 아주 기본적인 안내 (Windows 기준)
 
@@ -316,16 +376,16 @@ $persona-edit 투자자 트리거에 "리밸런싱"을 추가해줘
 
 ### 사용 가능한 skill 목록 확인
 
-Codex CLI와 IDE 확장에서는 `/skills`라고 입력하거나, `$`만 입력하면 지금 쓸 수 있는 skill 목록이 화면에 뜹니다.
+지원하는 Codex 화면에서는 `/skills` 또는 `$`로 사용 가능한 스킬을 확인합니다. 지원 여부와 호출 이름은 호스트·버전·설치 상태에 따라 확인하세요. 목록 화면이 없으면 PowerShell에서 `codex plugin list`로 설치 상태를 확인하고 새 대화에서 실제 응답을 시험합니다.
 
 ### 응답 강도를 내가 직접 조절하고 싶을 때
 
-말투에 특정 단어를 섞으면 응답의 깊이가 자동으로 바뀝니다. 자세한 원리는 [작동 방법](#작동-방법)에서 설명합니다.
+원하는 답변 길이와 검토 범위를 명확히 요청하세요. 단어 하나만으로 특정 단계나 모든 역할이 자동 선택되지는 않습니다. 관련 관점·요청 범위·실제 위험도를 함께 판단하는 원리는 [작동 방법](#작동-방법)에서 설명합니다. 형식 생략 요청은 응답 형식을 바꾸는 것이며 설치된 플러그인을 제거하는 명령은 아닙니다.
 
 | 원하는 것 | 이렇게 말하면 됨 |
 |---|---|
 | 아주 짧고 간단한 답 | "간단히", "짧게", "핵심만" |
-| 여러 전문가 관점을 다 모아 깊게 | "객관적으로", "깊게", "철저히" |
+| 관련 전문가 관점을 깊게 검토 | "객관적으로", "깊게", "철저히" |
 | 페르소나 형식 없이 자유롭게 | "그냥 답해", "페르소나 끄고" |
 | 관련 관점을 종합하여 깊게 검토 | "페르소나 풀버전" |
 
@@ -375,6 +435,14 @@ Codex CLI와 IDE 확장에서는 `/skills`라고 입력하거나, `$`만 입력�
 | `$persona-media-quality-rights-reviewer <내용>` | 이미지·영상 품질·출처·동의·라이선스 검수 관점(#35) |
 | `$persona-generative-ai-workflow-engineer <내용>` | ComfyUI형 로컬 도구·워크플로우·노드·모델·CUDA·VRAM·API·복구 관점(#36) |
 | `$persona-generative-ai-platform-operator <내용>` | Midjourney·Higgsfield·Runway형 외부 플랫폼 기능·계정·크레딧·업로드·출력 관점(#37) |
+| `$persona-agent-harness-expert <내용>` | AI 에이전트 지시·훅·스킬 충돌·오발동 검토(#38) |
+| `$persona-system-integration-expert <내용>` | Desktop·CLI·MCP·플러그인·외부 프로그램 연결 검증(#39) |
+| `$persona-acceptance-evidence-expert <내용>` | 완료 주장·수용 기준·실제 증거 검증(#40) |
+| `$persona-context-handoff-expert <내용>` | 여러 PC·AI·대화의 결정·승인·작업 인계(#41) |
+| `$persona-cad-bim-consistency-expert <내용>` | 건축 도면·BIM·표의 치수·단위·개정 정합성(#42) |
+| `$persona-design-construction-integration-expert <내용>` | 설계 변경의 시공·간섭·물량·비용·일정 영향(#43) |
+| `$persona-archviz-business-creative-expert <내용>` | 건축시각화의 공간 가치·홍보·사업 제안(#44) |
+| `$persona-domain-automation-productization-expert <내용>` | 건축·콘텐츠 반복 업무의 스크립트·CLI·MCP·앱 제품화(#45) |
 | `$persona-create` | 인터뷰 방식으로 새 도메인 페르소나를 추가. 실제 등록부의 다음 번호 사용(현재 #46) |
 | `$persona-edit` | 인터뷰 방식으로 기존 페르소나의 트리거 단어 추가·수정·제거 |
 
@@ -385,7 +453,10 @@ Codex CLI와 IDE 확장에서는 `/skills`라고 입력하거나, `$`만 입력�
 | `node validate.mjs` | 관점 ID·이름, 스킬 메타데이터·참조, 버전, 훅 형식, 개인 경로 노출과 스크립트 문법 등 정합성 자동 검사 |
 | `node --test test-hooks.mjs` | 두 hook의 정상·빈·잘못된·2 MiB 입력과 원문 누락·공백 복구 동작 검사 |
 | `node --test test-validator.mjs` | 등록부·버전·배선·크기·개인 경로·폴더명 오류를 검증기가 실제로 차단하는지 검사 |
-| `node diagnose.mjs` | 소스/설치 버전, 활성 상태, 두 hook 실행, 저장소 정합성을 한 번에 읽기 전용 진단 |
+| `node diagnose.mjs` | JSON 등록 정보·정확한 버전·설치 캐시 파일 해시·설치 훅·소스 정합성의 읽기 전용 진단 |
+| `node check-docs.mjs` | 한·영 MD/HTML 본문과 제목·토글 구조 비교; 번역 의미·화면 품질은 별도 검토 |
+| `node evaluate.mjs --list` | 라우팅 270개와 형식 2개의 시험 ID 목록 표시; 실제 AI 호출은 하지 않음 |
+| `node evaluate.mjs --execute --case R42-positive --out ./evaluation-results/run-01` | 새 임시 CLI 대화의 실제 후보 시험; 인증·사용량 필요, 같은 결과 파일 덮어쓰기 금지 |
 | `node build-docs.mjs` | `README.md`/`README.en.md`를 다시 읽어 `README.html`/`README.en.html`을 재생성(Pandoc 필요) |
 
 ---
@@ -417,35 +488,23 @@ L0는 단순 조회, L1은 설명·의견, L2는 구현·검토, L3는 실제 �
 ### 평소 대화의 흐름 (매 세션)
 
 ```text
-1. Codex 세션(task) 시작
-       │
-       ▼
-2. SessionStart hook 실행 (inject-core.js)
-   → persona_core.md 전문을 세션 컨텍스트에 주입 (권한 확인 표시 여부는 Codex 환경에 따름)
-       │
-       ▼
-3. 사용자가 메시지 입력
-       │
-       ▼
-4. UserPromptSubmit hook 실행 (inject-marker.js)
-   → persona_marker.txt 압축 요약을 매번 주입
-   → 대화가 길어지거나(compaction) 서브에이전트를 거친 뒤에도 페르소나를 즉시 복구하는 역할
-       │
-       ▼
-5. Codex가 주입된 규칙 + 사용자 발화를 함께 해석
-   → 응답 강도(L0~L3) 판정, 트리거 단어 매칭
-       │
-       ▼
-6. 조건에 맞는 skill 조건부 로드
-   (persona-triggers / persona-format / persona-safety / 도메인 34종 중 해당하는 것)
-       │
-       ▼
-7. L2·L3는 7단계 응답 형식(복기 → 근본 원인 → 추천 방향 → 실행 순서 →
-   검증 방법 → 주의사항 → 다음 작업)을 따라 답변 구성
-       │
-       ▼
-8. 응답 전 자가 검증 체크리스트 통과 확인 후 전달
+1. 설치·활성·권한·호스트 이벤트 지원 확인
+   → 새 Codex 대화 시작
+2. 호스트가 SessionStart 이벤트 전달
+   → inject-core.js가 고정 코어 텍스트를 hook JSON으로 출력
+3. 사용자 요청 입력 → 호스트가 UserPromptSubmit 이벤트 전달
+   → inject-marker.js가 고정 마커 텍스트를 hook JSON으로 출력
+4. Codex가 상위 지시·실제 요청 의도·명시적 제외를 함께 판단
+   → 단어 매칭만으로 역할을 켜지 않음
+5. 관련 주도·검토 역할과 필요한 스킬·도구 선택
+   → 답변 길이·범위·검토 깊이·실제 위험을 독립 판단
+6. 승인 범위에서 실행 → 실제 결과·실패·미검증 확인
+7. 일반 자연어는 첫 줄에 실제 관점 표시
+   → 결과·변경·검증·한계를 요청한 분량으로 보고; 7섹션 강제 없음
 ```
+
+위 흐름은 설정의 의도이며 모든 호스트에서 자동 전달을 관측한 기록이 아닙니다. 긴 대화·compaction·서브에이전트 전달은 별도 미검증입니다. 관점 표시만으로 훅 자동 실행이나 도구 실행을 증명하지 않습니다.
+
 
 ### 건축·인테리어 작업의 권장 흐름
 
@@ -564,73 +623,150 @@ Codex의 "플러그인"은 다음 4가지 요소로 이루어진 하나의 묶�
 ### 저장소 전체 구조
 
 ```text
-.
-├── .agents/plugins/marketplace.json      # Codex가 실제로 읽는 마켓플레이스 정의 (정본)
-├── .claude-plugin/marketplace.json       # [예전 호스트 호환용] Claude Code 마켓플레이스 정의
-├── .github/workflows/validate.yml        # CI: push/PR마다 validate.mjs 자동 실행
-├── LICENSE                               # Apache License 2.0 전문
-├── NOTICE                                # 저작권·상표·제3자 인용 고지
-├── README.md                             # 이 문서 (한국어, 정본)
-├── README.en.md                          # 이 문서의 영어판 (정본, 내용 동일)
-├── README.html / README.en.html          # 위 두 문서를 build-docs.mjs로 변환한 HTML (내용 동일)
-├── build-docs.mjs                        # README(.md) → README(.html) 재생성 스크립트
-├── doc-theme.html                        # 위 스크립트가 쓰는 HTML 테마(CSS)
-├── validate.mjs                          # 정합성 자동 검사기
-├── test-hooks.mjs                         # hook 정상·경계·실패 복구 실행 테스트
-├── test-validator.mjs                     # 검증기 실패 감지 회귀 테스트
-├── diagnose.mjs                           # 소스·설치본·hook·정합성 통합 진단
-├── plugins/sodam-persona/persona-registry.json # 관점·패턴·도메인·버전·hook 상한 구조화 정본
-└── plugins/sodam-persona/                # 실제로 배포·설치되는 플러그인 본체
-    ├── .codex-plugin/plugin.json         # Codex 매니페스트 (정본)
-    ├── compat/plugin.portable.json       # Agent Plugins 1.0 형식 보존본
-    ├── .claude-plugin/plugin.json        # [예전 호스트 호환용] Claude Code 매니페스트
-    ├── hooks/
-    │   ├── hooks.json                    # SessionStart / UserPromptSubmit hook 등록표
-    │   ├── inject-core.js                # SessionStart 시 실행되는 스크립트
-    │   ├── inject-marker.js              # UserPromptSubmit 시 실행되는 스크립트
-    │   ├── persona_core.md               # 세션 시작 시 주입되는 페르소나 코어 본문
-    │   └── persona_marker.txt            # 매 입력마다 주입되는 압축 마커
-    ├── skills/
-    │   ├── persona-format/SKILL.md       # L2/L3 응답 형식
-    │   ├── persona-safety/SKILL.md       # 보안 always-on, 비가역 작업 게이트
-    │   ├── persona-triggers/SKILL.md     # 의도 기반 라우팅과 관련 역할 선택
-    │   ├── persona-investor/SKILL.md     # #13 전문 투자자 도메인
-    │   ├── persona-lawyer/SKILL.md       # #11 전문 변호사 도메인
-    │   ├── persona-accountant/SKILL.md   # #14 회계·세무 전문가 도메인
-    │   ├── persona-marketer/SKILL.md     # #15 마케팅·세일즈 전문가 도메인
-    │   ├── persona-architectural-designer/SKILL.md # #16 건축 설계 도메인
-    │   ├── persona-interior-designer/SKILL.md      # #17 인테리어 설계 도메인
-    │   ├── persona-construction-expert/SKILL.md    # #18 시공 도메인
-    │   ├── persona-cost-estimator/SKILL.md         # #19 견적 도메인
-    │   ├── persona-design-director/SKILL.md        # #20 디자인 디렉션 도메인
-    │   ├── persona-spatial-3d-modeling-expert/SKILL.md # #21 3D 모델링·BIM 도메인
-    │   ├── persona-rendering-visualization-expert/SKILL.md # #22 렌더링·시각화 도메인
-    │   ├── persona-architectural-design-expert/SKILL.md # #23 건축 디자인 도메인
-    │   ├── persona-interior-design-expert/SKILL.md # #24 인테리어 디자인 도메인
-    │   ├── persona-source-verification-expert/SKILL.md # #25 자료 검색·출처 검증 도메인
-    │   ├── persona-research-analyst/SKILL.md # #26 리서치·분석 도메인
-    │   ├── persona-ideation-strategist/SKILL.md # #27 아이디어·콘셉트 전략 도메인
-    │   ├── persona-project-manager/SKILL.md # #28 프로젝트 실행관리 도메인
-    │   ├── persona-product-owner/SKILL.md # #29 제품 가치·백로그 도메인
-    │   ├── persona-pmo-governance-expert/SKILL.md # #30 PMO·거버넌스 도메인
-    │   ├── persona-project-analyst-coordinator/SKILL.md # #31 프로젝트 분석·운영 도메인
-    │   ├── persona-image-production-expert/SKILL.md # #32 이미지 제작·편집 도메인
-    │   ├── persona-video-production-director/SKILL.md # #33 영상 기획·연출 도메인
-    │   ├── persona-video-post-production-expert/SKILL.md # #34 영상 후반 제작 도메인
-    │   ├── persona-media-quality-rights-reviewer/SKILL.md # #35 미디어 품질·권리 검수 도메인
-    │   ├── persona-generative-ai-workflow-engineer/SKILL.md # #36 생성형 AI 로컬 워크플로우 도메인
-    │   ├── persona-generative-ai-platform-operator/SKILL.md # #37 생성형 AI 플랫폼 운영 도메인
-    │   ├── persona-create/SKILL.md       # 새 페르소나 생성 인터뷰 진입점
-    │   └── persona-edit/SKILL.md         # 트리거 편집 인터뷰 진입점
-    ├── commands/
-    │   ├── create.md                     # persona-create가 읽어 수행하는 절차 본문
-    │   └── edit.md                       # persona-edit이 읽어 수행하는 절차 본문
-    └── reference/
-        ├── persona_full_core.md          # 페르소나 풀 정의(L3 전면 활성/세션 복구용)
-        ├── built_environment_collaboration.md
-        ├── media_production_collaboration.md
-        ├── generative_ai_tools_collaboration.md # 건축·인테리어 공통 입력·인계·충돌 규칙
-        └── test_scenarios.md             # 트리거 동작 검증용 발화 시나리오 모음
+SoDam-Persona-Codex/
+  .agents/plugins/marketplace.json
+  .claude-plugin/marketplace.json
+  .github/workflows/validate.yml
+  .gitattributes
+  .gitignore
+  LICENSE
+  NOTICE
+  README.md
+  README.en.md
+  README.html
+  README.en.html
+  QUICKSTART.md
+  QUICKSTART.en.md
+  DEVELOPMENT.md
+  DEVELOPMENT.en.md
+  VERIFICATION.md
+  VERIFICATION.en.md
+  LEGAL_REVIEW.md
+  LEGAL_REVIEW.en.md
+  INTEGRATION_VERIFICATION.md
+  build-docs.mjs
+  doc-theme.html
+  check-docs.mjs
+  validate.mjs
+  diagnose.mjs
+  diagnose-core.mjs
+  codex-launch.mjs
+  evaluate.mjs
+  test-hooks.mjs
+  test-validator.mjs
+  test-supplemental.mjs
+  test-diagnose.mjs
+  test-evaluate.mjs
+  test-docs.mjs
+  plugins/
+    sodam-persona/
+      .claude-plugin/
+        plugin.json
+      .codex-plugin/
+        plugin.json
+      commands/
+        create.md
+        edit.md
+      compat/
+        plugin.portable.json
+      hooks/
+        hooks.json
+        inject-core.js
+        inject-marker.js
+        persona_core.md
+        persona_marker.txt
+      persona-registry.json
+      reference/
+        built_environment_collaboration.md
+        domain_routing.md
+        generative_ai_tools_collaboration.md
+        media_production_collaboration.md
+        operating_contract.md
+        persona_full_core.md
+        role_activation_contract.md
+        routing_cases_ko.json
+        routing_cases.json
+        test_scenarios.md
+        user_preferences.example.md
+      skills/
+        persona-acceptance-evidence-expert/
+          SKILL.md
+        persona-accountant/
+          SKILL.md
+        persona-agent-harness-expert/
+          SKILL.md
+        persona-architectural-design-expert/
+          SKILL.md
+        persona-architectural-designer/
+          SKILL.md
+        persona-archviz-business-creative-expert/
+          SKILL.md
+        persona-cad-bim-consistency-expert/
+          SKILL.md
+        persona-construction-expert/
+          SKILL.md
+        persona-context-handoff-expert/
+          SKILL.md
+        persona-cost-estimator/
+          SKILL.md
+        persona-create/
+          SKILL.md
+        persona-design-construction-integration-expert/
+          SKILL.md
+        persona-design-director/
+          SKILL.md
+        persona-domain-automation-productization-expert/
+          SKILL.md
+        persona-edit/
+          SKILL.md
+        persona-format/
+          SKILL.md
+        persona-generative-ai-platform-operator/
+          SKILL.md
+        persona-generative-ai-workflow-engineer/
+          SKILL.md
+        persona-ideation-strategist/
+          SKILL.md
+        persona-image-production-expert/
+          SKILL.md
+        persona-interior-design-expert/
+          SKILL.md
+        persona-interior-designer/
+          SKILL.md
+        persona-investor/
+          SKILL.md
+        persona-lawyer/
+          SKILL.md
+        persona-marketer/
+          SKILL.md
+        persona-media-quality-rights-reviewer/
+          SKILL.md
+        persona-pmo-governance-expert/
+          SKILL.md
+        persona-product-owner/
+          SKILL.md
+        persona-project-analyst-coordinator/
+          SKILL.md
+        persona-project-manager/
+          SKILL.md
+        persona-rendering-visualization-expert/
+          SKILL.md
+        persona-research-analyst/
+          SKILL.md
+        persona-safety/
+          SKILL.md
+        persona-source-verification-expert/
+          SKILL.md
+        persona-spatial-3d-modeling-expert/
+          SKILL.md
+        persona-system-integration-expert/
+          SKILL.md
+        persona-triggers/
+          SKILL.md
+        persona-video-post-production-expert/
+          SKILL.md
+        persona-video-production-director/
+          SKILL.md
 ```
 
 `commands/` 폴더는 v6 생성·편집 절차의 내부 참조입니다. Codex에서는 이를 직접 slash 명령으로 실행하지 않고, `persona-create`/`persona-edit` skill이 그 내용을 읽어서 수행합니다.
@@ -643,7 +779,7 @@ v6 검사는 45개 역할 ID·이름, 34개 도메인 배선, 39개 스킬 메�
 
 ### 지속적 통합(CI)
 
-`.github/workflows/validate.yml`은 `main` push와 Pull Request에서 정합성 검사와 세 회귀 시험 묶음를 실행하도록 설정되어 있습니다. CI 실패가 병합을 차단하는지는 GitHub 브랜치 보호 규칙에 달려 있습니다.
+`.github/workflows/validate.yml`은 `main` push와 Pull Request에서 정합성 검사·6개 테스트 파일·Pandoc 설치·MD/HTML 동기화 검사를 실행하도록 설정되어 있습니다. CI 실패가 병합을 차단하는지는 GitHub 브랜치 보호 규칙에 달려 있습니다.
 
 ---
 
@@ -665,7 +801,7 @@ v6 검사는 45개 역할 ID·이름, 34개 도메인 배선, 39개 스킬 메�
 
 ### 비가역 작업 게이트는 "행동 지침"이지 "시스템 방화벽"이 아님
 
-이 페르소나는 삭제·배포·강제 푸시·외부 발송 같은 되돌릴 수 없는 작업 앞에서 "자동 실행하지 말고 먼저 사용자에게 확인하라"는 **응답 습관과 판단 기준**을 Codex에게 지시합니다. 다만 이는 파일 시스템 접근을 물리적으로 차단하는 장치가 아니라, Codex가 원래 갖고 있는 승인·권한 체계 위에 "이럴 땐 반드시 멈춰서 물어봐라"는 규칙을 얹는 것입니다. 실제 최종 실행 권한과 승인 절차는 항상 Codex 플랫폼 자체의 정책을 따릅니다.
+이 페르소나는 현재 승인된 범위·원본 보존·비용·공개·손실 위험을 구분하는 **응답 습관과 판단 기준**을 Codex에게 제공합니다. 승인된 가역 작업은 진행하고, 새 위험·범위 확대·도구별 쓰기 게이트는 별도로 확인하도록 지시합니다. 다만 이는 파일 시스템 접근을 물리적으로 차단하는 장치가 아니라, Codex가 원래 갖고 있는 승인·권한 체계 위에 "이럴 땐 반드시 멈춰서 물어봐라"는 규칙을 얹는 것입니다. 실제 최종 실행 권한과 승인 절차는 항상 Codex 플랫폼 자체의 정책을 따릅니다.
 
 ### 데이터가 실제로 흘러가는 경로
 
@@ -676,14 +812,14 @@ v6 검사는 45개 역할 ID·이름, 34개 도메인 배선, 39개 스킬 메�
         │
         ▼
 Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
-   (이는 이 플러그인 유무와 무관하게, Codex를 쓰는 이상 항상 발생하는
+   (이는 이 플러그인 유무와 무관하게, 원격 모델을 사용하는 일반적인 Codex 대화에서 발생하는
     Codex 자체의 정상적인 동작 방식입니다)
         │
         ▼
 응답 생성 후 사용자에게 반환
 ```
 
-이 플러그인 자체는 자신만의 서버나 원격 저장소로 아무것도 전송하지 않습니다. 개인정보를 수집하거나, 사용 기록을 원격으로 남기거나, 별도 분석(텔레메트리)을 수행하지 않습니다. 다만 Codex를 사용하는 이상 대화 내용이 Codex가 연동한 AI 모델 제공자에게 전달되는 것은 이 플러그인과 무관하게 항상 발생하는 일이며, 그 처리 방침은 해당 제공자(OpenAI 등)의 공식 개인정보처리방침을 따릅니다.
+런타임 훅에는 자체 서버·원격 저장소 전송이나 별도 분석(텔레메트리) 기능이 없습니다. Codex가 원격 모델을 사용하는 경우 대화와 제공된 자료가 해당 모델 제공자에게 전달될 수 있으며, 실제 처리는 호스트 설정과 제공자 정책을 확인해야 합니다. 개발용 실제 AI 평가도 Codex 인증·통신·사용량을 사용합니다. 로컬 훅의 동작과 Codex·외부 도구의 통신을 구분하고 비밀정보를 대화·평가 입력에 넣지 마세요.
 
 ### 개인정보·민감정보 보호 습관
 
@@ -710,9 +846,14 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 | SessionStart 실행 스크립트 / 코어 본문 | `plugins/sodam-persona/hooks/inject-core.js`, `persona_core.md` |
 | UserPromptSubmit 실행 스크립트 / 압축 마커 | `plugins/sodam-persona/hooks/inject-marker.js`, `persona_marker.txt` |
 | 39개 skill 전체 | `plugins/sodam-persona/skills/persona-*/SKILL.md` |
-| 트리거 단어 전체 목록과 관점 매핑표 | `plugins/sodam-persona/skills/persona-triggers/SKILL.md` |
-| 도메인 전문가 34종 상세 | `plugins/sodam-persona/skills/` 아래 26개 도메인 `persona-*` 폴더 |
+| 의도 기반 활성·제외 정본 | `plugins/sodam-persona/reference/role_activation_contract.md`, `domain_routing.md` |
+| 45개 역할·34개 도메인·39개 스킬 등록부 | `plugins/sodam-persona/persona-registry.json` |
+| 라우팅 예제 180개+한국어 보강 90개 | `plugins/sodam-persona/reference/routing_cases.json`, `routing_cases_ko.json` |
+| 라우팅 적용 스킬 | `plugins/sodam-persona/skills/persona-triggers/SKILL.md` |
+| 도메인 전문가 34종 상세 | `plugins/sodam-persona/skills/` 아래 34개 도메인 `persona-*` 폴더 |
 | 새 페르소나 생성/편집 절차 원문 | `plugins/sodam-persona/commands/create.md`, `edit.md` |
+| 초보자 시작·개발·검증·권리 안내 | 최상위 `QUICKSTART.md`, `DEVELOPMENT.md`, `VERIFICATION.md`, `LEGAL_REVIEW.md` 및 각각의 `.en.md` |
+| 설치 환경 별도 기록 | 최상위 `INTEGRATION_VERIFICATION.md` (기록 당시 범위; 현재 상태는 재진단) |
 | 정합성 검사 스크립트 | 저장소 루트 `validate.mjs` |
 | 문서 HTML 재생성 스크립트 | 저장소 루트 `build-docs.mjs`, `doc-theme.html` |
 | Codex 마켓플레이스 정의(정본) | `.agents/plugins/marketplace.json` |
@@ -721,18 +862,30 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 | 수동·자동 시험 시나리오 | `plugins/sodam-persona/reference/test_scenarios.md` |
 | CI(자동 검사) 설정 | `.github/workflows/validate.yml` |
 
-> 이 표에 없는 폴더(예: 개발 중 생긴 로컬 캐시·메모 파일)는 `.gitignore`에 등록되어 저장소에 포함되지 않으며, 이 플러그인을 새로 내려받는 사용자에게는 존재하지 않는 파일이므로 이 문서에서 다루지 않습니다.
+> 이 표는 공개 배포 구성의 안내입니다. 표에 없다는 이유만으로 파일이 자동 제외되지는 않습니다. 공개 전 `git status --short`, `git ls-files`, `.gitignore`로 실제 포함 파일을 확인하세요. 개인 캐시·메모·CHECKPOINT.md·평가 결과를 포함해 원본 폴더 전체를 무검토 ZIP으로 배포하지 마세요.
 
 ---
 
 ## 업데이트 내용 요약
+
+<details>
+<summary><strong>2026-10-09 — 1.11.2 후보 최종 검증 및 초보자 문서 동기화</strong></summary>
+
+- Codex가 생성한 명령 스킬 2개는 원본으로 재구성한 바이트가 같을 때만 정상으로 인정하도록 진단을 수정했습니다. 알 수 없는 추가 파일이나 변조는 계속 실패 처리합니다.
+- 제품명 단독 활성·금융 분야 강제 협업·일반 구현의 잘못된 역할 인계·마케팅의 과도한 협업을 실제 요청 책임 기준으로 수정했습니다. 세무 기한과 보관 기간은 적용 관할·연도·사업 유형의 공식 근거가 필요합니다.
+- 자동 시험 53개, 전체 후보 행동 시험과 실패 재실행, 마지막 마케팅 사례 6개, 격리 설치 수명주기, 한·영 화면 검사를 기록했습니다. 전문 품질·Desktop 자동 실행은 별도 미확인입니다.
+- README의 과거 버전·시험 개수·환경 변수·설치 출처 설명을 갱신하고 영문 및 생성 HTML을 동기화했습니다. 과거 변경 요약은 역사 기록이며 현재 설치 상태를 뜻하지 않습니다.
+- 소스 수정·문서 생성·GitHub 반영·Release·전역 설치 업데이트는 서로 다른 단계입니다.
+
+</details>
+
 
 <details open>
 <summary><strong>2026-10-09 — 관점 표시 의무·진단 복원·최종 검증 안내</strong></summary>
 
 - 진행 안내와 최종 답변 첫 줄에 실제 적용 관점을 표시하도록 지침을 보강했습니다. 미적용·사용자 출력 형식 우선·표시와 실행 증거의 구분을 유지합니다.
 - 누락된 diagnose.mjs를 기존 Codex 배포 코드와 동일하게 복원하고 루트 중복 매니페스트를 compat 보존 상태로 정리했습니다.
-- 자동 시험 35/35와 문서·화면 검증은 통과했지만 설치본 1.11.0과 소스 1.11.1은 불일치합니다. 실제 Desktop 전체 사용은 미확인입니다.
+- 이전 1.11.1 단계에서 자동 시험 35/35와 문서·화면 검증은 통과했지만 당시 설치본 1.11.0과 소스 1.11.1은 불일치했습니다. 실제 Desktop 전체 사용은 미확인입니다.
 - 한국어/영어 MD를 기준으로 HTML을 생성합니다. 이번 문서 수정은 설치·commit·push·Release 생성이 아닙니다.
 
 </details>
@@ -982,11 +1135,27 @@ Codex가 사용하는 AI 모델 제공자로 대화 맥락 전송
 
 ## 자주 묻는 질문 (FAQ)
 
+**Q. 왜 45개 역할인데 스킬은 39개인가요?**
+A. 역할은 검토 관점 목록이고 스킬은 실행 지침 파일입니다. 모든 역할에 독립 스킬이 하나씩 있는 구조가 아닙니다. 34개 도메인 스킬과 공통 형식·안전·라우팅 3개, 생성·편집 2개를 합해 39개입니다. 45명이 별도 AI로 동시에 실행된다는 뜻도 아닙니다.
+
+**Q. PowerShell에서 `$persona-...`를 입력하면 되나요?**
+A. 아니요. `$persona-...`는 Codex 대화 입력칸에 쓰는 스킬 요청입니다. PowerShell에서는 `codex plugin ...`, `node ...`, `git ...` 명령을 사용합니다. 스킬 호출 지원과 정확한 이름은 설치된 호스트에서 확인하세요.
+
+**Q. 컴퓨터를 껐다 켰는데 왜 최신 후보가 적용되지 않나요?**
+A. 재부팅은 설치·업데이트가 아닙니다. 원본·마켓플레이스 스냅샷·설치 캐시·대화에 주입된 지침은 서로 다릅니다. 설치 출처와 버전·파일 진단을 확인하고 검증된 후보를 반영한 뒤 새 대화에서 시험하세요.
+
+**Q. 모바일이나 메신저에 직접 설치할 수 있나요?**
+A. 이 저장소에는 모바일/메신저 독립 앱이나 설치 기능이 없습니다. README HTML을 읽는 것과 Codex 플러그인을 실행하는 것은 다릅니다. 다른 앱과의 연결은 별도 구현·권한·검증이 필요합니다.
+
+**Q. 진단에서 생성 파일 2개가 나오거나 버전이 달라요.**
+A. Codex 0.160.1의 create/edit 이식 파일 2개는 원본에서 재구성한 내용과 정확히 같을 때만 정상으로 인정합니다. 다른 파일·변조·버전 불일치는 정상으로 처리하지 않습니다. 다른 Codex 버전의 생성 형식은 별도 검증해야 합니다. 파일이 다르다고 캐시 전체를 삭제하거나 강제로 통과시키지 마세요.
+
+
 **Q. 이 플러그인은 무료인가요?**
 A. 이 저장소의 코드는 Apache License 2.0으로 공개되어 별도의 플러그인 사용료가 없습니다. 다만 Codex/OpenAI 계정·구독·사용량 요금과 인터넷 비용은 별개일 수 있습니다. 자세한 조건은 [법률, 저작권, 라이선스, 상업적 용도](#법률-저작권-라이선스-상업적-용도)를 확인하세요.
 
 **Q. 제 컴퓨터 파일을 마음대로 지우거나 고치나요?**
-A. 아니요. 이 플러그인의 hook은 플러그인 폴더 안 고정된 텍스트 파일 2개를 읽는 것 외에는 아무 파일도 쓰거나 지우지 않습니다. 삭제·배포처럼 되돌릴 수 없는 작업은 항상 사용자에게 먼저 확인을 구하도록 설계되어 있습니다. 자세히는 [보안과 데이터 흐름](#보안과-데이터-흐름) 참고.
+A. 아니요. 이 플러그인의 hook은 플러그인 폴더 안 고정된 텍스트 파일 2개를 읽는 것 외에는 아무 파일도 쓰거나 지우지 않습니다. Codex의 실제 파일 작업은 승인 범위·도구 권한에 따르며, 새 공개·비용·손실 위험과 도구별 쓰기 게이트는 별도 확인합니다. 훅이 파일을 쓰지 않는다는 사실은 Codex 자체의 파일 수정 권한을 제한하지 않습니다. 자세히는 [보안과 데이터 흐름](#보안과-데이터-흐름) 참고.
 
 **Q. 인터넷 연결이 꼭 필요한가요?**
 A. Codex 자체가 AI 모델과 통신하기 위해 인터넷이 필요합니다. 다만 이 플러그인의 hook 자체는 로컬 파일만 읽을 뿐 별도로 인터넷에 접속하지 않습니다.
@@ -1061,7 +1230,7 @@ A. `UserPromptSubmit` hook은 해당 이벤트가 전달될 때 마커를 재주
 
 - **프로젝트에 표시된 저작권 고지**: Copyright 2026 SoDam AI Studio (`NOTICE` 기준). 실제 법적 주체명, 기여자 권리 이전, AI 보조 작성물의 권리 귀속은 이번 기술 점검에서 독립적으로 입증하지 않았으므로 공식 납품·투자·권리 보증이 필요한 경우 **법무/전문가 검토 필요**
 - **원문 위치**: 저장소 루트 `LICENSE` 파일
-- **공식 참고 링크**: `https://www.apache.org/licenses/LICENSE-2.0` (저장소의 `LICENSE` 원문이 우선이며, 아래 설명은 쉬운 요약입니다)
+- **공식 참고 링크**: [Apache 공식 원문](https://www.apache.org/licenses/LICENSE-2.0) (2026-10-09 확인; 공식 명칭 Apache License, Version 2.0, 영어 원문 정본. 저장소 LICENSE 및 아래 요약과 함께 확인)
 
 Apache License 2.0은 아래 4가지를 **명시적으로 허용**합니다.
 
@@ -1209,7 +1378,7 @@ Apache License 2.0은 아래 4가지를 **명시적으로 허용**합니다.
 | 훅 직접 실행 | 지침을 정상적인 JSON으로 전달함 | AI 답변이 항상 지침을 따름 |
 | 새 대화의 실제 답변 | 해당 대화에서 관점 표시와 판단이 나옴 | 모든 미래 요청에서 오류 없음 |
 
-2026-10-09 최종 점검 환경에서 소스는 **1.11.1**, 전역 설치본은 **1.11.0(enabled)**이었습니다. 관점 표시 규칙은 설치본에도 반영했지만 전체 버전은 일치하지 않았습니다. 이 값은 그 PC의 점검 기록이며 독자의 설치 버전은 아래 명령으로 직접 확인해야 합니다. 현재 소스의 추가 표시·진단 보완이 GitHub의 모든 브랜치에 이미 반영됐다고 가정하지 마세요.
+2026-10-09 검증 기록에서 소스 후보는 **1.11.2**, 기존 전역 설치본은 **1.11.1(enabled)**으로 서로 달랐습니다. 격리 설치한 1.11.2는 소스 61개 파일 및 Codex가 생성한 명령 스킬 2개와 일치했고 직접 훅 실행·제거·재설치를 통과했습니다. 전역 설치 업데이트나 Desktop 자동 적용은 수행·확인한 것이 아닙니다. 독자의 실제 상태는 아래 명령으로 직접 확인하세요. 상세 시험 조건·실패·미확인 항목은 [검증 기록](VERIFICATION.md)에 있습니다.
 
 ### 1단계 — 진단하기
 
@@ -1222,7 +1391,7 @@ codex plugin list
 node diagnose.mjs
 ```
 
-`codex plugin list`에서 `sodam-persona@sodam-persona`의 활성 상태·버전·소스 위치를 봅니다. `diagnose.mjs`는 파일을 수정하지 않고 소스/설치 버전, 활성 상태, 두 훅, 저장소 정합성을 확인합니다. **종료코드 0**은 이 진단 조건 통과, **종료코드 1**은 조건 중 하나가 맞지 않는다는 뜻입니다. 버전 불일치·비활성·미설치·설치 상태 확인 불가·훅 오류·정합성 오류라면 해당 원인을 해결하고 다시 실행하세요. 숫자 0은 실제 Desktop 대화 검증 완료를 뜻하지 않습니다.
+`codex plugin list`에서 `sodam-persona@sodam-persona`의 활성 상태·버전·소스 위치를 봅니다. `diagnose.mjs`는 파일을 수정하지 않고 정확한 버전, 활성 상태, 설치 캐시 파일 내용, 일치하는 설치본의 두 훅과 소스 정합성을 확인합니다. **종료코드 0**은 이 진단 조건 통과, **종료코드 1**은 조건 중 하나가 맞지 않는다는 뜻입니다. 버전 불일치·비활성·미설치·설치 상태 확인 불가·훅 오류·정합성 오류라면 해당 원인을 해결하고 다시 실행하세요. 숫자 0은 실제 Desktop 대화 검증 완료를 뜻하지 않습니다.
 
 ### 2단계 — 설치 출처에 맞게 업데이트하기
 
@@ -1257,12 +1426,13 @@ node diagnose.mjs
 node --check validate.mjs
 node --check diagnose.mjs
 node validate.mjs
-node --test test-hooks.mjs test-validator.mjs test-supplemental.mjs
+node --test test-hooks.mjs test-validator.mjs test-supplemental.mjs test-diagnose.mjs test-evaluate.mjs test-docs.mjs
 node build-docs.mjs
+node check-docs.mjs
 git diff --check
 ```
 
-현재 시험은 35개입니다. `test-hooks.mjs`는 정상·빈·잘못된 JSON·2MiB 입력·Windows 명령·누락/공백 지침·표시 의무의 출력 전달을, `test-validator.mjs`는 오류를 넣었을 때 검증기가 실패하는지를, `test-supplemental.mjs`는 한국어 인용/제외 입력과 호환 파일 배치를 검사합니다. 180개 고정 입력+90개 보강 입력은 **270번의 실제 AI 처리 통과**가 아닙니다. 별도 최종 점검에서는 Unicode·null·5MiB 입력과 권한 거부 모의 시험도 수행했습니다. 훅은 stdin 메타데이터를 판단하거나 실행하지 않고 읽어 비운 뒤 고정 지침을 출력합니다.
+현재 자동 시험은 53개입니다. 훅의 정상·빈·잘못된 입력과 복구, 등록부·버전·파일 변조·권한 오류, 설치 진단, 평가 기록 보존·형식, 문서 동기화를 검사합니다. 180개 기본+90개 한국어 라우팅 사례는 시험 입력 목록이며 목록 존재만으로 실제 AI 통과를 뜻하지 않습니다. 실제 실행 결과는 [검증 기록](VERIFICATION.md)에서 별도로 확인합니다. 훅은 stdin 내용을 실행·저장하지 않고 읽어 비운 뒤 고정 지침을 출력합니다.
 
 `node build-docs.mjs`는 Pandoc이 필요합니다. 설치 방법은 [Pandoc 공식 안내](https://pandoc.org/installing.html)를 따르세요. Markdown을 편집한 뒤 이 명령으로 HTML을 만들며 HTML 본문을 따로 고치지 않습니다. 테스트 실패를 해결하지 못하면 성공으로 보고하거나 검사를 생략하지 말고 배포를 중단합니다.
 
@@ -1278,22 +1448,30 @@ git diff --check
 
 | 항목 | 2026-10-09 확인 결과 |
 |---|---|
-| 정합성·JS 구문·자동 시험·문서 생성 | 통과, 자동 시험 35/35 |
-| 한/영 MD와 HTML 본문 | 언어별 일치 확인 |
-| 문서 화면 | 1440px/390px 가로 넘침 없음, 토글·목차 대상 확인, 파일 미리보기 콘솔 오류 없음 |
-| 공개 후보 파일 보안 | 79개 파일의 검사한 비밀정보 패턴 발견 없음; 전체 Git 이력 검사와 모든 형식의 비밀정보 보장은 미확인 |
-| 진단 명령 | 두 훅·정합성 정상, 소스/설치 버전 불일치로 종료코드 1 |
-| 실제 Desktop/CLI 전체 사용 흐름 | 미확인/미실행; 설치 버전 일치와 실제 답변 준수 확인 필요 |
-| 자체 로그인·API·DB·제품 서버 | 구현하지 않음; Codex 호스트의 인증·권한·통신은 별도 체계 |
+| 소스 정합성·구문·자동 시험 | 53/53 통과; Windows / Node.js 26.7.0 |
+| MD와 HTML | 언어별 본문 일치, 한·영 제목·토글 구조 일치, 격리 빌드 해시 일치 |
+| 문서 화면 | Edge 375/768/1280px × 한·영 6개 흐름에서 가로 넘침·내부 앵커 오류·콘솔 오류 없음; 첫 토글 확인 |
+| 후보 지침 실제 AI 실행 | 전체 272개 재시험 중 270개 최초 통과, CLI 실패 2개 별도 재실행 통과; 최초 실패 원인 미확인 |
+| 마지막 문구 수정 후 | 마케팅 관련 6개 행동 사례와 전체 자동 시험 재검증; 마지막 수정 이후 전체 272개 재실행은 하지 않음 |
+| 공개 후보 보안 | 95개 현존 파일 및 도달 가능한 84개 Git 커밋 텍스트의 대표 비밀정보 패턴 발견 0건; 모든 개인정보·바이너리 이력은 보장하지 않음 |
+| 설치 진단 | 격리 후보 일치·직접 훅·설치 수명주기 통과; 기존 전역 설치본은 후보와 다름 |
+| 미확인 | Desktop 자동 훅·모든 답변 전문 품질·실물 모바일·다른 브라우저/OS·긴 대화·장시간 부하·원격 CI |
+| 자체 로그인·API 서버·DB | 프로젝트에는 없음; Codex 인증·통신·외부 도구는 별도 |
+
+전체 시험은 후보 지침을 직접 제공한 CLI 대화입니다. 실제 설치 훅의 자동 선택 시험이나 도면·미디어 실무 수행을 대신하지 않습니다. 공개 배포 판단은 미확인 항목의 추가 확인이 필요하며 문서 검사 통과를 공개 배포·전역 설치 완료로 확대하지 않습니다. GitHub 반영 상태는 원격 기본 브랜치에서 별도로 확인하며 Release와 설치 업데이트는 별도 단계입니다.
 
 
 ## v6 검증 범위
-1.11.1 · 45개 역할 · 39개 스킬. 파일·훅 검사는 행동 품질·실제 도면·영상 검수의 증거가 아닙니다. 현재 시험 명령: `node validate.mjs`, `node --test test-hooks.mjs test-validator.mjs test-supplemental.mjs`, `node build-docs.mjs`.
+1.11.2 · 45개 역할 · 39개 스킬 · 훅 2개. 파일·훅 검사는 답변 전문 정확성·실제 도면·영상 검수의 증거가 아닙니다. `node validate.mjs`, 전체 6개 테스트 파일, `node build-docs.mjs`, `node check-docs.mjs`로 소스와 문서를 확인하고 실제 행동은 별도 새 대화로 시험합니다.
 
-현재 로컬 회귀 시험은 자동 시험 35개입니다. 라우팅 입력 270개를 정의했다는 사실은 실제 모델 실행 270개가 통과했다는 뜻이 아닙니다.
+현재 자동 시험은 53개이며 실제 전체 행동 시험 결과와 실패·재실행을 위 표 및 VERIFICATION.md에 구분했습니다. 이 결과를 Desktop 자동 적용이나 모든 미래 요청의 성공으로 확대하지 않습니다.
 
 ### 법률 근거와 적용 범위
+
+현재 작업 트리 권리 점검: 공개 후보 95개·JS 2개·MJS 13개를 확인했고 LICENSE 1~9조를 공식 원문과 대조했습니다. 외부 npm 의존성·배포용 미디어는 발견하지 못했습니다. 실제 설치 묶음·납품물에 LICENSE/NOTICE가 포함되는지와 수정 파일별 변경 표시 준수는 납품 전에 별도로 확인해야 합니다. 상세 범위·미확인은 [권리 점검 기록](LEGAL_REVIEW.md)을 따릅니다.
 
 최상위 LICENSE·NOTICE 원문이 기준입니다. Apache-2.0의 사용·재배포 허용에는 조건이 있으며 제3자 자료·상표·고객 데이터·AI 서비스 결과물의 모든 권리를 허락하지 않습니다. 수정 파일을 배포할 때는 저작권/NOTICE와 라이선스를 보존하고 수정 사실을 명시해야 합니다. 특허 조건·상표·보증 없음·책임 제한·추가 의무는 각각 원문 제3·6·7·8·9조도 확인하세요. 이 안내는 법률 자문이나 모든 생성물의 적법성·소유권 보장이 아닙니다.
 
 <!-- Modified 2026-10-09: legal provenance and distribution guidance synchronized. -->
+
+<!-- Modified 2026-10-09: current implementation, beginner instructions and final verification synchronized. -->

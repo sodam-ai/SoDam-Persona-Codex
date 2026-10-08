@@ -1,11 +1,28 @@
 # SoDam Persona for Codex
 
+### Shortest path for first-time users
+Follow [Quick Start](QUICKSTART.en.md): install → new conversation → perspective indicator → diagnosis. See [Development](DEVELOPMENT.en.md) for development, testing and delivery rules.
+
+<details>
+<summary>1.11.2 improvements and verification scope</summary>
+
+- All 45 roles and 39 skills are preserved; specialist instructions now explicitly reference common authority and activation rules.
+- Legal/investment wording substitution and blanket logging or OS-specific protection mandates were replaced with task-specific checks. Legal interpretation requires legal/professional review.
+- Personal work preferences are separated from public defaults; previously approved preferences are not revoked.
+- Diagnosis checks JSON registration, exact version, installed-cache SHA-256 and installed hook responses. Different installed code is not executed.
+- An actual fresh-Codex-conversation command covers 270 fixtures. Role selection and response quality are separate; quality requires review of real responses.
+- `node check-docs.mjs` checks MD/HTML body text and bilingual heading structure. It does not guarantee translation meaning or visual quality.
+- This source is a local candidate. Ran 53 automated tests and a full behavior suite with explicitly supplied candidate instructions. Two initial CLI failures in the full rerun passed separate retries; their causes remain unverified. Six related cases were checked after the final marketing change. Automatic Desktop hooks, professional correctness of all answers and completed public delivery are not claimed. See [actual verification](VERIFICATION.en.md).
+
+</details>
+
+
 ### Applied-perspective indicator
 Every ordinary natural-language response must start with an indicator such as `[페르소나: L2 · CAD·BIM 정보 정합성 관점]`, naming only perspectives actually applied. Show it in progress messages and final answers; when no specialist perspective applies, show the actual L level and `전문 관점 미적용` (no specialist perspective applied). Do not omit it for short answers. User-required JSON/code-only output or a request to hide the indicator takes precedence. The indicator is not evidence of tool execution or successful work. Already injected instructions in existing conversations do not change with edited files; verify in a new conversation.
 
 ## Current integration status (2026-10-09)
 
-This is the working source of `sodam-ai/SoDam-Persona-Codex`, ported from upstream `sodam-ai/SoDam-Persona`. It currently provides version 1.11.1, 45 perspectives, 39 skills, and two hooks, preserving creation/editing skills and the compat manifest. Source checks of the additional indicator and diagnosis fixes passed, but installed-version mismatch and complete Desktop usage remain unresolved/unverified. Check fixes against the commit containing this document; a version string alone does not establish file identity. No SoDam-Agent team-specific rules are included.
+This is the working source of `sodam-ai/SoDam-Persona-Codex`, ported from upstream `sodam-ai/SoDam-Persona`. It currently provides version 1.11.2, 45 perspectives, 39 skills, and two hooks, preserving creation/editing skills and the compat manifest. Source checks of the additional indicator and diagnosis fixes passed, but installed-version mismatch and complete Desktop usage remain unresolved/unverified. Check fixes against the commit containing this document; a version string alone does not establish file identity. No SoDam-Agent team-specific rules are included.
 
 
 **SoDam Persona** gives OpenAI's AI coding assistant **Codex** (an AI program that helps you build software using natural-language instructions) the personality of a "careful, detail-oriented Korean development partner." It is an add-on program (a **plugin** — a small extra program that adds features to an existing program).
@@ -14,7 +31,7 @@ This document is written so that even someone who has never used a computer, a s
 
 The plugin itself is not a separate AI. It layers a set of "judge this way, answer this way" rule documents on top of the conversational ability Codex already has. It contains 2 **hooks** (small programs configured to run when Codex dispatches their events) and 39 conditional expert knowledge modules (**skills**) to load when relevant. Verify actual automatic execution in your installed environment; installation, permissions, and host behavior can affect it.
 
-> **Version of this source**: `1.11.1` · **Perspectives**: 45 · **Routing**: intent-based; words alone do not activate roles · **Skills**: 39 · **Hooks**: 2 · **License**: Apache License 2.0
+> **Version of this source**: `1.11.2` · **Perspectives**: 45 · **Routing**: intent-based; words alone do not activate roles · **Skills**: 39 · **Hooks**: 2 · **License**: Apache License 2.0
 
 > **Check before installing**: The default GitHub install and ZIP download fetch the current default branch. Its version may differ from that of the branch displaying this document, so verify the actual plugin version after installation. To test a separate working branch, use the testing instructions below. Updating a Git branch does not create a Release or automatically update an existing installation.
 
@@ -47,16 +64,59 @@ The plugin itself is not a separate AI. It layers a set of "judge this way, answ
 
 ## Prerequisites
 
+### Beginner guide to read before installation
+
+This guide covers the Codex port of the original project. **Documents/files present → installed → enabled → hook executed → correct actual answer** are separate checks. Moving a folder or restarting the PC does not install a candidate.
+
+1. Open PowerShell from the Windows Start menu. Type one command line at a time and press Enter. Do not type triple backticks or explanatory sentences.
+2. If Node.js/Git is missing, obtain the appropriate installer from the official links below. Choose a supported Node.js LTS and an OS-appropriate Git installer. Run the installer, reopen PowerShell and check versions.
+3. If Codex is missing, follow the current official CLI/app installation instructions and sign in. This guide does not provide an account, free usage or installation permission. Distinguish CLI commands from app conversation inputs.
+4. Type commands in PowerShell, and requests such as “review the drawing” or `$persona-...` in the Codex conversation box. A browser address bar, messenger or ordinary ChatGPT chat does not install the plugin when given installation commands.
+5. You can read README on a phone, but this project is not a mobile app. It provides no independent mobile/messenger installation command. Verify support in the actual Codex host.
+
+| Plain meaning | Term used in this guide |
+|---|---|
+| A text-command window for running programs | Terminal / PowerShell |
+| Folder containing source code and documents | Repository / project root |
+| A bundle adding instructions to Codex | Plugin |
+| A small program run at a defined event | Hook |
+| Specialist instructions applied to a relevant request | Skill |
+| A value reporting that checked conditions passed | PASS or exit code 0; not a guarantee of every real-use flow |
+
+### Shortest installation and execution sequence
+
+Ordinary users do not need to run project-development tests first. Type these lines individually in PowerShell. If `codex plugin --help` has no installation commands, check official Codex updates and organization policies first.
+
+```powershell
+node --version
+codex --version
+codex plugin --help
+git --version
+codex plugin marketplace add sodam-ai/SoDam-Persona-Codex
+codex plugin add sodam-persona@sodam-persona
+codex plugin list
+codex
+```
+
+The GitHub commands install the public default-branch distribution. If a source is already registered or an error appears, first read the installation/troubleshooting sections. To test a local candidate, use local installation before repeating the commands above. After installing, enter this in a **new empty Codex conversation**.
+
+```text
+도면과 BIM 모델의 치수·단위·개정 불일치를 어떤 순서로 검토할지 설명해줘. 파일은 수정하지 마.
+```
+
+This requests an explanation of drawing/BIM dimension, unit and revision checks without modifying files. Expected behavior: actual perspectives appear on the first line and the body explains the requested checks. Claiming “review completed” without actual files is incorrect. An indicator alone, an unrelated answer or failed diagnosis does not establish successful use.
+
+
 Before you start, make sure the 4 items below are in place. If anything is missing, [Required Software](#required-software) explains how to install it.
 
 | # | Prerequisite | Why it's needed | If missing |
 |---|---|---|---|
 | 1 | Codex CLI (terminal version), Codex desktop app, or an IDE (code editor) extension with Codex connected | This plugin is an add-on that runs *inside* Codex, so Codex itself must already be there | There is nothing to install the plugin into |
-| 2 | Node.js 18 or newer | Both hooks and the validation script (`validate.mjs`) are written in JavaScript, and Node.js is the engine that runs them | Hooks won't run at all, so the persona never activates |
+| 2 | Node.js 20 or newer recommended | Both hooks and the validation script (`validate.mjs`) are written in JavaScript, and Node.js is the engine that runs them | Hooks won't run at all, so the persona never activates |
 | 3 | Git (only if installing from GitHub) | Needed when installing via an address like `codex plugin marketplace add sodam-ai/SoDam-Persona-Codex`, so Codex can fetch the repository | You can use the local-checkout install method instead (no Git required) |
 | 4 | A tiny bit of experience with a terminal (a black-screen program you type text commands into) | You only need to be able to type one line at a time and press Enter | The [How to Run](#how-to-run) section explains how to open a terminal from scratch |
 
-**Supported scope**: The target is any Windows, macOS, or Linux environment where Codex plugins and Node.js 18 or newer are available. Commands are shown for Windows PowerShell. On macOS/Linux, use the same `codex`, `node`, and `git` commands in that system's Terminal; plugin availability and UI labels can vary by Codex version, account, and organization policy.
+**Environment baseline**: Codex plugins and Node.js must be available on the chosen Windows/macOS/Linux host. Actual verification used Windows / Codex CLI 0.160.1 / Node.js 26.7.0 / Pandoc 3.7.0.2. CI is configured for Ubuntu / Node.js 20; remote CI execution remains unverified. Node.js 18 and every app/IDE/OS combination were not tested. For new installations, choose a supported LTS release from the official Node.js download page and validate that environment. Commands use PowerShell.
 
 **v1.10.2 verification record (2026-09-23, Windows)**: For the v1.10.2 source, the consistency checker, 22 hook/validator automated tests, official plugin-structure validator, installation and direct hook execution in an isolated temporary environment, Korean/English HTML regeneration, and Chrome rendering/console checks passed. This does not prove that an existing personal installation was updated or that Codex automatically invoked the hook on an ordinary prompt.
 
@@ -68,14 +128,14 @@ Before you start, make sure the 4 items below are in place. If anything is missi
 
 ## Required Software
 
-Installing in the order below avoids most snags. If something is already installed, just check its version and move on.
+Prepare the items below in order and check each command succeeds. If something is already installed, just check its version and move on.
 
 | Software | Minimum version | Where to get it | Version check command |
 |---|---|---|---|
-| Codex CLI / desktop app | Latest | Search "Codex" on OpenAI's official website and follow the instructions | (follow Codex's own guidance) |
-| Node.js | 18.0.0 or newer | `https://nodejs.org` (LTS build recommended) | `node --version` |
-| Git | Latest (only for GitHub install) | `https://git-scm.com` | `git --version` |
-| Pandoc (document editors only, optional) | Latest | `https://pandoc.org/installing.html` | `pandoc --version` |
+| Codex CLI / desktop app | Plugin commands required; verified with CLI 0.160.1 | [Official CLI installation](https://developers.openai.com/codex/cli), [official app guide](https://developers.openai.com/codex/app) | `codex --version`, `codex plugin --help` (CLI) |
+| Node.js | 20 or newer recommended | [Official Node.js download](https://nodejs.org/en/download) (supported LTS recommended) | `node --version` |
+| Git | Latest (only for GitHub install) | [Official Git download](https://git-scm.com/downloads) | `git --version` |
+| Pandoc (document editors only, optional) | Latest | [Official Pandoc installation](https://pandoc.org/installing.html) | `pandoc --version` |
 
 - **Codex CLI/desktop app** is the "stage" this plugin runs on. Install and log in first.
 - **Node.js** is required for every user (it runs the hooks). After installing, reopen your terminal so the `node` command is recognized.
@@ -93,7 +153,7 @@ A version number means it's installed; a "command not recognized" error means it
 
 ### A note on environment variables
 
-This plugin has **zero** environment variables (API keys, `.env` files, etc.) that a user needs to configure (confirmed by code review — neither hook script reads `process.env` anywhere). The `${PLUGIN_ROOT}` placeholder in the hook command is substituted automatically by Codex at run time with the plugin's install path; there is nothing for you to set yourself.
+Ordinary use does not require an API key or `.env` in this project. Neither hook reads `process.env`; `${PLUGIN_ROOT}` is the installation path supplied by the host. Development diagnosis uses `CODEX_HOME` or `--home` to select the home, and `evaluate.mjs` calls the Codex CLI using host authentication and usage. A home contains settings/cache and is different from the project directory. If set, `CODEX_HOME` overrides the default CLI home. Other plugins or model providers may have separate credential requirements. Never place credentials in README, Git or evaluation records.
 
 ---
 
@@ -149,7 +209,7 @@ codex plugin add sodam-persona@sodam-persona
 
 ### Testing this local candidate
 
-The GitHub distribution is defined by the commit containing this document. Check the default-branch README and commit, refresh the Marketplace snapshot, and test in a new conversation. Personal local changes are not included in downloads. Documentation edits do not automatically refresh installed copies.
+To test this local candidate, first verify that the target directory contains the root README and `.claude-plugin/marketplace.json`, then use the local installation commands above. If a marketplace of the same name is registered, inspect its source with `codex plugin marketplace list`. Do not immediately remove it to overwrite another source; preserve personal changes, settings and originals first. Installing the GitHub default branch does not fetch uncommitted local candidates. Remote branch/version/commit checks and post-install diagnosis are separate. Writing this document did not update the global installation.
 
 ### Permission and trust check after installation
 
@@ -169,7 +229,7 @@ codex plugin marketplace list
 codex plugin list
 ```
 
-The first command shows registered marketplaces; the second shows installed plugins. If `sodam-persona` appears in both and is enabled, package installation is complete. For a usage smoke test, start a new task and compare a normal question with "Review this objectively and deeply"; the response depth should change.
+The first command shows registered marketplaces; the second shows installed plugins. Verify source, version and enabled state, then compare candidate and installed files with `node diagnose.mjs`. In a fresh conversation, try the CAD/BIM example above and check the perspective marker, request-relevant content and absence of claims about unseen files. A listing or marker alone does not prove automatic hook execution or every feature working.
 
 ### Update and uninstall
 
@@ -201,23 +261,23 @@ If you get stuck, jump straight to [Troubleshooting](#troubleshooting).
 
 ## How to Run
 
-There is no separate concept of "running the plugin." This plugin **automatically activates the moment you run Codex and start a conversation.** In other words, "how to run" is really "how to open Codex."
+There is no separate user application for running this plugin. Its hooks are configured to supply instructions when the installed/enabled host grants execution permission and delivers the relevant event. Do not assume CLI, Desktop and IDE share one home, file set or hook execution path. Diagnose each environment and verify an actual response in a fresh conversation.
 
 ### Run via Codex CLI in a terminal
 
 1. Open a terminal (PowerShell or Command Prompt on Windows; Terminal app on macOS).
 2. Type `codex` and press Enter (the exact launch command follows whichever official instructions came with your installed Codex CLI).
-3. Once a new task (work session) opens, this plugin's SessionStart hook runs automatically at that moment and injects the persona core.
+3. In a new task, the hook supplies the core when installation, enablement, permission and SessionStart event delivery are present. Check the actual answer; unobserved automatic hook execution remains unverified.
 
 ### Run via the Codex desktop app
 
 1. Launch the installed Codex app icon.
 2. Start a new conversation (task).
-3. The hook runs automatically at session start, exactly as above.
+3. Check the actual app installation and permissions, then test its indicator and response body in a new conversation. Successful CLI installation does not guarantee automatic app hooks.
 
 ### Run via an IDE (code editor) extension
 
-If you use an IDE extension with Codex connected, open the Codex panel inside the IDE and start a new session — the same behavior applies.
+Open the Codex panel in the IDE and start a new session. Verify that this extension supports the plugin structure and hook events; not every IDE combination was tested.
 
 ### A very basic guide for first-time terminal users (Windows)
 
@@ -314,18 +374,18 @@ State the operating system, GPU and VRAM if relevant, tool or platform, version 
 
 ### Checking which skills are available
 
-In Codex CLI and the IDE extension, type `/skills`, or just type `$`, to see the list of skills currently available.
+On Codex surfaces that support it, use `/skills` or `$` to inspect available skills. Verify support and invocation names for your host, version and installation. If no listing UI is available, run `codex plugin list` in PowerShell and test an actual response in a fresh conversation.
 
 ### Controlling the response depth yourself
 
-Mixing certain words into your request automatically changes how deep the response goes. The mechanics are explained in [How It Works](#how-it-works).
+State the desired answer length and review scope clearly. A keyword alone does not automatically select a fixed level or every role. [How It Works](#how-it-works) explains how relevant perspectives, requested scope and actual risk are considered together. Asking to omit persona formatting changes the response format; it does not uninstall the plugin.
 
 | What you want | Say this |
 |---|---|
 | A very short, simple answer | "briefly", "in short", "just the key point" |
-| Every expert perspective gathered, in depth | "objectively", "in depth", "thoroughly" |
+| Review relevant expert perspectives in depth | "objectively", "in depth", "thoroughly" |
 | Free-form answers with no persona formatting | "just answer plainly", "turn off the persona" |
-| Review relevant viewpoints in depth on | "full persona version" |
+| Combine relevant viewpoints for a deep review | "full persona version" |
 
 ---
 
@@ -373,6 +433,14 @@ Mixing certain words into your request automatically changes how deep the respon
 | `$persona-media-quality-rights-reviewer <text>` | Image/video quality, provenance, consent, and license-review perspective (#35) |
 | `$persona-generative-ai-workflow-engineer <text>` | Local ComfyUI-style tools, workflows, nodes, models, CUDA/VRAM, APIs, and recovery (#36) |
 | `$persona-generative-ai-platform-operator <text>` | Hosted Midjourney/Higgsfield/Runway-style features, accounts, credits, uploads, and outputs (#37) |
+| `$persona-agent-harness-expert <text>` | Instruction/hook/skill conflicts and incorrect activation (#38) |
+| `$persona-system-integration-expert <text>` | Desktop/CLI/MCP/plugin/external-program integration (#39) |
+| `$persona-acceptance-evidence-expert <text>` | Completion claims, acceptance criteria and evidence (#40) |
+| `$persona-context-handoff-expert <text>` | Decisions/approval/handoff across PCs, AIs and conversations (#41) |
+| `$persona-cad-bim-consistency-expert <text>` | Architectural drawing/BIM/table dimension, unit and revision consistency (#42) |
+| `$persona-design-construction-integration-expert <text>` | Construction/clashes/quantities/cost/schedule impacts of design changes (#43) |
+| `$persona-archviz-business-creative-expert <text>` | ArchViz spatial value, promotion and business proposals (#44) |
+| `$persona-domain-automation-productization-expert <text>` | Productizing repeated architecture/content work as scripts/CLI/MCP/apps (#45) |
 | `$persona-create` | Add a domain persona through an interview. Under the current numbering, the next perspective follows the registry (currently #46) |
 | `$persona-edit` | Interview-style add/edit/remove of trigger words for an existing persona |
 
@@ -383,7 +451,10 @@ Mixing certain words into your request automatically changes how deep the respon
 | `node validate.mjs` | Checks perspective IDs and names, skill metadata and references, versions, hook format, personal path leaks, and script syntax |
 | `node --test test-hooks.mjs` | Tests both hooks with normal, empty, malformed, 2 MiB, missing-source, and blank-source inputs |
 | `node --test test-validator.mjs` | Proves the validator rejects registry, version, wiring, size, personal-path, and unsafe-folder errors |
-| `node diagnose.mjs` | Read-only diagnosis of source/installed versions, enabled state, both hooks, and repository consistency |
+| `node diagnose.mjs` | Read-only JSON registration, exact version, installed-cache hashes, installed hooks and source consistency diagnosis |
+| `node check-docs.mjs` | Compare bilingual MD/HTML bodies and heading/toggle structure; meaning/screens require review |
+| `node evaluate.mjs --list` | List 270 routing and two format IDs without calling AI |
+| `node evaluate.mjs --execute --case R42-positive --out ./evaluation-results/run-01` | Actual candidate test in a temporary CLI conversation; authentication/usage required, existing records never overwritten |
 | `node build-docs.mjs` | Re-reads `README.md`/`README.en.md` and regenerates `README.html`/`README.en.html` (requires Pandoc) |
 
 ---
@@ -408,40 +479,23 @@ Distinguish installation, connection, calls, application and output verification
 ### The flow of an ordinary conversation (every session)
 
 ```text
-1. A Codex session (task) starts
-       │
-       ▼
-2. The SessionStart hook runs (inject-core.js)
-   → injects the full text of persona_core.md into the session context
-     (once per session; whether a permission prompt appears depends on Codex)
-       │
-       ▼
-3. The user types a message
-       │
-       ▼
-4. The UserPromptSubmit hook runs (inject-marker.js)
-   → injects the compact summary in persona_marker.txt every single time
-   → this is what re-establishes the persona instantly even after a long
-     conversation is compacted or a sub-agent has run
-       │
-       ▼
-5. Codex interprets the injected rules together with what the user said
-   → decides the response intensity (L0-L3) and matches trigger words
-       │
-       ▼
-6. Matching skills load conditionally
-   (whichever of persona-triggers / persona-format / persona-safety /
-    whichever of the 34 domain skills apply)
-       │
-       ▼
-7. L2/L3 responses follow the 7-step response format (recap → root cause →
-   recommended direction → execution steps → verification method →
-   cautions → next steps)
-       │
-       ▼
-8. The response is checked against a self-verification checklist before
-   being sent
+1. Verify installation, enablement, permissions and host-event support
+   → start a new Codex conversation
+2. Host delivers SessionStart
+   → inject-core.js emits fixed core text as hook JSON
+3. User request → host delivers UserPromptSubmit
+   → inject-marker.js emits fixed marker text as hook JSON
+4. Codex judges higher-priority instructions, actual intent and explicit exclusions
+   → roles are not activated by word matching alone
+5. Select relevant lead/review roles and necessary skills/tools
+   → independently judge length, scope, review depth and actual risk
+6. Execute authorized work → inspect real results, failures and unverified scope
+7. Natural-language responses begin with actual perspectives
+   → report result/changes/checks/limits at the requested length; no forced seven sections
 ```
+
+This is the intended configured flow, not an observation of automatic delivery in every host. Long conversations, compaction and sub-agent delivery remain separately unverified. An indicator alone does not prove automatic hooks or tool execution.
+
 
 ### Recommended workflow for architectural and interior work
 
@@ -571,73 +625,150 @@ This project originally started as a plugin for Claude Code (a different AI codi
 ### Full repository layout
 
 ```text
-.
-├── .agents/plugins/marketplace.json      # The marketplace definition Codex actually reads (source of truth)
-├── .claude-plugin/marketplace.json       # [Legacy host compatibility] Claude Code marketplace definition
-├── .github/workflows/validate.yml        # CI: runs validate.mjs automatically on every push/PR
-├── LICENSE                               # Full text of the Apache License 2.0
-├── NOTICE                                # Copyright, trademark, and third-party attribution notices
-├── README.md                             # This document (Korean, source of truth)
-├── README.en.md                          # This document in English (source of truth, identical content)
-├── README.html / README.en.html          # HTML versions of the two files above, built with build-docs.mjs (identical content)
-├── build-docs.mjs                        # Script that regenerates README(.html) from README(.md)
-├── doc-theme.html                        # The HTML theme (CSS) used by that script
-├── validate.mjs                          # The automated consistency checker
-├── test-hooks.mjs                         # Hook execution, boundary, and recovery tests
-├── test-validator.mjs                     # Validator failure-detection regression tests
-├── diagnose.mjs                           # Source/install/hook/consistency diagnosis
-├── plugins/sodam-persona/persona-registry.json # Structured source of truth for roles, patterns, domains, version, and hook cap
-└── plugins/sodam-persona/                # The actual plugin body that gets distributed and installed
-    ├── .codex-plugin/plugin.json         # Codex manifest (source of truth)
-    ├── compat/plugin.portable.json       # Preserved Agent Plugins 1.0 format
-    ├── .claude-plugin/plugin.json        # [Legacy host compatibility] Claude Code manifest
-    ├── hooks/
-    │   ├── hooks.json                    # Registers the SessionStart / UserPromptSubmit hooks
-    │   ├── inject-core.js                # Script that runs on SessionStart
-    │   ├── inject-marker.js              # Script that runs on UserPromptSubmit
-    │   ├── persona_core.md               # The persona core text injected at session start
-    │   └── persona_marker.txt            # The compact marker injected on every message
-    ├── skills/
-    │   ├── persona-format/SKILL.md       # L2/L3 response format
-    │   ├── persona-safety/SKILL.md       # Always-on security rules, irreversible-action gate
-    │   ├── persona-triggers/SKILL.md     # Intent-based routing and relevant-role selection
-    │   ├── persona-investor/SKILL.md     # #13 professional investor domain
-    │   ├── persona-lawyer/SKILL.md       # #11 professional lawyer domain
-    │   ├── persona-accountant/SKILL.md   # #14 accounting/tax specialist domain
-    │   ├── persona-marketer/SKILL.md     # #15 marketing/sales specialist domain
-    │   ├── persona-architectural-designer/SKILL.md # #16 architectural design domain
-    │   ├── persona-interior-designer/SKILL.md      # #17 interior design domain
-    │   ├── persona-construction-expert/SKILL.md    # #18 construction domain
-    │   ├── persona-cost-estimator/SKILL.md         # #19 estimating domain
-    │   ├── persona-design-director/SKILL.md        # #20 design direction domain
-    │   ├── persona-spatial-3d-modeling-expert/SKILL.md # #21 3D modeling/BIM domain
-    │   ├── persona-rendering-visualization-expert/SKILL.md # #22 rendering/visualization domain
-    │   ├── persona-architectural-design-expert/SKILL.md # #23 architectural concept design domain
-    │   ├── persona-interior-design-expert/SKILL.md # #24 interior concept design domain
-    │   ├── persona-source-verification-expert/SKILL.md # #25 source search and verification domain
-    │   ├── persona-research-analyst/SKILL.md # #26 research and analysis domain
-    │   ├── persona-ideation-strategist/SKILL.md # #27 ideation and concept strategy domain
-    │   ├── persona-project-manager/SKILL.md # #28 project delivery domain
-    │   ├── persona-product-owner/SKILL.md # #29 product value and backlog domain
-    │   ├── persona-pmo-governance-expert/SKILL.md # #30 PMO and governance domain
-    │   ├── persona-project-analyst-coordinator/SKILL.md # #31 project analysis and operations domain
-    │   ├── persona-image-production-expert/SKILL.md # #32 image production and editing domain
-    │   ├── persona-video-production-director/SKILL.md # #33 video planning and direction domain
-    │   ├── persona-video-post-production-expert/SKILL.md # #34 video post-production domain
-    │   ├── persona-media-quality-rights-reviewer/SKILL.md # #35 media quality and rights review domain
-    │   ├── persona-generative-ai-workflow-engineer/SKILL.md # #36 local generative-AI workflow domain
-    │   ├── persona-generative-ai-platform-operator/SKILL.md # #37 hosted generative-AI platform domain
-    │   ├── persona-create/SKILL.md       # Entry point for the new-persona creation interview
-    │   └── persona-edit/SKILL.md         # Entry point for the trigger-editing interview
-    ├── commands/
-    │   ├── create.md                     # The procedure persona-create reads and follows
-    │   └── edit.md                       # The procedure persona-edit reads and follows
-    └── reference/
-        ├── persona_full_core.md          # The full persona definition (for full L3 activation / session recovery)
-        ├── built_environment_collaboration.md
-        ├── media_production_collaboration.md # Shared inputs, handoffs, and conflict rules
-        ├── generative_ai_tools_collaboration.md # Local/hosted generative-AI state, safety, cost, and handoffs
-        └── test_scenarios.md             # A set of sample utterances for verifying trigger behavior
+SoDam-Persona-Codex/
+  .agents/plugins/marketplace.json
+  .claude-plugin/marketplace.json
+  .github/workflows/validate.yml
+  .gitattributes
+  .gitignore
+  LICENSE
+  NOTICE
+  README.md
+  README.en.md
+  README.html
+  README.en.html
+  QUICKSTART.md
+  QUICKSTART.en.md
+  DEVELOPMENT.md
+  DEVELOPMENT.en.md
+  VERIFICATION.md
+  VERIFICATION.en.md
+  LEGAL_REVIEW.md
+  LEGAL_REVIEW.en.md
+  INTEGRATION_VERIFICATION.md
+  build-docs.mjs
+  doc-theme.html
+  check-docs.mjs
+  validate.mjs
+  diagnose.mjs
+  diagnose-core.mjs
+  codex-launch.mjs
+  evaluate.mjs
+  test-hooks.mjs
+  test-validator.mjs
+  test-supplemental.mjs
+  test-diagnose.mjs
+  test-evaluate.mjs
+  test-docs.mjs
+  plugins/
+    sodam-persona/
+      .claude-plugin/
+        plugin.json
+      .codex-plugin/
+        plugin.json
+      commands/
+        create.md
+        edit.md
+      compat/
+        plugin.portable.json
+      hooks/
+        hooks.json
+        inject-core.js
+        inject-marker.js
+        persona_core.md
+        persona_marker.txt
+      persona-registry.json
+      reference/
+        built_environment_collaboration.md
+        domain_routing.md
+        generative_ai_tools_collaboration.md
+        media_production_collaboration.md
+        operating_contract.md
+        persona_full_core.md
+        role_activation_contract.md
+        routing_cases_ko.json
+        routing_cases.json
+        test_scenarios.md
+        user_preferences.example.md
+      skills/
+        persona-acceptance-evidence-expert/
+          SKILL.md
+        persona-accountant/
+          SKILL.md
+        persona-agent-harness-expert/
+          SKILL.md
+        persona-architectural-design-expert/
+          SKILL.md
+        persona-architectural-designer/
+          SKILL.md
+        persona-archviz-business-creative-expert/
+          SKILL.md
+        persona-cad-bim-consistency-expert/
+          SKILL.md
+        persona-construction-expert/
+          SKILL.md
+        persona-context-handoff-expert/
+          SKILL.md
+        persona-cost-estimator/
+          SKILL.md
+        persona-create/
+          SKILL.md
+        persona-design-construction-integration-expert/
+          SKILL.md
+        persona-design-director/
+          SKILL.md
+        persona-domain-automation-productization-expert/
+          SKILL.md
+        persona-edit/
+          SKILL.md
+        persona-format/
+          SKILL.md
+        persona-generative-ai-platform-operator/
+          SKILL.md
+        persona-generative-ai-workflow-engineer/
+          SKILL.md
+        persona-ideation-strategist/
+          SKILL.md
+        persona-image-production-expert/
+          SKILL.md
+        persona-interior-design-expert/
+          SKILL.md
+        persona-interior-designer/
+          SKILL.md
+        persona-investor/
+          SKILL.md
+        persona-lawyer/
+          SKILL.md
+        persona-marketer/
+          SKILL.md
+        persona-media-quality-rights-reviewer/
+          SKILL.md
+        persona-pmo-governance-expert/
+          SKILL.md
+        persona-product-owner/
+          SKILL.md
+        persona-project-analyst-coordinator/
+          SKILL.md
+        persona-project-manager/
+          SKILL.md
+        persona-rendering-visualization-expert/
+          SKILL.md
+        persona-research-analyst/
+          SKILL.md
+        persona-safety/
+          SKILL.md
+        persona-source-verification-expert/
+          SKILL.md
+        persona-spatial-3d-modeling-expert/
+          SKILL.md
+        persona-system-integration-expert/
+          SKILL.md
+        persona-triggers/
+          SKILL.md
+        persona-video-post-production-expert/
+          SKILL.md
+        persona-video-production-director/
+          SKILL.md
 ```
 
 The `commands/` folder contains the v6 creation and editing workflow references. Codex does not run these as slash commands directly; instead, the `persona-create`/`persona-edit` skills read and follow their content.
@@ -650,7 +781,7 @@ These checks do not prove semantic disclaimer quality, all activation phrases, a
 
 ### Continuous integration (CI)
 
-`.github/workflows/validate.yml` is configured to run the consistency checker and all three regression suites for pushes to `main` and pull requests. Whether a failed CI run blocks a merge depends on GitHub branch-protection settings.
+`.github/workflows/validate.yml` is configured to run source validation, six test files, Pandoc installation and MD/HTML synchronization on `main` pushes and Pull Requests. Remote CI execution is not established by local tests. Whether failed CI blocks a merge depends on branch-protection settings.
 
 ---
 
@@ -672,7 +803,7 @@ Whether installation, activation, or hook execution is allowed depends on the Co
 
 ### The irreversible-action gate is a "behavioral guideline," not a "system firewall"
 
-In front of irreversible actions — deletion, deployment, force-pushing, external messaging — this persona instructs Codex to adopt the **response habit and judgment standard** of "don't run it automatically; ask the user first." This is not a mechanism that physically blocks filesystem access; it is a rule layered on top of the approval/permission system Codex already has, saying "always stop and ask in these situations." The actual final execution authority and approval process always follow Codex's own platform policy.
+This persona provides **response habits and decision rules** for approved scope, preservation, costs, public exposure and loss. Authorized reversible work may proceed; new risks, scope expansion and tool-specific write gates require separate checks. It does not physically block filesystem access. Actual execution permissions and approval rules belong to Codex and the relevant tools.
 
 ### Where data actually flows
 
@@ -690,7 +821,7 @@ The conversation context is sent to whichever AI model provider Codex uses
 A response is generated and returned to the user
 ```
 
-The plugin itself sends nothing to any server or remote storage of its own. It does not collect personal data, keep remote usage logs, or perform any separate analytics (telemetry). That said, as long as you use Codex at all, your conversation content being sent to whatever AI model provider Codex connects to (e.g. OpenAI) happens regardless of this plugin, and that provider's own official privacy policy governs how it's handled.
+The runtime hooks contain no transmission to a proprietary server or remote storage and no separate analytics (telemetry). When Codex uses a remote model, conversation content and supplied materials may be sent to that provider; check the host configuration and provider policies for actual handling. Development-time AI evaluations also use Codex authentication, communication and usage allowance. Distinguish local hook behavior from Codex and external-tool traffic, and do not include secrets in conversations or evaluation inputs.
 
 ### Habits around personal and sensitive data
 
@@ -717,9 +848,14 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 | SessionStart script / core text | `plugins/sodam-persona/hooks/inject-core.js`, `persona_core.md` |
 | UserPromptSubmit script / compact marker | `plugins/sodam-persona/hooks/inject-marker.js`, `persona_marker.txt` |
 | All 39 skills | `plugins/sodam-persona/skills/persona-*/SKILL.md` |
-| The full trigger-word list and perspective mapping table | `plugins/sodam-persona/skills/persona-triggers/SKILL.md` |
-| Details for all 34 domain experts | The 26 domain-specific `persona-*` folders under `plugins/sodam-persona/skills/` |
+| Intent activation/exclusion authority | `plugins/sodam-persona/reference/role_activation_contract.md`, `domain_routing.md` |
+| Registry: 45 roles, 34 domains and 39 skills | `plugins/sodam-persona/persona-registry.json` |
+| 180 routing examples + 90 Korean supplements | `plugins/sodam-persona/reference/routing_cases.json`, `routing_cases_ko.json` |
+| Routing application skill | `plugins/sodam-persona/skills/persona-triggers/SKILL.md` |
+| Details for all 34 domain experts | The 34 domain-specific `persona-*` folders under `plugins/sodam-persona/skills/` |
 | The original procedure text for creating/editing personas | `plugins/sodam-persona/commands/create.md`, `edit.md` |
+| Beginner/development/verification/rights guides | Root `QUICKSTART.md`, `DEVELOPMENT.md`, `VERIFICATION.md`, `LEGAL_REVIEW.md` and their `.en.md` counterparts |
+| Separate installation-environment record | Root `INTEGRATION_VERIFICATION.md` (historical scope; re-diagnose current state) |
 | The consistency-check script | Repository root, `validate.mjs` |
 | The HTML-regeneration script | Repository root, `build-docs.mjs`, `doc-theme.html` |
 | The Codex marketplace definition (source of truth) | `.agents/plugins/marketplace.json` |
@@ -728,18 +864,30 @@ Check #10 in `validate.mjs` automatically catches a developer's personal compute
 | Manual and automated test scenarios | `plugins/sodam-persona/reference/test_scenarios.md` |
 | The CI (automated check) configuration | `.github/workflows/validate.yml` |
 
-> Any folder not listed here (for example, local cache or scratch-note files created during development) is excluded from the repository via `.gitignore` and simply does not exist for anyone who freshly downloads this plugin, so this document does not cover it.
+> This table describes public distribution files. Omission from the table does not automatically exclude a file. Before publication, inspect `git status --short`, `git ls-files` and `.gitignore`. Do not distribute the entire unchecked source directory as a ZIP containing personal caches, notes, CHECKPOINT.md or evaluation records.
 
 ---
 
 ## Changelog Summary
+
+<details>
+<summary><strong>2026-10-09 — final 1.11.2 candidate checks and beginner-document synchronization</strong></summary>
+
+- Diagnosis accepts two Codex-generated command skills only when their bytes match reconstruction from source. Unknown extras and tampering still fail.
+- Corrected standalone-product activation, forced financial collaboration, generic implementation handoff and excessive marketing collaboration using actual requested responsibilities. Tax deadlines and retention require official evidence for the applicable jurisdiction, year and business type.
+- Recorded 53 automated tests, the full candidate behavior suite and failed-case retries, six final marketing cases, isolated installation lifecycle and bilingual screen checks. Professional quality and automatic Desktop execution remain separately unverified.
+- Updated stale version/test counts, environment variables and installation-source explanations, with matching English and generated HTML. Historical changelog entries do not describe current installation state.
+- Source changes, document generation, GitHub publication, Release and global installation updates are separate stages.
+
+</details>
+
 
 <details open>
 <summary><strong>2026-10-09 — mandatory perspective indicator, diagnosis restoration, and final-check guidance</strong></summary>
 
 - Instructions require actual applied perspectives at the start of progress messages and final answers. No-specialist status, user output-format priority, and distinction from execution evidence are preserved.
 - Restored missing diagnose.mjs unchanged from the Codex distribution and removed the duplicate root manifest while preserving compat.
-- Automated tests 35/35 and document/screen checks passed, but installation 1.11.0 differs from source 1.11.1. Complete Desktop usage remains unverified.
+- At the earlier 1.11.1 stage, automated tests 35/35 and document/screen checks passed, but installation 1.11.0 differed from source 1.11.1. Complete Desktop usage remains unverified.
 - HTML is generated from Korean/English Markdown. This documentation edit does not install, commit, push, or create a Release.
 
 </details>
@@ -989,11 +1137,27 @@ This project was later ported to be Codex-only, becoming today's `SoDam Persona 
 
 ## Frequently Asked Questions (FAQ)
 
+**Q. Why are there 45 roles but only 39 skills?**
+A. Roles are review perspectives; skills are instruction files. Not every role has a separate skill. There are 34 domain skills, three common format/safety/routing skills and two create/edit skills: 39 total. This does not mean 45 separate AIs execute simultaneously.
+
+**Q. Should I type `$persona-...` in PowerShell?**
+A. No. Enter `$persona-...` in the Codex conversation box as a skill request. PowerShell runs `codex plugin ...`, `node ...` and `git ...`. Check exact skill names and invocation support in the installed host.
+
+**Q. Why is the newest candidate not applied after restarting my PC?**
+A. Restarting is not installation/updating. Source files, marketplace snapshot, installed cache and instructions injected into a conversation are separate. Inspect source/version/content, apply the verified candidate and test in a new conversation.
+
+**Q. Can I install directly into mobile or a messenger?**
+A. This repository provides no independent mobile/messenger app or installer. Reading README HTML and running a Codex plugin are different. Integrating other apps requires separate implementation, permissions and verification.
+
+**Q. Diagnosis reports two generated files or a different version.**
+A. The two create/edit migration files generated by Codex 0.160.1 are accepted only when their content exactly matches reconstruction from source. Unknown files, tampering and version mismatch do not pass. Other Codex-generated formats require separate verification. Do not delete the entire cache or force a pass merely because files differ.
+
+
 **Q. Is this plugin free?**
 A. This repository charges no separate plugin fee and is published under Apache License 2.0. Codex/OpenAI subscriptions, usage charges, and internet access can still cost money. See [Legal, Copyright, License, and Commercial Use](#legal-copyright-license-and-commercial-use).
 
 **Q. Can it delete or change files on my computer on its own?**
-A. No. Aside from reading 2 fixed text files inside the plugin folder, the hooks never write or delete any file. Irreversible actions such as deletion or deployment are always designed to ask the user for confirmation first. See [Security & Data Flow](#security--data-flow) for details.
+A. No. Aside from reading 2 fixed text files inside the plugin folder, the hooks never write or delete any file. Actual Codex file operations follow authorized scope and tool permissions, with separate checks for new public/cost/loss risks and tool write gates. Hooks not writing files does not restrict Codex itself from authorized file changes. See [Security & Data Flow](#security--data-flow) for details.
 
 **Q. Do I need an internet connection?**
 A. Codex itself needs the internet to talk to an AI model. The plugin's hooks themselves only read local files and don't make any separate network connection.
@@ -1068,7 +1232,7 @@ A. The `UserPromptSubmit` hook is designed to re-inject its marker when that eve
 
 - **Copyright notice stated by the project**: Copyright 2026 SoDam AI Studio (from `NOTICE`). This technical review did not independently prove the legal-entity name, contributor assignments, or ownership of AI-assisted material; formal delivery, investment, or warranties of title require **legal/professional review**
 - **Full text location**: Repository root, `LICENSE`
-- **Official reference**: `https://www.apache.org/licenses/LICENSE-2.0` (the repository `LICENSE` is the governing text; the explanation below is a plain-language summary)
+- **Official reference**: [Official Apache text](https://www.apache.org/licenses/LICENSE-2.0) (checked 2026-10-09; Apache License, Version 2.0; the English text is authoritative) (the repository `LICENSE` is the governing text; the explanation below is a plain-language summary)
 
 The Apache License 2.0 **explicitly permits** the following 4 things.
 
@@ -1216,7 +1380,7 @@ If you have a specific situation in mind, please read the `LICENSE` and `NOTICE`
 | Direct hook execution | Instructions are returned as valid JSON | That every AI answer follows them |
 | An actual answer in a new conversation | The indicator and reasoning work in that conversation | Error-free behavior for every future request |
 
-In the final-check environment on 2026-10-09, the source was **1.11.1** and the global installation was **1.11.0 (enabled)**. The indicator rule was also patched into the installed source, but the complete versions did not match. These are observations from that PC; check your own installation with the commands below. Do not assume the additional local indicator/diagnosis fixes are already present on every GitHub branch.
+In the 2026-10-09 verification record, candidate source **1.11.2** differed from the existing global **1.11.1(enabled)** installation. An isolated 1.11.2 installation matched 61 source files and two Codex-generated command skills, and passed direct hooks, removal and reinstallation. Global installation updates or automatic Desktop application were not performed/confirmed. Check your own state with the commands below. See [verification](VERIFICATION.en.md) for test conditions, failures and unverified items.
 
 ### Step 1 — Run the diagnosis
 
@@ -1229,7 +1393,7 @@ codex plugin list
 node diagnose.mjs
 ```
 
-Find the enabled state, version, and source location of `sodam-persona@sodam-persona`. `diagnose.mjs` checks source/installed versions, enabled state, both hooks, and repository consistency without modifying files. **Exit code 0** means these diagnostic conditions passed; **exit code 1** means at least one did not. Resolve version mismatch, disabled/missing installation, unknown installation state, hook errors, or consistency errors, then rerun it. Code 0 does not mean the actual Desktop conversation was verified.
+Find the enabled state, version, and source location of `sodam-persona@sodam-persona`. `diagnose.mjs` checks exact versions, enabled state, installed-cache content, hooks of a matching installation and source consistency without modifying files. **Exit code 0** means these diagnostic conditions passed; **exit code 1** means at least one did not. Resolve version mismatch, disabled/missing installation, unknown installation state, hook errors, or consistency errors, then rerun it. Code 0 does not mean the actual Desktop conversation was verified.
 
 ### Step 2 — Update according to the installation source
 
@@ -1264,12 +1428,13 @@ Ordinary users do not need to run development checks every time. After editing s
 node --check validate.mjs
 node --check diagnose.mjs
 node validate.mjs
-node --test test-hooks.mjs test-validator.mjs test-supplemental.mjs
+node --test test-hooks.mjs test-validator.mjs test-supplemental.mjs test-diagnose.mjs test-evaluate.mjs test-docs.mjs
 node build-docs.mjs
+node check-docs.mjs
 git diff --check
 ```
 
-There are currently 35 tests. `test-hooks.mjs` covers normal/empty/malformed JSON, 2MiB input, Windows commands, missing/blank resources, and delivery of the mandatory indicator instructions. `test-validator.mjs` verifies rejection of injected errors. `test-supplemental.mjs` checks Korean quotation/exclusion inputs and compatibility-file placement. The 180 frozen inputs plus 90 supplementary inputs are **not 270 successful AI executions**. Separate final checks also exercised Unicode/null/5MiB input and simulated denied permissions. Hooks do not evaluate or execute stdin metadata: they drain it and output fixed instructions.
+There are currently 53 automated tests covering hook inputs/recovery, registration/version/file tampering/permission errors, installation diagnosis, preserved evaluation records/output formats and document synchronization. The 180 base plus 90 Korean routing fixtures are an input catalog; existence alone does not prove actual AI execution passed. See separate [execution evidence](VERIFICATION.en.md). Hooks drain stdin without executing or storing its content and output fixed instructions.
 
 `node build-docs.mjs` requires Pandoc. Follow the [official Pandoc installation guide](https://pandoc.org/installing.html). Edit Markdown and use this command to generate HTML; do not edit the HTML body separately. If a failed check cannot be resolved, stop distribution rather than reporting success or skipping the check.
 
@@ -1285,22 +1450,30 @@ There are currently 35 tests. `test-hooks.mjs` covers normal/empty/malformed JSO
 
 | Item | Observation on 2026-10-09 |
 |---|---|
-| Consistency, JS syntax, tests, documentation generation | Passed; automated tests 35/35 |
-| Korean/English Markdown and HTML bodies | Matching within each language |
-| Documentation screens | No horizontal overflow at 1440px/390px; toggles and TOC targets checked; no console errors in file preview |
-| Public candidate security | No checked credential-pattern findings in 79 files; full Git history and all possible secret formats remain unverified |
-| Diagnosis command | Hooks/consistency passed; exit code 1 because source/installed versions differed |
-| Complete Desktop/CLI usage flows | Unverified/not run; matching installation and actual answer compliance still required |
-| Built-in login/API/DB/product server | Not implemented; Codex-host authentication, permissions, and communication are separate |
+| Source consistency, syntax and tests | 53/53 passed on Windows / Node.js 26.7.0 |
+| Markdown and HTML | Matching bodies within each language, bilingual heading/toggle structure and isolated-build hashes |
+| Documentation screens | Six Edge flows: 375/768/1280px × both languages; no horizontal overflow, internal-anchor or console errors; first disclosure checked |
+| Actual AI with candidate instructions | Full rerun: 270 of 272 initially passed; two CLI failures passed separate retries; initial causes remain unverified |
+| After final wording change | Six marketing cases and the full automated suite rechecked; all 272 were not rerun after that final change |
+| Public-target security | Zero representative-secret-pattern findings across 95 existing files and reachable Git text history of 84 commits; not a guarantee for every personal-data form or historical binary |
+| Installation diagnosis | Isolated candidate match, direct hooks and installation lifecycle passed; existing global installation differs |
+| Unverified | Automatic Desktop hooks, all-answer professional quality, physical mobile, other browsers/OSs, long conversations, sustained load and remote CI |
+| Built-in login/API server/DB | Absent; Codex authentication/communication and external tools are separate |
+
+The full behavior suite explicitly supplied candidate instructions to CLI conversations. It does not replace automatically selected installed hooks or real drawing/media operations. Public delivery requires further checks of unverified items. Passing documentation checks does not establish public delivery or global installation. Verify GitHub delivery on the remote default branch; Release and installation updates are separate stages.
 
 
 ## v6 verification scope
-1.11.1 · 45 roles · 39 skills. File/hook checks do not prove behavioral or media quality. Commands: `node validate.mjs`, `node --test test-hooks.mjs test-validator.mjs test-supplemental.mjs`, `node build-docs.mjs`.
+1.11.2 · 45 roles · 39 skills · two hooks. File/hook checks do not prove professional answer accuracy or actual drawing/video review. Use `node validate.mjs`, all six test files, `node build-docs.mjs` and `node check-docs.mjs` for source/documents; test behavior separately in fresh conversations.
 
-Local regression currently covers 35 automated tests; defining 270 routing inputs does not mean 270 model executions passed.
+The current automated suite has 53 tests; actual full behavior results, failures and retries are separated above and in VERIFICATION.en.md. They do not establish automatic Desktop application or success for every future request.
 
 ### Source and legal scope
+
+Current-tree rights review inspected 95 distribution candidates, two JS and thirteen MJS files, and compared LICENSE sections 1–9 with the official text. No external npm dependency or bundled media was found. Verify LICENSE/NOTICE inclusion in the actual installation/client package and prominent change notices per modified file before delivery. See [rights review](LEGAL_REVIEW.en.md) for scope and unverified matters.
 
 The root LICENSE and NOTICE are the controlling notices. Apache-2.0 permission is conditional and does not grant blanket rights to third-party materials, trademarks, customer data or AI outputs. Preserve copyright/NOTICE, provide the license and mark modifications when distributing modified files. Sections 3, 6, 7, 8 and 9 cover patent conditions, trademarks, warranty disclaimers, liability and optional obligations. This guide is not legal advice or a guarantee of compliance or ownership of generated outputs.
 
 <!-- Modified 2026-10-09: legal provenance and distribution guidance synchronized. -->
+
+<!-- Modified 2026-10-09: current implementation, beginner instructions and final verification synchronized. -->

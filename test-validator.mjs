@@ -26,6 +26,13 @@ function mutate(root, rel, transform) {
 }
 
 const cases = [
+  ['missing common authority', 'plugins/sodam-persona/skills/persona-agent-harness-expert/SKILL.md', s => s.replaceAll('operating_contract.md','other.md'), /공통 정본 누락/],
+  ['stale specialist authority', 'plugins/sodam-persona/skills/persona-lawyer/SKILL.md', s => s+'\n37관점 기본 검토', /이전 전문 지침 충돌/],
+  ['blanket platform mandate', 'plugins/sodam-persona/skills/persona-lawyer/SKILL.md', s => s+'\n키링/DPAPI 강제', /이전 전문 지침 충돌/],
+  ['standalone product activation', 'plugins/sodam-persona/skills/persona-spatial-3d-modeling-expert/SKILL.md', s => s+'\n- Revit·레빗과 Rhino·라이노는 단독 언급도 활성화한다.', /활성·인계 정본 충돌/],
+  ['blanket financial collaboration', 'plugins/sodam-persona/skills/persona-accountant/SKILL.md', s => s+'\n투자·법률·회계세무 복합 맥락은 해당 도메인 모두 동시 활성.', /활성·인계 정본 충돌/],
+  ['blanket marketing collaboration', 'plugins/sodam-persona/skills/persona-marketer/SKILL.md', s => s+'\n전략·법률·비용·데이터 복합 맥락은 해당 도메인 동시 활성.', /활성·인계 정본 충돌/],
+  ['overbroad implementation handoff', 'plugins/sodam-persona/skills/persona-agent-harness-expert/SKILL.md', s => s+'\n도메인 기능 구현은 #6, 실제 연결은 #39에 인계한다.', /활성·인계 정본 충돌/],
   ['missing routing registration', 'plugins/sodam-persona/persona-registry.json', s => s.replace('reference/role_activation_contract.md','reference/missing_contract.md'), /활성 계약·시험 등록 오류/],
   ['missing activation role', 'plugins/sodam-persona/reference/role_activation_contract.md', s => s.replace('### #42 ', '### #999 '), /활성 계약 역할 누락/],
   ['wrong frozen expectation', 'plugins/sodam-persona/reference/routing_cases.json', s => s.replace('"required_role": 1','"required_role": 999'), /활성 시험 기대값 오류/],
@@ -37,8 +44,8 @@ const cases = [
   ['synthetic credential URI', 'README.md', s => s + '\n' + ['postgresql', '://fixture:synthetic@example.invalid/db'].join(''), /credential-uri/],
   ['LF role drift', 'plugins/sodam-persona/reference/persona_full_core.md', s => s.replace(/\r\n/g,'\n').replace('- #1 시니어 개발자','- #1 잘못된 이름'), /관점 불일치/],
   ['registry perspective drift', 'plugins/sodam-persona/persona-registry.json', (s) => s.replace('\"name\": \"시니어 개발자', '\"name\": \"잘못된 이름'), /등록부 관점 불일치/],
-  ['Codex manifest version drift', 'plugins/sodam-persona/.codex-plugin/plugin.json', (s) => s.replace('"version": "1.11.1"', '"version": "0.0.0"'), /version\(0\.0\.0\)/],
-  ['portable manifest version drift', 'plugins/sodam-persona/compat/plugin.portable.json', (s) => s.replace('"version": "1.11.1"', '"version": "0.0.0"'), /version\(0\.0\.0\)/],
+  ['Codex manifest version drift', 'plugins/sodam-persona/.codex-plugin/plugin.json', (s) => s.replace(/"version": "[^"]+"/, '"version": "0.0.0"'), /version\(0\.0\.0\)/],
+  ['portable manifest version drift', 'plugins/sodam-persona/compat/plugin.portable.json', (s) => s.replace(/"version": "[^"]+"/, '"version": "0.0.0"'), /version\(0\.0\.0\)/],
   ['Windows hook command removal', 'plugins/sodam-persona/hooks/hooks.json', (s) => s.replaceAll('"commandWindows"', '"commandWindowsMissing"'), /commandWindows 문자열 없음/],
   ['Windows hook event swap', 'plugins/sodam-persona/hooks/hooks.json', (s) => s.replace("'inject-core.js'", "'inject-marker.js'"), /SessionStart Windows 명령.*연결 불일치/],
   ['hook timeout drift', 'plugins/sodam-persona/hooks/hooks.json', (s) => s.replaceAll('"timeout": 30', '"timeout": 5'), /timeout\(5\)/],

@@ -4,15 +4,14 @@ Reviewed: 2026-10-09. Scope: current SoDam-Persona-Codex working tree. Reference
 
 ## Verified facts
 
-- During the earlier rights review of the D: source, the branch was main with pre-existing changes. That documentation review ended without committing or pushing. The subsequently authorized delivery uses a separate branch from current remote main and includes indicator guidance, regression checks, and documentation.
-- Before editing, 79 distribution candidates (existing tracked files and non-ignored untracked files) were inspected. Imports in two JS and six MJS files use Node built-ins; no external npm package imports were found.
-- No package.json, lockfiles, requirements.txt, pyproject.toml, Cargo.toml, go.mod, or assets/public/docs directories were found in the candidates. Dependency license scanners were not run because no project dependency inventory exists. Recheck if dependencies are added.
-- Candidates are text files. No bundled images, icons, font files, video, audio, model weights, or sample account files were found. HTML references system font names and does not bundle font files.
-- Node.js and the documentation converter Pandoc are separately installed tools. GitHub Actions checkout/setup-node are external execution tools. Their source and binaries are not bundled here. Bundling them into another product requires reviewing their licenses and transitive dependencies separately.
-- LICENSE contains sections 1–9 and the appendix of Apache License, Version 2.0, and states Copyright 2026 SoDam AI Studio. Official guidance identifies the English text as authoritative. LICENSE was not changed.
-- The three historical third-party passages were not found in current persona-triggers. NOTICE provenance was retained; present-inclusion wording was corrected to historical attribution.
-- Product and brand names and public provenance links exist. They do not establish permission to distribute logos or imply official affiliation; trademark clearance is not guaranteed.
-- No private-key headers, common provider token patterns, or password-bearing database URL patterns were found in distribution candidates. Pattern scanning cannot exclude every form of personal or confidential information. .remember, internal records, excluded local folders, and complete Git history remain unverified. Do not distribute a ZIP of the entire working folder; recheck the exact candidate list.
+- Current source: the user-designated SoDam-Persona-Codex checkout, branch main, with pre-existing tracked changes, additions and a deleted legacy manifest. This review does not commit, push, release, change remotes, or update installed plugins. Earlier distribution descriptions are not evidence of current delivery.
+- Inspected 95 existing distribution candidates: tracked files plus non-ignored untracked files. All are text files; none exceeds 1 MiB. There are two JS and thirteen MJS files. Imports refer to Node built-ins (including fs/path without a node: prefix) or local project modules; no external npm import was found.
+- No package/dependency manifests or lockfiles, or assets/public/docs directories, were found in these candidates. Dependency license scanning is not run: there is no project package inventory to scan. No bundled images, icons, fonts, video, audio, model weights or sample-account files were found. HTML names system fonts but does not distribute font files or fetch a web font.
+- Node.js, Codex, Git and Pandoc are separately installed tools. CI invokes checkout/setup-node and installs Pandoc externally. No corresponding vendor binary/source bundle is in these candidates. Their terms, account policies and transitive dependencies must be reviewed separately if bundled, modified or used in a customer product.
+- The current Apache License is Version 2.0, January 2004. Sections 1–9 in LICENSE match the official downloaded text after whitespace normalization; the appendix states Copyright 2026 SoDam AI Studio. LICENSE was preserved. The stated holder and year are project notices, not independently verified title evidence.
+- Existing NOTICE was preserved. It records three historical quotations/paraphrases; those passages are not present in current persona-triggers. Attribution alone is not permission. Restoring or distributing historical versions requires separate review.
+- Product names and public provenance links exist; no logo asset was found. Trademark permission or affiliation is not established. Test fixtures mention hypothetical roles, tools and situations; their wording is not evidence of actual customers, professional credentials or cleared third-party rights.
+- Candidate scans found no private-key headers, common provider tokens or password-bearing database URLs. All checked relative Markdown links resolve. These results do not exclude every kind of personal/confidential material, rights infringement or unseen binaries. Ignored local records and Git history were not rescanned in this review. Keep CHECKPOINT.md, private evaluations and local settings out of distribution; never publish the entire working folder without reviewing its contents.
 
 ## Beginner use boundaries
 
@@ -35,3 +34,12 @@ The legal rights holder behind SoDam AI Studio, contributor assignments, and tit
 [Official Apache text](https://www.apache.org/licenses/LICENSE-2.0), [LICENSE](LICENSE), [NOTICE](NOTICE), [English README](README.en.md), [Korean review](LEGAL_REVIEW.md).
 
 Modification notice: 2026-10-09 added rights review and distribution boundaries.
+
+## Pre-delivery conditions
+
+- Must Have: include LICENSE and applicable NOTICE attribution in the actual plugin/archive/client package, not merely in the repository. Modified files require prominent change notices under section 4(b); this review does not certify every pre-existing changed file as compliant. Check that condition per file before delivery.
+- AI assistance may have contributed code, instructions or documents. Check provenance, similarity, input authority and commercial-use conditions before final use. Apache licensing alone does not establish copyright ownership or warrant non-infringement of outputs.
+- No extra restriction has been added to Apache 2.0. Additional customer warranties, support or indemnity are separate contractual decisions; assess section 9 and obtain legal/professional review when material.
+- API pricing, model policies, service terms and added media/font/icon licenses must be checked for the actual provider, account, version and use date. No provider-wide commercial clearance is asserted.
+
+Modification notice: 2026-10-09 refreshed the actual candidate inventory, license comparison and delivery limits.

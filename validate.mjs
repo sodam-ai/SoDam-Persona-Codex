@@ -26,7 +26,7 @@ function requireReference(base,ref){
 }
 try{
   walk(PLUGIN);
-  for(const name of ['validate.mjs','test-hooks.mjs','test-validator.mjs','test-supplemental.mjs','README.md','README.en.md','LICENSE','NOTICE','build-docs.mjs','doc-theme.html'])if(existsSync(join(ROOT,name)))files.push(join(ROOT,name));
+  for(const name of ['validate.mjs','test-hooks.mjs','test-validator.mjs','test-supplemental.mjs','README.md','README.en.md','LICENSE','NOTICE','build-docs.mjs','doc-theme.html','diagnose.mjs','diagnose-core.mjs','codex-launch.mjs','evaluate.mjs','check-docs.mjs','test-diagnose.mjs','test-evaluate.mjs','test-docs.mjs','QUICKSTART.md','QUICKSTART.en.md','DEVELOPMENT.md','DEVELOPMENT.en.md'])if(existsSync(join(ROOT,name)))files.push(join(ROOT,name));
   const reg=json(join(PLUGIN,'persona-registry.json'));
   if(reg.schemaVersion!==1||!/^\d+\.\d+\.\d+$/.test(reg.pluginVersion||'')||reg.hookSerializedCap!==12000)err('등록부 기본 형식 오류');
   if(!Array.isArray(reg.perspectives)||reg.perspectives.length!==45)err('등록부 관점 수 오류');
@@ -61,6 +61,9 @@ try{
     if(!existsSync(p)){err('SKILL.md 누락: '+slug);continue;}
     const s=text(p),front=s.match(/^---\r?\n([\s\S]*?)\r?\n---/);
     if(!front||!front[1].includes(`name: ${slug}`)||!/^description:\s*\S/m.test(front[1]))err('스킬 메타데이터 오류: '+slug);
+    if(!s.includes('operating_contract.md'))err('공통 정본 누락: '+slug);
+    if(/^(?:- Revit.*단독 언급도 활성화한다\.|투자·법률·회계세무 복합 맥락은 해당 도메인 모두 동시 활성\.|전략·법률·비용·데이터 복합 맥락은 해당 도메인 동시 활성\.|(?:투자|법률) 트리거와 동시 감지 시 .*함께 활성\.|도메인 기능 구현은 #6, 실제 연결은 #39에 인계한다\.)/m.test(s))err('활성·인계 정본 충돌: '+slug);
+    if(s.includes('37관점 기본 검토')||s.includes('키링/DPAPI 강제')||s.includes('자본시장법 경계 회피')||s.includes('정본은 `hooks/persona_core.md`다')||s.includes('정본은 항상켜짐 코어'))err('이전 전문 지침 충돌: '+slug);
     for(const ref of s.matchAll(/\.\.\/\.\.\/reference\/[a-z_]+\.md/g))requireReference(dirname(p),ref[0]);
   }
   for(const rel of ['.codex-plugin/plugin.json','.claude-plugin/plugin.json','compat/plugin.portable.json']){

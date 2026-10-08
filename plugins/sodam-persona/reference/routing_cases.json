@@ -1,0 +1,2357 @@
+{
+  "schemaVersion": 1,
+  "roles": [
+    {
+      "id": 1,
+      "name": "시니어 개발자",
+      "candidates": [
+        "구현",
+        "버그",
+        "로직",
+        "리팩토링",
+        "코드 수정"
+      ],
+      "positive": "이 함수의 중복 저장 버그를 재현하고 안전하게 수정해줘.",
+      "negative": "코드라는 단어만 영어로 번역해줘.",
+      "input_output": "코드·재현 입력 -> 수정·실행 증거",
+      "boundary": "제품 우선순위29,보안2,AI모델6과 구분",
+      "skill": null
+    },
+    {
+      "id": 2,
+      "name": "시니어 보안 전문가",
+      "candidates": [
+        "보안",
+        "취약점",
+        "인증 우회",
+        "비밀정보",
+        "권한 검토"
+      ],
+      "positive": "이 API의 권한 우회와 토큰 노출 가능성을 검토해줘.",
+      "negative": "보안이라는 단어의 영어 철자만 알려줘.",
+      "input_output": "권한 경계·코드 -> 재현 조건·안전한 개선",
+      "boundary": "실제 공격·자격증명 사용 허가를 추론하지 않음",
+      "skill": null
+    },
+    {
+      "id": 3,
+      "name": "비개발자/왕초보/무경험자",
+      "candidates": [
+        "왕초보",
+        "비개발자",
+        "처음 사용",
+        "쉬운 설명",
+        "클릭 순서"
+      ],
+      "positive": "개발을 처음 하는 사람이 이 코드 실행 순서를 이해하게 설명해줘.",
+      "negative": "왕초보라는 단어를 제목에서 지워줘.",
+      "input_output": "사용자 수준·작업 -> 이해 가능한 설명",
+      "boundary": "주도 전문가를 대체하지 않는 사용자 이해 관점,숙련도 고정 금지",
+      "skill": null
+    },
+    {
+      "id": 4,
+      "name": "QA/테스트 엔지니어",
+      "candidates": [
+        "QA",
+        "회귀 테스트",
+        "재현",
+        "경계값",
+        "테스트 설계"
+      ],
+      "positive": "이 저장 기능의 정상·경계·실패 테스트를 설계하고 실행해줘.",
+      "negative": "테스트라는 글자를 굵게 표시해줘.",
+      "input_output": "요구사항·실행 대상 -> 결함·회귀 증거",
+      "boundary": "최종 완료 주장은40,단순 깊게라는 표현만으로 활성하지 않음",
+      "skill": null
+    },
+    {
+      "id": 5,
+      "name": "DevOps/배포·운영/SRE",
+      "candidates": [
+        "배포",
+        "운영",
+        "SRE",
+        "관측",
+        "롤백",
+        "가용성"
+      ],
+      "positive": "이 서비스의 배포 절차와 장애 복구 계획을 검토해줘.",
+      "negative": "배포라는 표현을 출시라는 표현으로 바꿔줘.",
+      "input_output": "환경·배포 계획 -> 운영·복구 검증",
+      "boundary": "설치 경로 간 연결 문제는39,공개 권한은 별도",
+      "skill": null
+    },
+    {
+      "id": 6,
+      "name": "데이터/AI 엔지니어",
+      "candidates": [
+        "AI모델",
+        "학습",
+        "추론",
+        "데이터 파이프라인",
+        "임베딩"
+      ],
+      "positive": "이 데이터로 분류 모델을 학습하고 평가하는 구조를 설계해줘.",
+      "negative": "AI라는 글자를 소문자로 바꿔줘.",
+      "input_output": "데이터·모델 목표 -> 처리·학습·평가 설계",
+      "boundary": "생성도구 환경36,에이전트 지시38과 구분",
+      "skill": null
+    },
+    {
+      "id": 7,
+      "name": "시니어 디자이너",
+      "candidates": [
+        "UI",
+        "디자인 시스템",
+        "타이포그래피",
+        "컴포넌트",
+        "화면 디자인"
+      ],
+      "positive": "이 앱 화면의 시각 계층과 디자인 시스템을 개선해줘.",
+      "negative": "건축 파사드의 매스 디자인 대안을 제안해줘.",
+      "input_output": "화면·사용자 목표 -> UI 시각 설계",
+      "boundary": "공간 디자인23/24와 구분",
+      "skill": null
+    },
+    {
+      "id": 8,
+      "name": "UX 리서처",
+      "candidates": [
+        "UX",
+        "사용성",
+        "사용자 조사",
+        "인터뷰",
+        "사용 흐름"
+      ],
+      "positive": "신규 사용자가 결제 단계에서 이탈하는 이유를 조사할 계획을 만들어줘.",
+      "negative": "인터뷰라는 단어를 번역해줘.",
+      "input_output": "관찰·사용자 과업 -> 조사·사용성 근거",
+      "boundary": "시각 스타일7,사업 목표10과 구분",
+      "skill": null
+    },
+    {
+      "id": 9,
+      "name": "시니어 기획·요구사항 라우터",
+      "candidates": [
+        "요구사항",
+        "기획",
+        "범위 정의",
+        "스펙",
+        "불명확한 요청"
+      ],
+      "positive": "이 모호한 앱 아이디어를 구현 가능한 요구사항으로 정리해줘.",
+      "negative": "PM이라는 약어 뜻을 한 줄로 알려줘.",
+      "input_output": "요청·제약 -> 요구사항·열린 질문",
+      "boundary": "제품 가치·우선순위29,일정28과 구분",
+      "skill": null
+    },
+    {
+      "id": 10,
+      "name": "C-레벨 경영진/비즈니스 (25년+)",
+      "candidates": [
+        "사업 전략",
+        "경영",
+        "비즈니스",
+        "수익 구조",
+        "투자 의사결정"
+      ],
+      "positive": "이 사업의 수익 구조와 추진 여부를 경영 관점에서 평가해줘.",
+      "negative": "사업이라는 단어의 한자만 알려줘.",
+      "input_output": "사업 근거·제약 -> 대안·판단 근거",
+      "boundary": "개인 투자13,세금14,원가12와 구분",
+      "skill": null
+    },
+    {
+      "id": 11,
+      "name": "**법무/컴플라이언스 (15년+ 경력 전문 변호사)**",
+      "candidates": [
+        "계약",
+        "법률",
+        "약관",
+        "저작권",
+        "컴플라이언스"
+      ],
+      "positive": "이 계약의 해지와 저작권 조항 위험을 검토해줘.",
+      "negative": "계약이라는 단어만 번역하고 법률 검토는 제외해줘.",
+      "input_output": "관할·원문·목적 -> 조항 위험·확인 사항",
+      "boundary": "법률 자격·효력 보장 금지,실행성 판단에 해당 스킬 면책 적용",
+      "skill": "persona-lawyer"
+    },
+    {
+      "id": 12,
+      "name": "비용 최적화/사업 운영 (15년+)",
+      "candidates": [
+        "비용 최적화",
+        "운영비",
+        "예산 효율",
+        "단위 비용",
+        "TCO"
+      ],
+      "positive": "이 AI 서비스의 운영비를 비용 항목별로 줄이는 방안을 검토해줘.",
+      "negative": "건축 도면에서 벽체 물량과 공사비를 산출해줘.",
+      "input_output": "사용량·가격 근거 -> 비용 대안·가정",
+      "boundary": "공사 견적19,세금14,실측 없는 절감액 단정 금지",
+      "skill": null
+    },
+    {
+      "id": 13,
+      "name": "**전문 투자자 (15년+ 경력)**",
+      "candidates": [
+        "투자",
+        "포트폴리오",
+        "자동매매",
+        "백테스트",
+        "손실"
+      ],
+      "positive": "이 자동매매 전략의 손실과 과최적화 위험을 검토해줘.",
+      "negative": "투자라는 단어를 문서에서 삭제해줘.",
+      "input_output": "전략·실제 근거 -> 손실 시나리오·한계",
+      "boundary": "경영10,수익 보장·실거래 권한 추론 금지",
+      "skill": "persona-investor"
+    },
+    {
+      "id": 14,
+      "name": "**회계·세무 전문가 (15년+ 경력)**",
+      "candidates": [
+        "세무",
+        "부가세",
+        "경비 처리",
+        "세금계산서",
+        "기장"
+      ],
+      "positive": "이 사업 지출의 경비 처리에 필요한 증빙을 검토해줘.",
+      "negative": "API 요청을 신고라는 변수 이름으로 바꿔줘.",
+      "input_output": "관할·거래·증빙 -> 세무 확인 사항",
+      "boundary": "개발 변수 신고로 활성 금지,실제 신고·자격 대체 금지",
+      "skill": "persona-accountant"
+    },
+    {
+      "id": 15,
+      "name": "**마케팅·세일즈 전문가 (15년+ 경력)**",
+      "candidates": [
+        "마케팅",
+        "세일즈",
+        "카피",
+        "전환율",
+        "랜딩",
+        "캠페인"
+      ],
+      "positive": "이 상품 랜딩페이지의 전환 메시지를 개선해줘.",
+      "negative": "영상 편집에서 두 장면의 전환 효과만 바꿔줘.",
+      "input_output": "고객·상품·매체 -> 판매 메시지·측정 계획",
+      "boundary": "영상 컷 전환34,공간 가치 스토리44와 구분",
+      "skill": "persona-marketer"
+    },
+    {
+      "id": 16,
+      "name": "**건축 설계 전문가 (15년+ 경력)**",
+      "candidates": [
+        "건축 설계",
+        "대지",
+        "배치",
+        "인허가",
+        "피난",
+        "설계도서"
+      ],
+      "positive": "주택 대지의 배치와 인허가 검토에 필요한 조건을 정리해줘.",
+      "negative": "소프트웨어 아키텍처 설계를 검토해줘.",
+      "input_output": "대지·관할·도서 -> 기술 설계 검토",
+      "boundary": "건축 콘셉트23,정보 대조42,자격자 확인 필요",
+      "skill": "persona-architectural-designer"
+    },
+    {
+      "id": 17,
+      "name": "**인테리어 설계 전문가 (15년+ 경력)**",
+      "candidates": [
+        "실내 동선",
+        "천장 계획",
+        "마감 상세",
+        "제작가구",
+        "인테리어 설계"
+      ],
+      "positive": "카페의 실내 동선과 천장·가구 상세 설계를 검토해줘.",
+      "negative": "카페 분위기와 색채 무드보드 대안만 제안해줘.",
+      "input_output": "실측·실내 도서 -> 기능·상세 검토",
+      "boundary": "미적 방향24,현장 시공18,정보 대조42와 구분",
+      "skill": "persona-interior-designer"
+    },
+    {
+      "id": 18,
+      "name": "**건축·인테리어 시공 전문가 (15년+ 경력)**",
+      "candidates": [
+        "시공 순서",
+        "검측",
+        "공법",
+        "하자",
+        "현장 관리",
+        "RFI"
+      ],
+      "positive": "이 인테리어 공사의 시공 순서와 검측 기준을 정리해줘.",
+      "negative": "시공이라는 단어를 영문으로 번역해줘.",
+      "input_output": "현장·승인 도서 -> 시공·검측 계획",
+      "boundary": "설계 변경 영향43,견적19,현장 안전·승인 대체 금지",
+      "skill": "persona-construction-expert"
+    },
+    {
+      "id": 19,
+      "name": "**건축·인테리어 견적 전문가 (15년+ 경력)**",
+      "candidates": [
+        "물량 산출",
+        "공사 견적",
+        "내역서",
+        "단가",
+        "VE",
+        "변경 견적"
+      ],
+      "positive": "이 건축 도면의 물량 산출과 견적에 필요한 조건을 확인해줘.",
+      "negative": "앱 이용량에 따른 클라우드 비용만 비교해줘.",
+      "input_output": "도서·수량·단가 근거 -> 물량·견적·가정",
+      "boundary": "운영비12,단위·개정 대조42,단가 없는 확정금액 금지",
+      "skill": "persona-cost-estimator"
+    },
+    {
+      "id": 20,
+      "name": "**건축·인테리어 디자인 디렉터 (15년+ 경력)**",
+      "candidates": [
+        "공간 디자인 통합",
+        "외관과 실내",
+        "디자인 언어",
+        "공간 디렉션"
+      ],
+      "positive": "건물 외관과 실내의 재료·디자인 언어를 통합해줘.",
+      "negative": "웹사이트 버튼의 디자인 시스템만 만들어줘.",
+      "input_output": "외관·실내 의도 -> 통합 공간 디자인 기준",
+      "boundary": "UI7,부분 미적 설계23/24,판매 구성44와 구분",
+      "skill": "persona-design-director"
+    },
+    {
+      "id": 21,
+      "name": "**건축·인테리어 3D 모델링 전문가 (15년+ 경력)**",
+      "candidates": [
+        "BIM 모델링",
+        "Revit",
+        "Rhino",
+        "3D 형상",
+        "모델 변환"
+      ],
+      "positive": "Revit 건축 모델을 Rhino로 변환할 때 형상 손실을 검토해줘.",
+      "negative": "DB 데이터 모델을 설계해줘.",
+      "input_output": "공간 모델·도구·단위 -> 형상 제작·변환 검증",
+      "boundary": "DB모델 제외,도면/표 정보 일치42,도구명 단독 제외",
+      "skill": "persona-spatial-3d-modeling-expert"
+    },
+    {
+      "id": 22,
+      "name": "**건축·인테리어 렌더링·시각화 전문가 (15년+ 경력)**",
+      "candidates": [
+        "공간 렌더",
+        "조명",
+        "재질",
+        "카메라",
+        "D5",
+        "워크스루"
+      ],
+      "positive": "이 실내 3D 장면의 재질·조명·카메라 렌더 설정을 검토해줘.",
+      "negative": "React 웹 화면의 렌더링 성능을 개선해줘.",
+      "input_output": "공간 장면·목적 -> 렌더 설정·이미지 품질",
+      "boundary": "웹 렌더 제외,합성32,판매 스토리44,실제 시청35",
+      "skill": "persona-rendering-visualization-expert"
+    },
+    {
+      "id": 23,
+      "name": "**건축 디자인 전문가 (15년+ 경력)**",
+      "candidates": [
+        "건축 콘셉트",
+        "매스",
+        "파사드",
+        "입면 디자인",
+        "외장재"
+      ],
+      "positive": "이 건물의 매스와 파사드 디자인 대안을 제안해줘.",
+      "negative": "API 아키텍처 디자인만 검토해줘.",
+      "input_output": "대지·공간 의도 -> 건축 미적 대안",
+      "boundary": "기술 설계16,공간 통합20,UI7과 구분",
+      "skill": "persona-architectural-design-expert"
+    },
+    {
+      "id": 24,
+      "name": "**인테리어 디자인 전문가 (15년+ 경력)**",
+      "candidates": [
+        "인테리어 무드",
+        "색채",
+        "재료 팔레트",
+        "가구 스타일",
+        "실내 분위기"
+      ],
+      "positive": "카페 인테리어 분위기와 재료 팔레트 대안을 제안해줘.",
+      "negative": "카페 천장 접합과 가구 제작 상세를 검토해줘.",
+      "input_output": "공간 목적·취향 -> 실내 미적 대안",
+      "boundary": "기술 상세17,통합20,렌더 설정22와 구분",
+      "skill": "persona-interior-design-expert"
+    },
+    {
+      "id": 25,
+      "name": "**자료 검색·출처 검증 전문가 (15년+ 경력)**",
+      "candidates": [
+        "공식 출처",
+        "원문 확인",
+        "최신성",
+        "사실 검증",
+        "검색"
+      ],
+      "positive": "이 주장에 대한 공식 원문과 확인 날짜를 찾아 검증해줘.",
+      "negative": "이미 제공한 문장의 맞춤법만 수정해줘.",
+      "input_output": "주장·출처 -> 근거·날짜·미확인",
+      "boundary": "종합 분석26,출처를 추측하거나 검색 실패를 숨기지 않음",
+      "skill": "persona-source-verification-expert"
+    },
+    {
+      "id": 26,
+      "name": "**리서치·분석 전문가 (15년+ 경력)**",
+      "candidates": [
+        "비교 연구",
+        "리서치",
+        "분석 기준",
+        "조사 설계",
+        "종합"
+      ],
+      "positive": "이 세 사례를 같은 비교 기준으로 분석해줘.",
+      "negative": "표의 숫자를 정렬만 해줘.",
+      "input_output": "질문·여러 근거 -> 비교·불확실성",
+      "boundary": "출처 검색25,새 아이디어27,결론 없는 자료 나열 금지",
+      "skill": "persona-research-analyst"
+    },
+    {
+      "id": 27,
+      "name": "**아이디어·콘셉트 전략 전문가 (15년+ 경력)**",
+      "candidates": [
+        "아이디어",
+        "콘셉트 대안",
+        "브레인스토밍",
+        "발산",
+        "실험"
+      ],
+      "positive": "이 서비스의 차별화 아이디어를 만들고 검증 실험을 제안해줘.",
+      "negative": "제공된 문장의 사실만 확인해줘.",
+      "input_output": "목표·제약 -> 대안·평가·실험",
+      "boundary": "자료 검증25,기능 우선순위29,아이디어만으로 구현 완료 금지",
+      "skill": "persona-ideation-strategist"
+    },
+    {
+      "id": 28,
+      "name": "**프로젝트 매니저 (15년+ 경력)**",
+      "candidates": [
+        "프로젝트 일정",
+        "마일스톤",
+        "의존성",
+        "납기",
+        "진척"
+      ],
+      "positive": "이 프로젝트의 일정·의존성·납품 위험을 정리해줘.",
+      "negative": "제품 기능의 사용자 가치 우선순위만 정해줘.",
+      "input_output": "범위·자원·기한 -> 실행 일정·위험",
+      "boundary": "제품29,전사 승인 체계30,근거 없는 일정 확정 금지",
+      "skill": "persona-project-manager"
+    },
+    {
+      "id": 29,
+      "name": "**프로덕트 매니저·프로덕트 오너 (15년+ 경력)**",
+      "candidates": [
+        "제품 로드맵",
+        "백로그",
+        "MVP",
+        "사용자 가치",
+        "기능 우선순위"
+      ],
+      "positive": "이 앱의 MVP와 기능 백로그 우선순위를 정해줘.",
+      "negative": "이미 확정된 공사의 시공 순서만 정해줘.",
+      "input_output": "사용자 문제·가치 -> 제품 목표·우선순위",
+      "boundary": "범위 정리9,일정28,현장 공정18과 구분",
+      "skill": "persona-product-owner"
+    },
+    {
+      "id": 30,
+      "name": "**PMO·프로젝트 거버넌스 전문가 (15년+ 경력)**",
+      "candidates": [
+        "PMO",
+        "거버넌스",
+        "전사 프로젝트",
+        "승인 체계",
+        "포트폴리오 관리"
+      ],
+      "positive": "여러 프로젝트의 승인·보고·변경 통제 기준을 만들어줘.",
+      "negative": "개인 작업의 할 일 목록만 정렬해줘.",
+      "input_output": "조직·프로젝트 집합 -> 통제·승인 기준",
+      "boundary": "개별 일정28,기록31,새 권한 부여는 별도",
+      "skill": "persona-pmo-governance-expert"
+    },
+    {
+      "id": 31,
+      "name": "**프로젝트 분석·운영 코디네이터 (15년+ 경력)**",
+      "candidates": [
+        "회의 기록",
+        "액션아이템",
+        "결정 추적",
+        "운영 기록",
+        "상태 표"
+      ],
+      "positive": "회의 내용에서 결정과 담당자·액션을 원문 근거로 정리해줘.",
+      "negative": "다른 PC에서 작업을 이어갈 환경과 승인 범위를 정리해줘.",
+      "input_output": "원문 기록 -> 결정·상태·출처",
+      "boundary": "AI인계41,원문 없는 담당·날짜 창작 금지",
+      "skill": "persona-project-analyst-coordinator"
+    },
+    {
+      "id": 32,
+      "name": "**이미지 제작·편집 전문가 (15년+ 경력)**",
+      "candidates": [
+        "이미지 합성",
+        "보정",
+        "배경 제거",
+        "업스케일",
+        "이미지 편집"
+      ],
+      "positive": "이 렌더 이미지의 배경을 원본 보존하면서 합성해줘.",
+      "negative": "3D 장면의 조명과 재질만 수정해줘.",
+      "input_output": "이미지·유지 요소 -> 편집 결과·실제 확인",
+      "boundary": "3D장면22,영상 연출33,제작만으로 권리검수35 완료 금지",
+      "skill": "persona-image-production-expert"
+    },
+    {
+      "id": 33,
+      "name": "**영상 제작·연출 전문가 (15년+ 경력)**",
+      "candidates": [
+        "영상 연출",
+        "스토리보드",
+        "샷",
+        "카메라 동선",
+        "영상 콘셉트"
+      ],
+      "positive": "이 공간 소개 영상의 스토리보드와 카메라 동선을 설계해줘.",
+      "negative": "완성 영상의 자막 타이밍과 음량만 편집해줘.",
+      "input_output": "목적·소스 -> 장면·연출 설계",
+      "boundary": "후반34,판매 메시지44,렌더22,실제 시청35",
+      "skill": "persona-video-production-director"
+    },
+    {
+      "id": 34,
+      "name": "**영상 편집·후반작업 전문가 (15년+ 경력)**",
+      "candidates": [
+        "컷 편집",
+        "자막",
+        "음량",
+        "색보정",
+        "인코딩",
+        "후반작업"
+      ],
+      "positive": "이 완성 영상의 컷·자막·음량과 출력 규격을 맞춰줘.",
+      "negative": "영상 판매 제안의 고객 메시지만 정리해줘.",
+      "input_output": "영상·편집 요구 -> 편집·출력 결과",
+      "boundary": "기획33,사업44,품질·권리35와 구분",
+      "skill": "persona-video-post-production-expert"
+    },
+    {
+      "id": 35,
+      "name": "**미디어 품질·권리 검수 전문가 (15년+ 경력)**",
+      "candidates": [
+        "실제 검수",
+        "재생 확인",
+        "음원 권리",
+        "폰트 라이선스",
+        "납품 품질"
+      ],
+      "positive": "이 영상의 전체 재생·청취와 음원·폰트 권리를 검수해줘.",
+      "negative": "영상 인코딩 성공 로그만 한 줄로 요약해줘.",
+      "input_output": "실제 파일·권리 근거 -> 품질·권리 검수 상태",
+      "boundary": "생성·메타데이터만으로 시청 완료 금지,법률11 확인",
+      "skill": "persona-media-quality-rights-reviewer"
+    },
+    {
+      "id": 36,
+      "name": "**생성형 AI 로컬 워크플로우 엔지니어 (15년+ 기반 경력)**",
+      "candidates": [
+        "ComfyUI",
+        "노드",
+        "워크플로우",
+        "CUDA",
+        "VRAM",
+        "체크포인트"
+      ],
+      "positive": "ComfyUI의 누락 노드·모델과 CUDA 오류를 로그로 진단해줘.",
+      "negative": "ComfyUI라는 이름은 인용만 했고 웹 CSS만 수정해줘.",
+      "input_output": "로컬 환경·워크플로우 -> 생성환경 진단·실행",
+      "boundary": "브랜드 단독 제외,호스트연결39,외부플랫폼37과 구분",
+      "skill": "persona-generative-ai-workflow-engineer"
+    },
+    {
+      "id": 37,
+      "name": "**생성형 AI 플랫폼 운영 전문가 (15년+ 기반 경력)**",
+      "candidates": [
+        "생성 플랫폼",
+        "Midjourney",
+        "Runway",
+        "Higgsfield",
+        "크레딧",
+        "플랜"
+      ],
+      "positive": "외부 영상 생성 플랫폼의 플랜·크레딧·다운로드 조건을 비교해줘.",
+      "negative": "ComfyUI 로컬 노드 오류만 진단해줘.",
+      "input_output": "서비스·계정조건·공식자료 -> 기능·비용·권리 근거",
+      "boundary": "최신 가격·정책 확인 날짜,로컬36,실제 결제·업로드 권한 추론 금지",
+      "skill": "persona-generative-ai-platform-operator"
+    },
+    {
+      "id": 38,
+      "name": "AI 에이전트 하네스·지시 체계 설계 전문가",
+      "candidates": [
+        "지시 충돌",
+        "훅",
+        "스킬 트리거",
+        "하네스",
+        "주입량",
+        "오발동"
+      ],
+      "positive": "페르소나 훅과 스킬의 지시 충돌·오발동 원인을 검토해줘.",
+      "negative": "훅이라는 단어가 들어간 문장을 번역만 해줘.",
+      "input_output": "지시·훅·관측응답 -> 충돌·라우팅 설계",
+      "boundary": "실제 연결39,기능 코드1,완료 판정40과 구분",
+      "skill": "persona-agent-harness-expert"
+    },
+    {
+      "id": 39,
+      "name": "시스템 통합·실행 환경 검증 전문가",
+      "candidates": [
+        "Desktop와 CLI",
+        "MCP 연결",
+        "실행 경로",
+        "플러그인 연결",
+        "프로세스"
+      ],
+      "positive": "CLI에서는 되는데 Desktop에서 MCP가 호출되지 않는 원인을 검토해줘.",
+      "negative": "MCP라는 단어를 제목에서 빼줘.",
+      "input_output": "호스트·버전·로그 -> 연결 실패 구간·대표호출",
+      "boundary": "ComfyUI 내부36,지시38,인계41,운영5와 구분",
+      "skill": "persona-system-integration-expert"
+    },
+    {
+      "id": 40,
+      "name": "완료 증거·수용 기준 검증 전문가",
+      "candidates": [
+        "완료 증거",
+        "수용 기준",
+        "검증 범위",
+        "미실행",
+        "완료 주장"
+      ],
+      "positive": "설치·빌드만 통과한 작업을 전체 완료라고 할 수 있는지 판단해줘.",
+      "negative": "완료라는 글자를 문서 제목에 넣어줘.",
+      "input_output": "요구사항·결과 -> 통과·실패·미검증 대조",
+      "boundary": "실제 결함 시험4,일정28,문서 작성만으로 합격 금지",
+      "skill": "persona-acceptance-evidence-expert"
+    },
+    {
+      "id": 41,
+      "name": "작업 맥락·결정 이력·AI 인수인계 전문가",
+      "candidates": [
+        "인수인계",
+        "작업 재개",
+        "다른 PC",
+        "다른 AI",
+        "결정 이력"
+      ],
+      "positive": "다른 PC와 AI에서 이 작업을 이어갈 승인 범위와 재개 순서를 정리해줘.",
+      "negative": "회의 원문에서 액션 목록만 추출해줘.",
+      "input_output": "현재원본·결정·승인 -> 재개 가능한 인계",
+      "boundary": "기록31,환경39,메모리 저장·다음 단계 승인 추론 금지",
+      "skill": "persona-context-handoff-expert"
+    },
+    {
+      "id": 42,
+      "name": "CAD·BIM 도면 체계·설계정보 정합성 전문가",
+      "candidates": [
+        "도면 정합성",
+        "단위",
+        "좌표",
+        "개정",
+        "도면과 모델",
+        "일람표"
+      ],
+      "positive": "도면과 BIM 모델의 치수·단위·개정 불일치를 검토해줘.",
+      "negative": "DB 모델과 API 응답 스키마만 대조해줘.",
+      "input_output": "최신도서·모델·표 -> 불일치·권위 원본 확인",
+      "boundary": "공간 한정,설계16/17·모델21,승인본 없이 임의 치수 수정 금지",
+      "skill": "persona-cad-bim-consistency-expert"
+    },
+    {
+      "id": 43,
+      "name": "설계·시공 통합 검토·변경 영향 전문가",
+      "candidates": [
+        "설계 변경 영향",
+        "공종 간섭",
+        "변경 물량",
+        "시공 영향",
+        "제작 변경"
+      ],
+      "positive": "벽체 위치 변경이 시공·설비 간섭·물량·비용·일정에 주는 영향을 검토해줘.",
+      "negative": "벽체 변경이라는 문장을 번역만 해줘.",
+      "input_output": "변경전후·현장조건 -> 변경 영향·확인 관계자",
+      "boundary": "설계16/17,시공18·견적19·정합42,구조/소방/설비 승인 대체 금지",
+      "skill": "persona-design-construction-integration-expert"
+    },
+    {
+      "id": 44,
+      "name": "건축시각화 크리에이티브·사업 제안 전문가",
+      "candidates": [
+        "건축시각화 제안",
+        "ArchViz 판매",
+        "공간 가치",
+        "수주 영상",
+        "고객 메시지"
+      ],
+      "positive": "건축시각화 제안 영상에서 공간 가치와 고객 문의를 연결할 구성을 제안해줘.",
+      "negative": "실내 렌더의 카메라 노출값만 설정해줘.",
+      "input_output": "고객·설계·목적 -> 판매 근거·장면 목적",
+      "boundary": "일반마케팅15,렌더22·연출33,실측없는 매출효과·설계외 기능 보장 금지",
+      "skill": "persona-archviz-business-creative-expert"
+    },
+    {
+      "id": 45,
+      "name": "건축·콘텐츠 업무 자동화·도구 제품화 전문가",
+      "candidates": [
+        "건축 업무 자동화",
+        "콘텐츠 자동화",
+        "도면 도구",
+        "반복 업무",
+        "MCP 제품화"
+      ],
+      "positive": "반복되는 건축 도면 검토를 원본 보존형 CLI 도구로 제품화해줘.",
+      "negative": "기존 도면 한 장의 치수만 검토해줘.",
+      "input_output": "실제업무·입출력·예외 -> 작은 도구·복구 검증",
+      "boundary": "일반개발1,AI6·하네스38·환경39,자동 설치·공개 권한 추론 금지",
+      "skill": "persona-domain-automation-productization-expert"
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "R01-positive",
+      "role_id": 1,
+      "kind": "positive",
+      "request": "이 함수의 중복 저장 버그를 재현하고 안전하게 수정해줘.",
+      "required_role": 1,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R01-different_intent",
+      "role_id": 1,
+      "kind": "different_intent",
+      "request": "코드라는 단어만 영어로 번역해줘.",
+      "required_role": null,
+      "forbidden_role": 1,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R01-quoted",
+      "role_id": 1,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“구현”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 1,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R01-excluded",
+      "role_id": 1,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除시니어 개발자工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 1,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R02-positive",
+      "role_id": 2,
+      "kind": "positive",
+      "request": "이 API의 권한 우회와 토큰 노출 가능성을 검토해줘.",
+      "required_role": 2,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R02-different_intent",
+      "role_id": 2,
+      "kind": "different_intent",
+      "request": "보안이라는 단어의 영어 철자만 알려줘.",
+      "required_role": null,
+      "forbidden_role": 2,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R02-quoted",
+      "role_id": 2,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“보안”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 2,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R02-excluded",
+      "role_id": 2,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除시니어 보안 전문가工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 2,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R03-positive",
+      "role_id": 3,
+      "kind": "positive",
+      "request": "개발을 처음 하는 사람이 이 코드 실행 순서를 이해하게 설명해줘.",
+      "required_role": 3,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R03-different_intent",
+      "role_id": 3,
+      "kind": "different_intent",
+      "request": "왕초보라는 단어를 제목에서 지워줘.",
+      "required_role": null,
+      "forbidden_role": 3,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R03-quoted",
+      "role_id": 3,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“왕초보”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 3,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R03-excluded",
+      "role_id": 3,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除비개발자/왕초보/무경험자工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 3,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R04-positive",
+      "role_id": 4,
+      "kind": "positive",
+      "request": "이 저장 기능의 정상·경계·실패 테스트를 설계하고 실행해줘.",
+      "required_role": 4,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R04-different_intent",
+      "role_id": 4,
+      "kind": "different_intent",
+      "request": "테스트라는 글자를 굵게 표시해줘.",
+      "required_role": null,
+      "forbidden_role": 4,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R04-quoted",
+      "role_id": 4,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“QA”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 4,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R04-excluded",
+      "role_id": 4,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除QA/테스트 엔지니어工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 4,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R05-positive",
+      "role_id": 5,
+      "kind": "positive",
+      "request": "이 서비스의 배포 절차와 장애 복구 계획을 검토해줘.",
+      "required_role": 5,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R05-different_intent",
+      "role_id": 5,
+      "kind": "different_intent",
+      "request": "배포라는 표현을 출시라는 표현으로 바꿔줘.",
+      "required_role": null,
+      "forbidden_role": 5,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R05-quoted",
+      "role_id": 5,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“배포”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 5,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R05-excluded",
+      "role_id": 5,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除DevOps/배포·운영/SRE工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 5,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R06-positive",
+      "role_id": 6,
+      "kind": "positive",
+      "request": "이 데이터로 분류 모델을 학습하고 평가하는 구조를 설계해줘.",
+      "required_role": 6,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R06-different_intent",
+      "role_id": 6,
+      "kind": "different_intent",
+      "request": "AI라는 글자를 소문자로 바꿔줘.",
+      "required_role": null,
+      "forbidden_role": 6,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R06-quoted",
+      "role_id": 6,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“AI모델”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 6,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R06-excluded",
+      "role_id": 6,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除데이터/AI 엔지니어工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 6,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R07-positive",
+      "role_id": 7,
+      "kind": "positive",
+      "request": "이 앱 화면의 시각 계층과 디자인 시스템을 개선해줘.",
+      "required_role": 7,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R07-different_intent",
+      "role_id": 7,
+      "kind": "different_intent",
+      "request": "건축 파사드의 매스 디자인 대안을 제안해줘.",
+      "required_role": null,
+      "forbidden_role": 7,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R07-quoted",
+      "role_id": 7,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“UI”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 7,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R07-excluded",
+      "role_id": 7,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除시니어 디자이너工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 7,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R08-positive",
+      "role_id": 8,
+      "kind": "positive",
+      "request": "신규 사용자가 결제 단계에서 이탈하는 이유를 조사할 계획을 만들어줘.",
+      "required_role": 8,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R08-different_intent",
+      "role_id": 8,
+      "kind": "different_intent",
+      "request": "인터뷰라는 단어를 번역해줘.",
+      "required_role": null,
+      "forbidden_role": 8,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R08-quoted",
+      "role_id": 8,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“UX”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 8,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R08-excluded",
+      "role_id": 8,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除UX 리서처工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 8,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R09-positive",
+      "role_id": 9,
+      "kind": "positive",
+      "request": "이 모호한 앱 아이디어를 구현 가능한 요구사항으로 정리해줘.",
+      "required_role": 9,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R09-different_intent",
+      "role_id": 9,
+      "kind": "different_intent",
+      "request": "PM이라는 약어 뜻을 한 줄로 알려줘.",
+      "required_role": null,
+      "forbidden_role": 9,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R09-quoted",
+      "role_id": 9,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“요구사항”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 9,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R09-excluded",
+      "role_id": 9,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除시니어 기획·요구사항 라우터工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 9,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R10-positive",
+      "role_id": 10,
+      "kind": "positive",
+      "request": "이 사업의 수익 구조와 추진 여부를 경영 관점에서 평가해줘.",
+      "required_role": 10,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R10-different_intent",
+      "role_id": 10,
+      "kind": "different_intent",
+      "request": "사업이라는 단어의 한자만 알려줘.",
+      "required_role": null,
+      "forbidden_role": 10,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R10-quoted",
+      "role_id": 10,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“사업 전략”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 10,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R10-excluded",
+      "role_id": 10,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除C-레벨 경영진/비즈니스 (25년+)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 10,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R11-positive",
+      "role_id": 11,
+      "kind": "positive",
+      "request": "이 계약의 해지와 저작권 조항 위험을 검토해줘.",
+      "required_role": 11,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R11-different_intent",
+      "role_id": 11,
+      "kind": "different_intent",
+      "request": "계약이라는 단어만 번역하고 법률 검토는 제외해줘.",
+      "required_role": null,
+      "forbidden_role": 11,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R11-quoted",
+      "role_id": 11,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“계약”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 11,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R11-excluded",
+      "role_id": 11,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除법무/컴플라이언스 (15년+ 경력 전문 변호사)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 11,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R12-positive",
+      "role_id": 12,
+      "kind": "positive",
+      "request": "이 AI 서비스의 운영비를 비용 항목별로 줄이는 방안을 검토해줘.",
+      "required_role": 12,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R12-different_intent",
+      "role_id": 12,
+      "kind": "different_intent",
+      "request": "건축 도면에서 벽체 물량과 공사비를 산출해줘.",
+      "required_role": null,
+      "forbidden_role": 12,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R12-quoted",
+      "role_id": 12,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“비용 최적화”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 12,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R12-excluded",
+      "role_id": 12,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除비용 최적화/사업 운영 (15년+)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 12,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R13-positive",
+      "role_id": 13,
+      "kind": "positive",
+      "request": "이 자동매매 전략의 손실과 과최적화 위험을 검토해줘.",
+      "required_role": 13,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R13-different_intent",
+      "role_id": 13,
+      "kind": "different_intent",
+      "request": "투자라는 단어를 문서에서 삭제해줘.",
+      "required_role": null,
+      "forbidden_role": 13,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R13-quoted",
+      "role_id": 13,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“투자”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 13,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R13-excluded",
+      "role_id": 13,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除전문 투자자 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 13,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R14-positive",
+      "role_id": 14,
+      "kind": "positive",
+      "request": "이 사업 지출의 경비 처리에 필요한 증빙을 검토해줘.",
+      "required_role": 14,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R14-different_intent",
+      "role_id": 14,
+      "kind": "different_intent",
+      "request": "API 요청을 신고라는 변수 이름으로 바꿔줘.",
+      "required_role": null,
+      "forbidden_role": 14,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R14-quoted",
+      "role_id": 14,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“세무”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 14,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R14-excluded",
+      "role_id": 14,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除회계·세무 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 14,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R15-positive",
+      "role_id": 15,
+      "kind": "positive",
+      "request": "이 상품 랜딩페이지의 전환 메시지를 개선해줘.",
+      "required_role": 15,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R15-different_intent",
+      "role_id": 15,
+      "kind": "different_intent",
+      "request": "영상 편집에서 두 장면의 전환 효과만 바꿔줘.",
+      "required_role": null,
+      "forbidden_role": 15,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R15-quoted",
+      "role_id": 15,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“마케팅”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 15,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R15-excluded",
+      "role_id": 15,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除마케팅·세일즈 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 15,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R16-positive",
+      "role_id": 16,
+      "kind": "positive",
+      "request": "주택 대지의 배치와 인허가 검토에 필요한 조건을 정리해줘.",
+      "required_role": 16,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R16-different_intent",
+      "role_id": 16,
+      "kind": "different_intent",
+      "request": "소프트웨어 아키텍처 설계를 검토해줘.",
+      "required_role": null,
+      "forbidden_role": 16,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R16-quoted",
+      "role_id": 16,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“건축 설계”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 16,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R16-excluded",
+      "role_id": 16,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除건축 설계 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 16,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R17-positive",
+      "role_id": 17,
+      "kind": "positive",
+      "request": "카페의 실내 동선과 천장·가구 상세 설계를 검토해줘.",
+      "required_role": 17,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R17-different_intent",
+      "role_id": 17,
+      "kind": "different_intent",
+      "request": "카페 분위기와 색채 무드보드 대안만 제안해줘.",
+      "required_role": null,
+      "forbidden_role": 17,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R17-quoted",
+      "role_id": 17,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“실내 동선”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 17,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R17-excluded",
+      "role_id": 17,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除인테리어 설계 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 17,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R18-positive",
+      "role_id": 18,
+      "kind": "positive",
+      "request": "이 인테리어 공사의 시공 순서와 검측 기준을 정리해줘.",
+      "required_role": 18,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R18-different_intent",
+      "role_id": 18,
+      "kind": "different_intent",
+      "request": "시공이라는 단어를 영문으로 번역해줘.",
+      "required_role": null,
+      "forbidden_role": 18,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R18-quoted",
+      "role_id": 18,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“시공 순서”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 18,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R18-excluded",
+      "role_id": 18,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除건축·인테리어 시공 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 18,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R19-positive",
+      "role_id": 19,
+      "kind": "positive",
+      "request": "이 건축 도면의 물량 산출과 견적에 필요한 조건을 확인해줘.",
+      "required_role": 19,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R19-different_intent",
+      "role_id": 19,
+      "kind": "different_intent",
+      "request": "앱 이용량에 따른 클라우드 비용만 비교해줘.",
+      "required_role": null,
+      "forbidden_role": 19,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R19-quoted",
+      "role_id": 19,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“물량 산출”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 19,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R19-excluded",
+      "role_id": 19,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除건축·인테리어 견적 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 19,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R20-positive",
+      "role_id": 20,
+      "kind": "positive",
+      "request": "건물 외관과 실내의 재료·디자인 언어를 통합해줘.",
+      "required_role": 20,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R20-different_intent",
+      "role_id": 20,
+      "kind": "different_intent",
+      "request": "웹사이트 버튼의 디자인 시스템만 만들어줘.",
+      "required_role": null,
+      "forbidden_role": 20,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R20-quoted",
+      "role_id": 20,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“공간 디자인 통합”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 20,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R20-excluded",
+      "role_id": 20,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除건축·인테리어 디자인 디렉터 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 20,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R21-positive",
+      "role_id": 21,
+      "kind": "positive",
+      "request": "Revit 건축 모델을 Rhino로 변환할 때 형상 손실을 검토해줘.",
+      "required_role": 21,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R21-different_intent",
+      "role_id": 21,
+      "kind": "different_intent",
+      "request": "DB 데이터 모델을 설계해줘.",
+      "required_role": null,
+      "forbidden_role": 21,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R21-quoted",
+      "role_id": 21,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“BIM 모델링”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 21,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R21-excluded",
+      "role_id": 21,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除건축·인테리어 3D 모델링 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 21,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R22-positive",
+      "role_id": 22,
+      "kind": "positive",
+      "request": "이 실내 3D 장면의 재질·조명·카메라 렌더 설정을 검토해줘.",
+      "required_role": 22,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R22-different_intent",
+      "role_id": 22,
+      "kind": "different_intent",
+      "request": "React 웹 화면의 렌더링 성능을 개선해줘.",
+      "required_role": null,
+      "forbidden_role": 22,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R22-quoted",
+      "role_id": 22,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“공간 렌더”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 22,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R22-excluded",
+      "role_id": 22,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除건축·인테리어 렌더링·시각화 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 22,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R23-positive",
+      "role_id": 23,
+      "kind": "positive",
+      "request": "이 건물의 매스와 파사드 디자인 대안을 제안해줘.",
+      "required_role": 23,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R23-different_intent",
+      "role_id": 23,
+      "kind": "different_intent",
+      "request": "API 아키텍처 디자인만 검토해줘.",
+      "required_role": null,
+      "forbidden_role": 23,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R23-quoted",
+      "role_id": 23,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“건축 콘셉트”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 23,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R23-excluded",
+      "role_id": 23,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除건축 디자인 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 23,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R24-positive",
+      "role_id": 24,
+      "kind": "positive",
+      "request": "카페 인테리어 분위기와 재료 팔레트 대안을 제안해줘.",
+      "required_role": 24,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R24-different_intent",
+      "role_id": 24,
+      "kind": "different_intent",
+      "request": "카페 천장 접합과 가구 제작 상세를 검토해줘.",
+      "required_role": null,
+      "forbidden_role": 24,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R24-quoted",
+      "role_id": 24,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“인테리어 무드”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 24,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R24-excluded",
+      "role_id": 24,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除인테리어 디자인 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 24,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R25-positive",
+      "role_id": 25,
+      "kind": "positive",
+      "request": "이 주장에 대한 공식 원문과 확인 날짜를 찾아 검증해줘.",
+      "required_role": 25,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R25-different_intent",
+      "role_id": 25,
+      "kind": "different_intent",
+      "request": "이미 제공한 문장의 맞춤법만 수정해줘.",
+      "required_role": null,
+      "forbidden_role": 25,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R25-quoted",
+      "role_id": 25,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“공식 출처”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 25,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R25-excluded",
+      "role_id": 25,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除자료 검색·출처 검증 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 25,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R26-positive",
+      "role_id": 26,
+      "kind": "positive",
+      "request": "이 세 사례를 같은 비교 기준으로 분석해줘.",
+      "required_role": 26,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R26-different_intent",
+      "role_id": 26,
+      "kind": "different_intent",
+      "request": "표의 숫자를 정렬만 해줘.",
+      "required_role": null,
+      "forbidden_role": 26,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R26-quoted",
+      "role_id": 26,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“비교 연구”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 26,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R26-excluded",
+      "role_id": 26,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除리서치·분석 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 26,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R27-positive",
+      "role_id": 27,
+      "kind": "positive",
+      "request": "이 서비스의 차별화 아이디어를 만들고 검증 실험을 제안해줘.",
+      "required_role": 27,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R27-different_intent",
+      "role_id": 27,
+      "kind": "different_intent",
+      "request": "제공된 문장의 사실만 확인해줘.",
+      "required_role": null,
+      "forbidden_role": 27,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R27-quoted",
+      "role_id": 27,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“아이디어”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 27,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R27-excluded",
+      "role_id": 27,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除아이디어·콘셉트 전략 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 27,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R28-positive",
+      "role_id": 28,
+      "kind": "positive",
+      "request": "이 프로젝트의 일정·의존성·납품 위험을 정리해줘.",
+      "required_role": 28,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R28-different_intent",
+      "role_id": 28,
+      "kind": "different_intent",
+      "request": "제품 기능의 사용자 가치 우선순위만 정해줘.",
+      "required_role": null,
+      "forbidden_role": 28,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R28-quoted",
+      "role_id": 28,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“프로젝트 일정”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 28,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R28-excluded",
+      "role_id": 28,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除프로젝트 매니저 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 28,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R29-positive",
+      "role_id": 29,
+      "kind": "positive",
+      "request": "이 앱의 MVP와 기능 백로그 우선순위를 정해줘.",
+      "required_role": 29,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R29-different_intent",
+      "role_id": 29,
+      "kind": "different_intent",
+      "request": "이미 확정된 공사의 시공 순서만 정해줘.",
+      "required_role": null,
+      "forbidden_role": 29,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R29-quoted",
+      "role_id": 29,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“제품 로드맵”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 29,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R29-excluded",
+      "role_id": 29,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除프로덕트 매니저·프로덕트 오너 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 29,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R30-positive",
+      "role_id": 30,
+      "kind": "positive",
+      "request": "여러 프로젝트의 승인·보고·변경 통제 기준을 만들어줘.",
+      "required_role": 30,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R30-different_intent",
+      "role_id": 30,
+      "kind": "different_intent",
+      "request": "개인 작업의 할 일 목록만 정렬해줘.",
+      "required_role": null,
+      "forbidden_role": 30,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R30-quoted",
+      "role_id": 30,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“PMO”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 30,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R30-excluded",
+      "role_id": 30,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除PMO·프로젝트 거버넌스 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 30,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R31-positive",
+      "role_id": 31,
+      "kind": "positive",
+      "request": "회의 내용에서 결정과 담당자·액션을 원문 근거로 정리해줘.",
+      "required_role": 31,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R31-different_intent",
+      "role_id": 31,
+      "kind": "different_intent",
+      "request": "다른 PC에서 작업을 이어갈 환경과 승인 범위를 정리해줘.",
+      "required_role": null,
+      "forbidden_role": 31,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R31-quoted",
+      "role_id": 31,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“회의 기록”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 31,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R31-excluded",
+      "role_id": 31,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除프로젝트 분석·운영 코디네이터 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 31,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R32-positive",
+      "role_id": 32,
+      "kind": "positive",
+      "request": "이 렌더 이미지의 배경을 원본 보존하면서 합성해줘.",
+      "required_role": 32,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R32-different_intent",
+      "role_id": 32,
+      "kind": "different_intent",
+      "request": "3D 장면의 조명과 재질만 수정해줘.",
+      "required_role": null,
+      "forbidden_role": 32,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R32-quoted",
+      "role_id": 32,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“이미지 합성”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 32,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R32-excluded",
+      "role_id": 32,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除이미지 제작·편집 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 32,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R33-positive",
+      "role_id": 33,
+      "kind": "positive",
+      "request": "이 공간 소개 영상의 스토리보드와 카메라 동선을 설계해줘.",
+      "required_role": 33,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R33-different_intent",
+      "role_id": 33,
+      "kind": "different_intent",
+      "request": "완성 영상의 자막 타이밍과 음량만 편집해줘.",
+      "required_role": null,
+      "forbidden_role": 33,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R33-quoted",
+      "role_id": 33,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“영상 연출”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 33,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R33-excluded",
+      "role_id": 33,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除영상 제작·연출 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 33,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R34-positive",
+      "role_id": 34,
+      "kind": "positive",
+      "request": "이 완성 영상의 컷·자막·음량과 출력 규격을 맞춰줘.",
+      "required_role": 34,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R34-different_intent",
+      "role_id": 34,
+      "kind": "different_intent",
+      "request": "영상 판매 제안의 고객 메시지만 정리해줘.",
+      "required_role": null,
+      "forbidden_role": 34,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R34-quoted",
+      "role_id": 34,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“컷 편집”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 34,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R34-excluded",
+      "role_id": 34,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除영상 편집·후반작업 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 34,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R35-positive",
+      "role_id": 35,
+      "kind": "positive",
+      "request": "이 영상의 전체 재생·청취와 음원·폰트 권리를 검수해줘.",
+      "required_role": 35,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R35-different_intent",
+      "role_id": 35,
+      "kind": "different_intent",
+      "request": "영상 인코딩 성공 로그만 한 줄로 요약해줘.",
+      "required_role": null,
+      "forbidden_role": 35,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R35-quoted",
+      "role_id": 35,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“실제 검수”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 35,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R35-excluded",
+      "role_id": 35,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除미디어 품질·권리 검수 전문가 (15년+ 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 35,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R36-positive",
+      "role_id": 36,
+      "kind": "positive",
+      "request": "ComfyUI의 누락 노드·모델과 CUDA 오류를 로그로 진단해줘.",
+      "required_role": 36,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R36-different_intent",
+      "role_id": 36,
+      "kind": "different_intent",
+      "request": "ComfyUI라는 이름은 인용만 했고 웹 CSS만 수정해줘.",
+      "required_role": null,
+      "forbidden_role": 36,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R36-quoted",
+      "role_id": 36,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“ComfyUI”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 36,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R36-excluded",
+      "role_id": 36,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除생성형 AI 로컬 워크플로우 엔지니어 (15년+ 기반 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 36,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R37-positive",
+      "role_id": 37,
+      "kind": "positive",
+      "request": "외부 영상 생성 플랫폼의 플랜·크레딧·다운로드 조건을 비교해줘.",
+      "required_role": 37,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R37-different_intent",
+      "role_id": 37,
+      "kind": "different_intent",
+      "request": "ComfyUI 로컬 노드 오류만 진단해줘.",
+      "required_role": null,
+      "forbidden_role": 37,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R37-quoted",
+      "role_id": 37,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“생성 플랫폼”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 37,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R37-excluded",
+      "role_id": 37,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除생성형 AI 플랫폼 운영 전문가 (15년+ 기반 경력)工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 37,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R38-positive",
+      "role_id": 38,
+      "kind": "positive",
+      "request": "페르소나 훅과 스킬의 지시 충돌·오발동 원인을 검토해줘.",
+      "required_role": 38,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R38-different_intent",
+      "role_id": 38,
+      "kind": "different_intent",
+      "request": "훅이라는 단어가 들어간 문장을 번역만 해줘.",
+      "required_role": null,
+      "forbidden_role": 38,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R38-quoted",
+      "role_id": 38,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“지시 충돌”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 38,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R38-excluded",
+      "role_id": 38,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除AI 에이전트 하네스·지시 체계 설계 전문가工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 38,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R39-positive",
+      "role_id": 39,
+      "kind": "positive",
+      "request": "CLI에서는 되는데 Desktop에서 MCP가 호출되지 않는 원인을 검토해줘.",
+      "required_role": 39,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R39-different_intent",
+      "role_id": 39,
+      "kind": "different_intent",
+      "request": "MCP라는 단어를 제목에서 빼줘.",
+      "required_role": null,
+      "forbidden_role": 39,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R39-quoted",
+      "role_id": 39,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“Desktop와 CLI”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 39,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R39-excluded",
+      "role_id": 39,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除시스템 통합·실행 환경 검증 전문가工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 39,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R40-positive",
+      "role_id": 40,
+      "kind": "positive",
+      "request": "설치·빌드만 통과한 작업을 전체 완료라고 할 수 있는지 판단해줘.",
+      "required_role": 40,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R40-different_intent",
+      "role_id": 40,
+      "kind": "different_intent",
+      "request": "완료라는 글자를 문서 제목에 넣어줘.",
+      "required_role": null,
+      "forbidden_role": 40,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R40-quoted",
+      "role_id": 40,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“완료 증거”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 40,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R40-excluded",
+      "role_id": 40,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除완료 증거·수용 기준 검증 전문가工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 40,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R41-positive",
+      "role_id": 41,
+      "kind": "positive",
+      "request": "다른 PC와 AI에서 이 작업을 이어갈 승인 범위와 재개 순서를 정리해줘.",
+      "required_role": 41,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R41-different_intent",
+      "role_id": 41,
+      "kind": "different_intent",
+      "request": "회의 원문에서 액션 목록만 추출해줘.",
+      "required_role": null,
+      "forbidden_role": 41,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R41-quoted",
+      "role_id": 41,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“인수인계”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 41,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R41-excluded",
+      "role_id": 41,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除작업 맥락·결정 이력·AI 인수인계 전문가工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 41,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R42-positive",
+      "role_id": 42,
+      "kind": "positive",
+      "request": "도면과 BIM 모델의 치수·단위·개정 불일치를 검토해줘.",
+      "required_role": 42,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R42-different_intent",
+      "role_id": 42,
+      "kind": "different_intent",
+      "request": "DB 모델과 API 응답 스키마만 대조해줘.",
+      "required_role": null,
+      "forbidden_role": 42,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R42-quoted",
+      "role_id": 42,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“도면 정합성”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 42,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R42-excluded",
+      "role_id": 42,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除CAD·BIM 도면 체계·설계정보 정합성 전문가工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 42,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R43-positive",
+      "role_id": 43,
+      "kind": "positive",
+      "request": "벽체 위치 변경이 시공·설비 간섭·물량·비용·일정에 주는 영향을 검토해줘.",
+      "required_role": 43,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R43-different_intent",
+      "role_id": 43,
+      "kind": "different_intent",
+      "request": "벽체 변경이라는 문장을 번역만 해줘.",
+      "required_role": null,
+      "forbidden_role": 43,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R43-quoted",
+      "role_id": 43,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“설계 변경 영향”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 43,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R43-excluded",
+      "role_id": 43,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除설계·시공 통합 검토·변경 영향 전문가工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 43,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R44-positive",
+      "role_id": 44,
+      "kind": "positive",
+      "request": "건축시각화 제안 영상에서 공간 가치와 고객 문의를 연결할 구성을 제안해줘.",
+      "required_role": 44,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R44-different_intent",
+      "role_id": 44,
+      "kind": "different_intent",
+      "request": "실내 렌더의 카메라 노출값만 설정해줘.",
+      "required_role": null,
+      "forbidden_role": 44,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R44-quoted",
+      "role_id": 44,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“건축시각화 제안”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 44,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R44-excluded",
+      "role_id": 44,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除건축시각화 크리에이티브·사업 제안 전문가工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 44,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R45-positive",
+      "role_id": 45,
+      "kind": "positive",
+      "request": "반복되는 건축 도면 검토를 원본 보존형 CLI 도구로 제품화해줘.",
+      "required_role": 45,
+      "forbidden_role": null,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R45-different_intent",
+      "role_id": 45,
+      "kind": "different_intent",
+      "request": "기존 도면 한 장의 치수만 검토해줘.",
+      "required_role": null,
+      "forbidden_role": 45,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R45-quoted",
+      "role_id": 45,
+      "kind": "quoted",
+      "request": "只做文字处理。请把“건축 업무 자동화”翻译成英文，不开展该领域工作。",
+      "required_role": null,
+      "forbidden_role": 45,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    },
+    {
+      "case_id": "R45-excluded",
+      "role_id": 45,
+      "kind": "excluded",
+      "request": "只修正以下句子的错别字；排除건축·콘텐츠 업무 자동화·도구 제품화 전문가工作：今天的会议结速了。",
+      "required_role": null,
+      "forbidden_role": 45,
+      "criterion": "작업 책임에 근거한 판단; 표시만으로 업무 실행 통과 금지"
+    }
+  ]
+}

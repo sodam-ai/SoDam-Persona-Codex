@@ -11,7 +11,7 @@
     {
       "name": "sodam-persona",
       "source": "./plugins/sodam-persona",
-      "description": "바이브코딩 AI 개발 파트너 페르소나 v5 — 항상켜짐 코어(hook) + 조건부 15관점/도메인(skills). 본인 전용 새 PC 이식용."
+      "description": "페르소나 v6: 45개 관점과 조건부 전문 스킬. 실제 설치와 자동 선택 검증은 별도."
     }
   ]
 }

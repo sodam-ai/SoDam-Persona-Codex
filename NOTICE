@@ -8,8 +8,8 @@ See the LICENSE file for the full license text.
 Third-party quotations and provenance
 --------------------------------------------------------------------------------
 
-The current distribution contains short quotations or paraphrases in
-plugins/sodam-persona/skills/persona-triggers/SKILL.md. It does NOT bundle or
+Earlier distributions contained short quotations or paraphrases in
+plugins/sodam-persona/skills/persona-triggers/SKILL.md. Their provenance is retained below for historical attribution. This distribution does NOT bundle or
 redistribute third-party source code, images, fonts, audio, or video:
 
   - "Chesterton's Fence" — the project uses a simplified paraphrase of the

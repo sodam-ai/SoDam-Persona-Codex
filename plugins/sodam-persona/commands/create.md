@@ -1,73 +1,16 @@
 ---
-description: "인터뷰 방식으로 새 도메인 페르소나(현재 다음 번호 #38부터)를 생성 — 추천 트리거 단어 자동 제안, 관련 파일 전부 동기화, validate.mjs로 자동 검증"
+description: "인터뷰로 새 역할을 추가하고 v6 등록부·라우팅·스킬·검증·문서를 동기화한다."
 ---
+# 새 페르소나 생성
+변경 사항: v6 정본과 역할 등록부 기반 절차로 전환.
 
-# $persona-create — 새 페르소나 생성 (인터뷰 방식)
+1. `reference/operating_contract.md`, `persona-registry.json`, `reference/persona_full_core.md`, `reference/domain_routing.md`와 대상 저장소의 검증 코드를 읽는다. 설치 캐시를 소스로 사용하지 않는다.
+2. 분야·책임·기존 역할과의 차이·필수 면책을 한 번에 하나씩 확인한다. 이미 승인된 요구사항은 다시 묻지 않는다. 기존 역할로 해결되면 중복을 설명한다.
+3. 슬러그는 `^[a-z][a-z0-9-]*$`로 검증하고 중복·Windows 예약 이름·경로 이탈을 차단한다. 사용자 문자열을 쉘 명령에 삽입하지 않는다.
+4. 등록부의 최대 ID 다음 번호를 사용한다. 현재 기본값은 #46이지만 실제 등록부를 기준으로 정한다. 기존 ID·이름을 재배열하지 않는다.
+5. 활성 의도·제외 사례·책임·경계·15년 전문 판단 기준·필요한 면책·정본 참조가 있는 스킬 초안을 보여준다. 명시적 생성 요청 범위와 이미 받은 승인을 적용한다.
+6. 소스 복사본에서 등록부, 역할 목록, 분야 라우팅, 새 스킬, 행동 시험, 한·영 README를 동기화한다. 훅에는 최소한의 라우팅만 추가하고 상세 본문은 reference에 둔다. 기존 43개 분류 이력은 새 역할 수와 혼동하지 않는다.
+7. 새 역할 추가에 따라 검증기의 기대 역할·스킬 수를 근거 있게 갱신하고, 기존 45개 보존 및 새 역할 배선 시험을 추가한다. 실패를 숨기거나 검사를 삭제하지 않는다. `node validate.mjs`, `node --test test-hooks.mjs test-validator.mjs`, `node build-docs.mjs`와 실제 행동 시험을 실행한다. 실행하지 못한 항목은 미실행으로 보고한다.
+8. 소스·설치 캐시·실제 훅 실행을 구분한다. 필요한 재설치는 사용자 승인 범위에서 공식 명령을 쓰며 삭제 전 수정본을 보존한다. push·공개는 별도 사용자 지시를 따른다.
 
-이 명령이 실행되면 아래 순서를 **하나씩, 인터뷰 형식으로** 진행한다. 한 번에 여러 질문을 던지지 말고, 답을 받은 뒤 다음 질문으로 넘어간다.
-
-## 0단계. 사전 확인
-
-- `plugins/sodam-persona/skills/persona-triggers/SKILL.md`를 읽어 `## B.` 섹션 표에서 현재 마지막 관점 번호(N)를 확인한다.
-- 같은 파일에서 `## ([A-Z]+)\. ` 형태의 마지막 패턴 ID를 확인한다(현재 A~AQ).
-- 새 관점 번호 = N+1, 새 패턴 ID는 Excel 열 표기처럼 증가한다(Z 다음은 AA, AA 다음은 AB). 단순 문자 코드 증가를 사용하지 않는다.
-
-## 1단계. 인터뷰 (한 번에 하나씩)
-
-1. "새 페르소나가 다룰 전문 분야가 무엇인가요? (예: 의료·건강, 부동산, 교육 등 한글로)"
-2. "영문 폴더/파일 이름에 쓸 짧은 영어 슬러그를 정해주세요 (예: doctor, realestate). 소문자·하이픈만."
-   - **입력값 검증(필수)**: 답변이 `^[a-z][a-z0-9-]*$` 형식(소문자로 시작, 소문자·숫자·하이픈만, 공백·슬래시(`/`)·역슬래시·마침표 2개 연속(`..`)·특수문자 없음)이 아니면 파일 경로에 절대 사용하지 말고, "영문 소문자와 하이픈만 사용해주세요 (예: doctor)"라고 다시 요청한다. 이 슬러그는 곧바로 `plugins/sodam-persona/skills/persona-<슬러그>/` 폴더 경로에 쓰이므로, 검증 없이 그대로 사용하면 경로 조작(path traversal) 위험이 있다.
-3. "이 페르소나가 답변할 때 챙겨야 할 책임 영역을 간단히 알려주세요 (몇 가지 항목이어도 됩니다)."
-4. "이 도메인이 신고·계약·처방·진단처럼 '실행성 답변'을 다뤄서, #14(회계세무)·#11(법률)처럼 **면책 문구가 반드시 필요한 영역**인가요? (예/아니오)"
-
-## 2단계. 추천 트리거 단어 생성
-
-1~3단계 답변을 바탕으로, 기존 도메인 섹션(J 투자·K 법률·S 회계세무·T 마케팅·U~AD 건축/인테리어/3D·AE~AG 검색/리서치/아이디어·AH~AK 프로젝트관리·AL~AO 이미지/영상, `persona-triggers/SKILL.md` 참고)과 같은 형식으로 **한국어 트리거 단어 15~30개를 직접 생성**해 보여준다. 사용자에게 "이대로 등록할까요? 추가/삭제하고 싶은 단어가 있나요?"라고 확인한다. 확정 전까지는 파일을 건드리지 않는다.
-
-## 3단계. 파일 반영 (확정 후에만, 순서대로)
-
-1. **`plugins/sodam-persona/skills/persona-triggers/SKILL.md`**
-   - `## B.` 표에 새 행 추가: `| N+1 | <도메인명> (15년+) | <트리거 표현들> |`
-   - 새 알파벳 섹션(예: `## U. "<도메인>" 도메인 패턴 → #N+1 <도메인> 페르소나 활성`) 추가 — J/K/S/T 섹션과 동일 구조(트리거 단어군 / 책임 영역 / PR 체크리스트 / 다른 관점과의 경계)
-   - frontmatter `description`과 본문의 현재 `A~AQ 43패턴` 표기를 `A~<새글자> <새패턴수>패턴`으로 갱신
-   - "매칭 예시" 표에 새 도메인 예시 1줄 추가
-2. **`plugins/sodam-persona/hooks/persona_core.md`**
-   - "도메인 트리거 (조건부 활성)" 섹션에 새 도메인 소단원 추가 (트리거 단어·책임 영역, 기존 4개와 동일 형식)
-   - 면책 필요 시 "[면책 강제]" 섹션에 새 도메인 추가
-   - "현재 N명 다관점 균형 검토"의 관점 목록 목록에 새 관점 이름 추가, 숫자를 N+1로 갱신
-   - "파일 맵" 표의 도메인 스킬 목록에 `persona-<슬러그>` 추가
-3. **`plugins/sodam-persona/hooks/persona_marker.txt`**
-   - "도메인 (조건부)" 한 줄 문구에 새 도메인 트리거·활성 문구 추가 (persona_core.md와 동일 내용)
-   - "persona-* 자동 활성" 목록에 `persona-<슬러그>` 추가
-   - 면책 필요 시 "[도메인 면책 강제]" 항목에 새 도메인 추가
-4. **`plugins/sodam-persona/skills/persona-<슬러그>/SKILL.md`** (신규 생성)
-   - `persona-investor`/`persona-lawyer`/`persona-accountant`/`persona-marketer` 중 하나를 그대로 구조 참고: frontmatter(name=폴더명과 반드시 일치, description) → 정본 안내 → 트리거 단어군 → 필요 시 "⚠️ 필수 면책" 박스 → 책임 영역 → PR/작업 체크리스트 → 다른 관점과의 경계
-5. **`plugins/sodam-persona/skills/persona-format/SKILL.md`**
-   - "다관점 판단 (<현재 관점 수>)" 제목과 목록에 새 관점 추가, 숫자 갱신
-6. **`plugins/sodam-persona/reference/persona_full_core.md`**, **`plugins/sodam-persona/reference/test_scenarios.md`**
-   - 관점 수 숫자 표기 갱신 (validate.mjs가 이 두 파일도 검사 대상에 포함함)
-7. **`README.md` / `README.en.md`** (2개 전부. 2026-07-27부로 GUIDE.md/GUIDE.en.md는 폐지되어 README에 통합됨)
-   - 현행 관점 수 표기 등 전부 새 숫자로
-   - 현행 트리거 패턴 수와 마지막 ID를 새 값으로
-   - 한·영 README의 스킬 수를 실제 새 개수로 갱신
-   - 관점 목록·업데이트 내용 요약에 새 도메인 한 줄 추가
-8. **`plugins/sodam-persona/persona-registry.json`**
-   - `perspectives`, `triggerPatterns`, `domainSkills`에 새 관점·패턴·스킬을 추가한다. `validate.mjs`가 이 등록부를 기준으로 전체 배선을 검사한다.
-
-## 3-1단계. 검증 전 마지막 훑기 (2026-07-27 실측 반영)
-
-3단계 목록은 알려진 위치만 나열한 것이라, `persona-triggers/SKILL.md`의 개별 패턴 섹션(A/L/P/Q/I 등)이나 매칭 예시 표, `persona-format.md`/`persona-investor`/`persona-lawyer`의 안내 문구처럼 옛 관점 수("N명"·"N관점")가 산발적으로 더 남아있을 수 있다(실제 라이브 테스트에서 17건 누락 발견됨). `node validate.mjs`를 처음 돌리기 전에, 옛 숫자를 기준으로 프로젝트 전체를 한 번 더 검색해 남은 곳을 먼저 고친다:
-
-```
-grep -rn "옛N명\|옛N관점\|옛N개 관점\|옛N개 도메인 관점\|A~옛마지막글자\|Skills (옛스킬수)\|Skills(옛스킬수)" --include=*.md --include=*.json --include=*.txt .
-```
-
-## 4단계. 검증
-
-`node validate.mjs`를 실행한다. `❌ FAIL`이 나오면 표시된 항목을 하나씩 고치고 다시 실행 — `✅ PASS`가 나올 때까지 반복한다. 실행 결과를 그대로 사용자에게 보여준다.
-
-## 5단계. 마무리 안내
-
-- 설치된 캐시에는 자동 반영되지 않는다는 점을 안내: `codex plugin marketplace upgrade sodam-persona` → `codex plugin remove sodam-persona@sodam-persona` → `codex plugin add sodam-persona@sodam-persona` → 새 task 시작
-- git 커밋은 바뀐 파일만 정확히 이름 지정해 add (`git add -A` 금지, 이 저장소 README.md §8의 기존 규칙), conventional commit 형식으로 작성
-- 실제 push·PR 생성·merge는 사용자의 명시적 승인 없이는 실행하지 않는다
+역할을 추가·편집할 때 reference/role_activation_contract.md, reference/routing_cases.json의 해당 계약과 시험도 함께 갱신한다. 시험 기대값은 실행 전에 고정하고 관측 결과에 맞춰 몰래 변경하지 않는다.

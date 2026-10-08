@@ -1,0 +1,816 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "case_id": "KO-R01-quoted",
+      "request": "\"시니어 개발자\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        1
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R01-excluded",
+      "request": "\"시니어 개발자\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        1
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R02-quoted",
+      "request": "\"시니어 보안 전문가\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        2
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R02-excluded",
+      "request": "\"시니어 보안 전문가\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        2
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R03-quoted",
+      "request": "\"비개발자/왕초보/무경험자\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        3
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R03-excluded",
+      "request": "\"비개발자/왕초보/무경험자\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        3
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R04-quoted",
+      "request": "\"QA/테스트 엔지니어\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        4
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R04-excluded",
+      "request": "\"QA/테스트 엔지니어\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        4
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R05-quoted",
+      "request": "\"DevOps/배포·운영/SRE\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        5
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R05-excluded",
+      "request": "\"DevOps/배포·운영/SRE\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        5
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R06-quoted",
+      "request": "\"데이터/AI 엔지니어\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        6
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R06-excluded",
+      "request": "\"데이터/AI 엔지니어\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        6
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R07-quoted",
+      "request": "\"시니어 디자이너\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        7
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R07-excluded",
+      "request": "\"시니어 디자이너\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        7
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R08-quoted",
+      "request": "\"UX 리서처\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        8
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R08-excluded",
+      "request": "\"UX 리서처\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        8
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R09-quoted",
+      "request": "\"시니어 기획·요구사항 라우터\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        9
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R09-excluded",
+      "request": "\"시니어 기획·요구사항 라우터\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        9
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R10-quoted",
+      "request": "\"C-레벨 경영진/비즈니스 (25년+)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        10
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R10-excluded",
+      "request": "\"C-레벨 경영진/비즈니스 (25년+)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        10
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R11-quoted",
+      "request": "\"법무/컴플라이언스 (15년+ 경력 전문 변호사)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        11
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R11-excluded",
+      "request": "\"법무/컴플라이언스 (15년+ 경력 전문 변호사)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        11
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R12-quoted",
+      "request": "\"비용 최적화/사업 운영 (15년+)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        12
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R12-excluded",
+      "request": "\"비용 최적화/사업 운영 (15년+)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        12
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R13-quoted",
+      "request": "\"전문 투자자 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        13
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R13-excluded",
+      "request": "\"전문 투자자 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        13
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R14-quoted",
+      "request": "\"회계·세무 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        14
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R14-excluded",
+      "request": "\"회계·세무 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        14
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R15-quoted",
+      "request": "\"마케팅·세일즈 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        15
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R15-excluded",
+      "request": "\"마케팅·세일즈 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        15
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R16-quoted",
+      "request": "\"건축 설계 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        16
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R16-excluded",
+      "request": "\"건축 설계 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        16
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R17-quoted",
+      "request": "\"인테리어 설계 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        17
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R17-excluded",
+      "request": "\"인테리어 설계 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        17
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R18-quoted",
+      "request": "\"건축·인테리어 시공 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        18
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R18-excluded",
+      "request": "\"건축·인테리어 시공 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        18
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R19-quoted",
+      "request": "\"건축·인테리어 견적 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        19
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R19-excluded",
+      "request": "\"건축·인테리어 견적 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        19
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R20-quoted",
+      "request": "\"건축·인테리어 디자인 디렉터 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        20
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R20-excluded",
+      "request": "\"건축·인테리어 디자인 디렉터 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        20
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R21-quoted",
+      "request": "\"건축·인테리어 3D 모델링 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        21
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R21-excluded",
+      "request": "\"건축·인테리어 3D 모델링 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        21
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R22-quoted",
+      "request": "\"건축·인테리어 렌더링·시각화 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        22
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R22-excluded",
+      "request": "\"건축·인테리어 렌더링·시각화 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        22
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R23-quoted",
+      "request": "\"건축 디자인 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        23
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R23-excluded",
+      "request": "\"건축 디자인 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        23
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R24-quoted",
+      "request": "\"인테리어 디자인 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        24
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R24-excluded",
+      "request": "\"인테리어 디자인 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        24
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R25-quoted",
+      "request": "\"자료 검색·출처 검증 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        25
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R25-excluded",
+      "request": "\"자료 검색·출처 검증 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        25
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R26-quoted",
+      "request": "\"리서치·분석 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        26
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R26-excluded",
+      "request": "\"리서치·분석 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        26
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R27-quoted",
+      "request": "\"아이디어·콘셉트 전략 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        27
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R27-excluded",
+      "request": "\"아이디어·콘셉트 전략 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        27
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R28-quoted",
+      "request": "\"프로젝트 매니저 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        28
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R28-excluded",
+      "request": "\"프로젝트 매니저 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        28
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R29-quoted",
+      "request": "\"프로덕트 매니저·프로덕트 오너 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        29
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R29-excluded",
+      "request": "\"프로덕트 매니저·프로덕트 오너 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        29
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R30-quoted",
+      "request": "\"PMO·프로젝트 거버넌스 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        30
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R30-excluded",
+      "request": "\"PMO·프로젝트 거버넌스 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        30
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R31-quoted",
+      "request": "\"프로젝트 분석·운영 코디네이터 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        31
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R31-excluded",
+      "request": "\"프로젝트 분석·운영 코디네이터 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        31
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R32-quoted",
+      "request": "\"이미지 제작·편집 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        32
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R32-excluded",
+      "request": "\"이미지 제작·편집 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        32
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R33-quoted",
+      "request": "\"영상 제작·연출 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        33
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R33-excluded",
+      "request": "\"영상 제작·연출 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        33
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R34-quoted",
+      "request": "\"영상 편집·후반작업 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        34
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R34-excluded",
+      "request": "\"영상 편집·후반작업 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        34
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R35-quoted",
+      "request": "\"미디어 품질·권리 검수 전문가 (15년+ 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        35
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R35-excluded",
+      "request": "\"미디어 품질·권리 검수 전문가 (15년+ 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        35
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R36-quoted",
+      "request": "\"생성형 AI 로컬 워크플로우 엔지니어 (15년+ 기반 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        36
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R36-excluded",
+      "request": "\"생성형 AI 로컬 워크플로우 엔지니어 (15년+ 기반 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        36
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R37-quoted",
+      "request": "\"생성형 AI 플랫폼 운영 전문가 (15년+ 기반 경력)\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        37
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R37-excluded",
+      "request": "\"생성형 AI 플랫폼 운영 전문가 (15년+ 기반 경력)\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        37
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R38-quoted",
+      "request": "\"AI 에이전트 하네스·지시 체계 설계 전문가\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        38
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R38-excluded",
+      "request": "\"AI 에이전트 하네스·지시 체계 설계 전문가\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        38
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R39-quoted",
+      "request": "\"시스템 통합·실행 환경 검증 전문가\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        39
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R39-excluded",
+      "request": "\"시스템 통합·실행 환경 검증 전문가\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        39
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R40-quoted",
+      "request": "\"완료 증거·수용 기준 검증 전문가\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        40
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R40-excluded",
+      "request": "\"완료 증거·수용 기준 검증 전문가\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        40
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R41-quoted",
+      "request": "\"작업 맥락·결정 이력·AI 인수인계 전문가\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        41
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R41-excluded",
+      "request": "\"작업 맥락·결정 이력·AI 인수인계 전문가\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        41
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R42-quoted",
+      "request": "\"CAD·BIM 도면 체계·설계정보 정합성 전문가\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        42
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R42-excluded",
+      "request": "\"CAD·BIM 도면 체계·설계정보 정합성 전문가\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        42
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R43-quoted",
+      "request": "\"설계·시공 통합 검토·변경 영향 전문가\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        43
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R43-excluded",
+      "request": "\"설계·시공 통합 검토·변경 영향 전문가\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        43
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R44-quoted",
+      "request": "\"건축시각화 크리에이티브·사업 제안 전문가\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        44
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R44-excluded",
+      "request": "\"건축시각화 크리에이티브·사업 제안 전문가\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        44
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R45-quoted",
+      "request": "\"건축·콘텐츠 업무 자동화·도구 제품화 전문가\"를 영어로 번역만 해줘. 해당 분야의 분석이나 실행은 하지 마.",
+      "forbidden_roles": [
+        45
+      ],
+      "expected_task": "translation",
+      "max_selected_roles": 2
+    },
+    {
+      "case_id": "KO-R45-excluded",
+      "request": "\"건축·콘텐츠 업무 자동화·도구 제품화 전문가\"의 띄어쓰기만 검토해줘. 해당 분야의 역할이나 업무는 명시적으로 제외해.",
+      "forbidden_roles": [
+        45
+      ],
+      "expected_task": "proofreading",
+      "max_selected_roles": 2
+    }
+  ],
+  "purpose": "supplemental fixtures; model execution not verified"
+}

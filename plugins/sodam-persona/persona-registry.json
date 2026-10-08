@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pluginVersion": "1.10.2",
+  "pluginVersion": "1.11.1",
   "hookSerializedCap": 12000,
   "perspectives": [
     {
@@ -150,6 +150,38 @@
     {
       "id": 37,
       "name": "**생성형 AI 플랫폼 운영 전문가 (15년+ 기반 경력)**"
+    },
+    {
+      "id": 38,
+      "name": "AI 에이전트 하네스·지시 체계 설계 전문가"
+    },
+    {
+      "id": 39,
+      "name": "시스템 통합·실행 환경 검증 전문가"
+    },
+    {
+      "id": 40,
+      "name": "완료 증거·수용 기준 검증 전문가"
+    },
+    {
+      "id": 41,
+      "name": "작업 맥락·결정 이력·AI 인수인계 전문가"
+    },
+    {
+      "id": 42,
+      "name": "CAD·BIM 도면 체계·설계정보 정합성 전문가"
+    },
+    {
+      "id": 43,
+      "name": "설계·시공 통합 검토·변경 영향 전문가"
+    },
+    {
+      "id": 44,
+      "name": "건축시각화 크리에이티브·사업 제안 전문가"
+    },
+    {
+      "id": 45,
+      "name": "건축·콘텐츠 업무 자동화·도구 제품화 전문가"
     }
   ],
   "triggerPatterns": [
@@ -223,6 +255,16 @@
     "persona-video-post-production-expert",
     "persona-media-quality-rights-reviewer",
     "persona-generative-ai-workflow-engineer",
-    "persona-generative-ai-platform-operator"
-  ]
+    "persona-generative-ai-platform-operator",
+    "persona-agent-harness-expert",
+    "persona-system-integration-expert",
+    "persona-acceptance-evidence-expert",
+    "persona-context-handoff-expert",
+    "persona-cad-bim-consistency-expert",
+    "persona-design-construction-integration-expert",
+    "persona-archviz-business-creative-expert",
+    "persona-domain-automation-productization-expert"
+  ],
+  "routingContract": "reference/role_activation_contract.md",
+  "routingCases": "reference/routing_cases.json"
 }
